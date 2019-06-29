@@ -16,6 +16,9 @@ public class UserTestData {
     public static final User SECOND_USER = new User(FIRST_USER_ID + 1, "Vasya", "vasya@gmail.com", "VasyaTheBest", LocalDateTime.now(), true, Collections.singleton(Roles.ROLE_USER));
     public static final User THIRD_USER = new User(FIRST_USER_ID + 2, "Petr", "petr@gmail.com", "PertHasStrongPass123", LocalDateTime.now(), true, Collections.singleton(Roles.ROLE_USER));
 
+    private UserTestData() {
+    }
+
     public static void assertMatch(User actual, User expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "roles");
     }

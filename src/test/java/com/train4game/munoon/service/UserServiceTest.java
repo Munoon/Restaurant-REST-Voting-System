@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.train4game.munoon.UserTestData.*;
+import static com.train4game.munoon.data.UserTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",

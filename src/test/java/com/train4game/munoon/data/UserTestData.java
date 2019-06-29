@@ -1,4 +1,4 @@
-package com.train4game.munoon;
+package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;

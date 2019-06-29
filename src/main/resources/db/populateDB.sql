@@ -16,8 +16,8 @@ INSERT INTO user_roles (user_id, role) VALUES
     (102, 'ROLE_USER');
 
 INSERT INTO restaurants (name) VALUES
-    'McDonalds',
-    'KFC';
+    ('McDonalds'),
+    ('KFC');
 
 INSERT INTO menu (restaurant_id, name, price) VALUES
     (103, 'Burger', 50),

@@ -1,8 +1,17 @@
 package com.train4game.munoon.model;
 
+import org.springframework.lang.Nullable;
+
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.util.List;
 
-public class Restaurant extends NamedEntity {
+public class Restaurant extends AbstractNamedEntity {
+    @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
+    @OneToMany(fetch = FetchType.LAZY)
+    @Nullable
     private List<Meal> menu;
 
     public Restaurant() {

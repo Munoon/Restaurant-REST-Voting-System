@@ -1,13 +1,36 @@
 package com.train4game.munoon.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class User extends NamedEntity {
+public class User extends AbstractNamedEntity {
+    @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @NotBlank
+    @Size(max = 200)
     private String email;
+
+    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Size(max = 200)
     private String password;
+
+    @Column(name = "registered", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @NotNull
     private LocalDateTime registered;
+
+    @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean enabled;
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Roles> roles;
 
     public User() {

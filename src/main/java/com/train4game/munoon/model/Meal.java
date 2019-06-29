@@ -1,7 +1,16 @@
 package com.train4game.munoon.model;
 
-public class Meal extends NamedEntity {
+import org.springframework.lang.Nullable;
+
+import javax.persistence.*;
+
+public class Meal extends AbstractNamedEntity {
+    @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Nullable
     private Restaurant restaurant;
+
+    @Column(name = "price", nullable = false)
     private int price;
 
     public Meal() {

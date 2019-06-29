@@ -2,12 +2,11 @@ package com.train4game.munoon.model;
 
 import org.springframework.lang.Nullable;
 
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "restaurants", uniqueConstraints = @UniqueConstraint(columnNames = "name", name = "restaurants_unique_name_idx"))
 public class Restaurant extends AbstractNamedEntity {
     @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
     @OneToMany(fetch = FetchType.LAZY)

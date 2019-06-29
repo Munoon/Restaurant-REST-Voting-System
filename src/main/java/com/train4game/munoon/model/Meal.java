@@ -4,6 +4,8 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "menu", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "menu_unique_name_idx"))
 public class Meal extends AbstractNamedEntity {
     @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
     @ManyToOne(fetch = FetchType.LAZY)

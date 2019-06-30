@@ -2,8 +2,11 @@ package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Meal;
 
+import java.util.Arrays;
+
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MealTestData {
     public static final int FIRST_MEAL_ID = 105;
@@ -13,5 +16,17 @@ public class MealTestData {
     public static final Meal FOURTH_MEAL = new Meal(FIRST_MEAL_ID + 3, "Chicken", SECOND_RESTAURANT, 35);
 
     private MealTestData() {
+    }
+
+    public static void assertMatch(Meal actual, Meal expected) {
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant");
+    }
+
+    public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
+        assertMatch(actual, Arrays.asList(expected));
+    }
+
+    public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
+        assertThat(actual).usingElementComparatorIgnoringFields("restaurant").isEqualTo(expected);
     }
 }

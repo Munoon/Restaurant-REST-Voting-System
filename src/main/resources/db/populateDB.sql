@@ -1,5 +1,5 @@
 DELETE FROM user_votes;
-DELETE FROM menu;
+DELETE FROM meals;
 DELETE FROM restaurants;
 DELETE FROM user_roles;
 DELETE FROM users;
@@ -19,7 +19,7 @@ INSERT INTO restaurants (name) VALUES
     ('McDonalds'),
     ('KFC');
 
-INSERT INTO menu (restaurant_id, name, price) VALUES
+INSERT INTO meals (restaurant_id, name, price) VALUES
     (103, 'Burger', 50),
     (103, 'French Fries', 20),
     (104, 'Burger', 30),

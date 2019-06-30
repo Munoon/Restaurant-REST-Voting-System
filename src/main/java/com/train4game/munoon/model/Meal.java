@@ -11,7 +11,7 @@ import javax.persistence.*;
                 "ORDER BY m.name")
 })
 @Entity
-@Table(name = "menu", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "menu_unique_name_idx"))
+@Table(name = "meals", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "menu_unique_name_idx"))
 public class Meal extends AbstractNamedEntity {
     public static final String DELETE = "Meal.delete";
     public static final String GET_ALL = "Meal.getAll";

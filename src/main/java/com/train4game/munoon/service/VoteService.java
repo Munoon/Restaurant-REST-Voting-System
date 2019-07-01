@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
+import static com.train4game.munoon.utils.ValidationUtils.checkForTimeException;
 import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
 
 @Service
@@ -38,6 +39,7 @@ public class VoteService {
 
     public void update(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
+        checkForTimeException();
         checkNotFoundWithId(repository.save(vote, userId), vote.getId());
     }
 }

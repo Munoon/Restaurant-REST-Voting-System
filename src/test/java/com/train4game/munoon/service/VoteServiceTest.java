@@ -2,6 +2,7 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
+import com.train4game.munoon.utils.exceptions.TimeOverException;
 import javafx.scene.paint.Stop;
 import org.junit.AfterClass;
 import org.junit.Rule;
@@ -20,6 +21,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +109,9 @@ public class VoteServiceTest {
 
     @Test
     public void update() {
+        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
+            exception.expect(TimeOverException.class);
+
         Vote vote = new Vote(SECOND_VOTE);
         vote.setRestaurant(SECOND_RESTAURANT);
         service.update(vote, FIRST_USER_ID);
@@ -115,7 +120,17 @@ public class VoteServiceTest {
 
     @Test
     public void updateNotOwn() {
-        exception.expect(NotFoundException.class);
+        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
+            exception.expect(TimeOverException.class);
+        else
+            exception.expect(NotFoundException.class);
+
         service.update(FIRST_VOTE, SECOND_USER.getId());
+    }
+
+    @Test
+    public void updateTimeOver() {
+        exception.expect(TimeOverException.class);
+        service.update(FIRST_VOTE, FIRST_USER_ID);
     }
 }

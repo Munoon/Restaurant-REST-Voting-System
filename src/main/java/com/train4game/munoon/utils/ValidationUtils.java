@@ -4,6 +4,9 @@ import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
+import com.train4game.munoon.utils.exceptions.TimeOverException;
+
+import java.time.LocalTime;
 
 public class ValidationUtils {
     private ValidationUtils() {
@@ -31,5 +34,12 @@ public class ValidationUtils {
     public static void checkUserForAdmin(User user) {
         if (!user.getRoles().contains(Roles.ROLE_ADMIN))
             throw new PermissionDeniedException("User didnt have admin role");
+    }
+
+    public static void checkForTimeException() {
+        LocalTime time = LocalTime.now();
+        LocalTime endTime = LocalTime.of(11, 0);
+        if (time.isAfter(endTime))
+            throw new TimeOverException();
     }
 }

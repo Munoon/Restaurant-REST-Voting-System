@@ -18,10 +18,19 @@
         </encoder>
     </appender>
 
-    <logger name="com.train4game.munoon" level="debug"/>
+    <appender name="test-statistic" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss} %magenta([%thread]) TEST STATISTIC - %highlight(%msg%n)</pattern>
+        </encoder>
+    </appender>
 
     <root level="info">
         <appender-ref ref="file"/>
         <appender-ref ref="console"/>
     </root>
+
+    <logger name="com.train4game.munoon.service" level="debug" additivity="false">
+        <appender-ref ref="test-statistic"/>
+    </logger>
 </configuration>

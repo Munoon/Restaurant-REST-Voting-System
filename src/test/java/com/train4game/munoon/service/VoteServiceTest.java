@@ -3,7 +3,6 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
-import javafx.scene.paint.Stop;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
 import static com.train4game.munoon.data.UserTestData.*;
+import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
 
 @ContextConfiguration({

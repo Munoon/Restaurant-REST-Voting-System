@@ -13,12 +13,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.naming.NoPermissionException;
-
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
-import static org.junit.Assert.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",

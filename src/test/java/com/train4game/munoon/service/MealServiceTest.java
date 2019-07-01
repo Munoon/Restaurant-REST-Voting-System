@@ -18,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +67,7 @@ public class MealServiceTest {
 
     @Test
     public void create() {
-        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50);
+        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDateTime.now());
         Meal created = service.create(newMeal, FIRST_USER);
         newMeal.setId(created.getId());
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal);

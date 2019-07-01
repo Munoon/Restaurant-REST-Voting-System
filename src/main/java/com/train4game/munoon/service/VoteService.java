@@ -38,6 +38,6 @@ public class VoteService {
 
     public void update(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
-        repository.save(vote, userId);
+        checkNotFoundWithId(repository.save(vote, userId), vote.getId());
     }
 }

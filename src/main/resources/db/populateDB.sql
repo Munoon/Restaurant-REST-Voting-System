@@ -25,6 +25,7 @@ INSERT INTO meals (restaurant_id, name, price) VALUES
     (104, 'Burger', 30),
     (104, 'Chicken', 35);
 
-INSERT INTO user_votes (user_id, restaurant_id) VALUES
-    (100, 104),
-    (101, 103);
+INSERT INTO user_votes (user_id, restaurant_id, date) VALUES
+    (100, 104, '2019-07-01 10:00:00.000000'),
+    (100, 103, '2019-07-02 10:00:00.000000'),
+    (101, 103, '2019-07-01 10:00:00.000000');

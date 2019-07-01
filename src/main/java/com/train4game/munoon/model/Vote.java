@@ -1,5 +1,8 @@
 package com.train4game.munoon.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
@@ -15,12 +18,14 @@ public class Vote extends AbstractBaseEntity {
     public static final String GET_ALL = "Vote.getAll";
 
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @Null
     private User user;
 
     @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @Null
     private Restaurant restaurant;
 

@@ -12,6 +12,7 @@
     <title>User</title>
 </head>
 <body>
+    <h2><a href="./">Main Page</a></h2>
     <h1>User Page</h1>
     <h2>Name - ${user.name}</h2>
     <h2>Email - ${user.email}</h2>

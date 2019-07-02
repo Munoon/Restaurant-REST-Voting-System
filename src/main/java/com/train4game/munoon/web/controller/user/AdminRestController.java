@@ -1,7 +1,6 @@
 package com.train4game.munoon.web.controller.user;
 
 import com.train4game.munoon.model.User;
-import com.train4game.munoon.service.UserService;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;

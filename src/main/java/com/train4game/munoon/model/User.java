@@ -8,6 +8,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+// https://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
+
 @NamedQueries({
         @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=:email"),

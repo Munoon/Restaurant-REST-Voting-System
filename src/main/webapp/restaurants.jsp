@@ -37,9 +37,17 @@
     </table>
     <c:if test="${edit != null}">
         <form method="post">
+            <input type="hidden" name="type" value="edit">
             <input type="hidden" name="id" value="${edit.id}">
             <input type="text" name="name" value="${edit.name}">
             <input type="submit" value="Change">
+        </form>
+    </c:if>
+    <c:if test="${edit == null}">
+        <form method="post">
+            <input type="hidden" name="type" value="create">
+            <input type="text" name="name">
+            <input type="submit" value="Create">
         </form>
     </c:if>
 </body>

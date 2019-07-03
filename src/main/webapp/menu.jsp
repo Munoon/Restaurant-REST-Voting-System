@@ -58,7 +58,7 @@
             <input type="text" name="name"><br>
             <input type="number" name="price"><br>
             <input type="datetime-local" name="date"><br>
-            <input type="submit" value="Edit">
+            <input type="submit" value="Create">
         </form>
     </c:if>
 </body>

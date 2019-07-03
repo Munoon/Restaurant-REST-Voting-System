@@ -31,10 +31,19 @@ public class RestaurantServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        Restaurant restaurant = restaurantController.get(id);
-        restaurant.setName(req.getParameter("name"));
-        restaurantController.update(restaurant, id);
+        String name = req.getParameter("name");
+
+        switch (req.getParameter("type")) {
+            case "edit":
+                int id = Integer.parseInt(req.getParameter("id"));
+                Restaurant restaurant = restaurantController.get(id);
+                restaurant.setName(name);
+                restaurantController.update(restaurant, id);
+            case "create":
+                Restaurant newRestaurant = new Restaurant(null, name);
+                restaurantController.create(newRestaurant);
+        }
+
         resp.sendRedirect("./restaurants");
     }
 }

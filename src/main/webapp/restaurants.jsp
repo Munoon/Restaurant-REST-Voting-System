@@ -28,7 +28,7 @@
                 <jsp:useBean id="restaurant" type="com.train4game.munoon.model.Restaurant" />
                 <tr>
                     <td>${restaurant.name}</td>
-                    <td><a href="../menu?id=${restaurant.id}">Menu</a></td>
+                    <td><a href="./menu?id=${restaurant.id}">Menu</a></td>
                     <td><a href="./restaurants?type=delete&id=${restaurant.id}">Delete</a></td>
                     <td><a href="./restaurants?type=update&id=${restaurant.id}">Update</a></td>
                 </tr>

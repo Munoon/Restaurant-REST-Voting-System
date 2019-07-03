@@ -1,5 +1,6 @@
 package com.train4game.munoon.web;
 
+import com.train4game.munoon.web.controller.MealRestController;
 import com.train4game.munoon.web.controller.RestaurantController;
 import com.train4game.munoon.web.controller.user.ProfileRestController;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -17,6 +18,7 @@ public class MainServlet extends HttpServlet {
     public static ConfigurableApplicationContext springContext;
     public static ProfileRestController profileRestController;
     public static RestaurantController restaurantController;
+    public static MealRestController mealRestController;
 
     @Override
     public void init() throws ServletException {
@@ -24,6 +26,7 @@ public class MainServlet extends HttpServlet {
         springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
         profileRestController = springContext.getBean(ProfileRestController.class);
         restaurantController = springContext.getBean(RestaurantController.class);
+        mealRestController = springContext.getBean(MealRestController.class);
     }
 
     @Override

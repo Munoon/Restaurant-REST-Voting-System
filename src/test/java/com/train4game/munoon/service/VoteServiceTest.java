@@ -78,13 +78,20 @@ public class VoteServiceTest {
 
     @Test
     public void delete() {
+        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
+            exception.expect(TimeOverException.class);
+
         service.delete(FIRST_VOTE_ID, FIRST_USER_ID);
         assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE);
     }
 
     @Test
     public void deleteNotOwn() {
-        exception.expect(NotFoundException.class);
+        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
+            exception.expect(TimeOverException.class);
+        else
+            exception.expect(NotFoundException.class);
+
         service.delete(FIRST_VOTE_ID, SECOND_USER.getId());
     }
 

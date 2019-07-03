@@ -73,7 +73,7 @@ public class VoteServiceTest {
         newVote.setId(created.getId());
         newVote.setUser(created.getUser());
         List<Vote> all = service.getAll(FIRST_USER_ID);
-        assertMatch(all, FIRST_VOTE, newVote, SECOND_VOTE);
+        assertMatch(all, FIRST_VOTE, SECOND_VOTE, newVote);
     }
 
     @Test

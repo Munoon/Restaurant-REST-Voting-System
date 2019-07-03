@@ -20,13 +20,11 @@ public class Vote extends AbstractBaseEntity {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
     @OneToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
-    @Null
     private User user;
 
     @JoinColumn(name = "restaurant_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
     @OneToOne(fetch = FetchType.EAGER)
     @Fetch(FetchMode.JOIN)
-    @Null
     private Restaurant restaurant;
 
     @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
@@ -73,8 +71,7 @@ public class Vote extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Vote{" +
-                "user=" + user +
-                ", restaurant=" + restaurant +
+                "restaurant=" + restaurant +
                 ", date=" + date +
                 ", id=" + id +
                 '}';

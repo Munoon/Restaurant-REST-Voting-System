@@ -17,5 +17,6 @@
     <h1>Restaurant REST Voting System</h1>
     <h2><a href="./user">User page</a></h2>
     <h2><a href="./restaurants">Restaurants page</a></h2>
+    <h2><a href="./vote">Vote page</a></h2>
 </body>
 </html>

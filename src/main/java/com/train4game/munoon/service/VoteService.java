@@ -26,6 +26,7 @@ public class VoteService {
     }
 
     public void delete(int id, int userId) {
+        checkForTimeException();
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
 

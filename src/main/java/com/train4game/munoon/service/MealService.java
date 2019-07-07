@@ -2,7 +2,7 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.User;
-import com.train4game.munoon.repository.MealRepository;
+import com.train4game.munoon.repository.meal.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -44,5 +44,9 @@ public class MealService {
         checkUserForAdmin(user);
         Assert.notNull(meal, "Meal must be not null");
         repository.save(meal);
+    }
+
+    public Meal getWithRestaurant(int id) {
+        return checkNotFoundWithId(repository.getWithRestaurant(id), id);
     }
 }

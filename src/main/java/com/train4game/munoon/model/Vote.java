@@ -4,7 +4,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 
 @NamedQueries({

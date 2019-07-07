@@ -3,15 +3,10 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
-import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.Stopwatch;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,16 +14,12 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT_ID;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
-import static org.junit.Assert.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -36,34 +27,12 @@ import static org.junit.Assert.*;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class MealServiceTest {
-    public final static Logger log = LoggerFactory.getLogger(MealServiceTest.class);
-    public static Map<String, Long> testsStatistic = new HashMap<>();
-
+public class MealServiceTest extends AbstractServiceTest {
     @Autowired
     private MealService service;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    @Rule
-    public Stopwatch stopwatch = new Stopwatch() {
-        @Override
-        protected void finished(long nanos, Description description) {
-            long time = TimeUnit.NANOSECONDS.toMillis(nanos);
-            log.info("Finished test {}: spent {} ms", description.getMethodName(), time);
-            testsStatistic.put(description.getMethodName(), time);
-        }
-    };
-
-    @AfterClass
-    public static void afterClass() {
-        Long totalTime = testsStatistic.values().stream().reduce((long) 0, (value, aLong) -> aLong += value);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-        long milliseconds = totalTime - seconds * 1000;
-        log.info("Finished User Service testing [{} sec {} ms]", seconds, milliseconds);
-        testsStatistic.forEach((testName, testTime) -> log.info("{} - {} ms", testName, testTime));
-    }
 
     @Test
     public void create() {

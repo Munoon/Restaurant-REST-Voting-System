@@ -23,7 +23,7 @@ import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class RestaurantServiceTest {
+public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private RestaurantService service;
 

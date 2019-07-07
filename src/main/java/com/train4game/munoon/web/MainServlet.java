@@ -1,6 +1,5 @@
 package com.train4game.munoon.web;
 
-import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.web.controller.MealRestController;
 import com.train4game.munoon.web.controller.RestaurantController;
 import com.train4game.munoon.web.controller.VoteRestController;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @WebServlet("")
 public class MainServlet extends HttpServlet {

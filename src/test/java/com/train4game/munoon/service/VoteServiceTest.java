@@ -3,15 +3,10 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
-import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.Stopwatch;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -20,10 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
@@ -37,34 +29,12 @@ import static com.train4game.munoon.data.VoteTestData.*;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class VoteServiceTest {
-    public final static Logger log = LoggerFactory.getLogger(VoteServiceTest.class);
-    public static Map<String, Long> testsStatistic = new HashMap<>();
-
+public class VoteServiceTest extends AbstractServiceTest  {
     @Autowired
     private VoteService service;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    @Rule
-    public Stopwatch stopwatch = new Stopwatch() {
-        @Override
-        protected void finished(long nanos, Description description) {
-            long time = TimeUnit.NANOSECONDS.toMillis(nanos);
-            log.info("Finished test {}: spent {} ms", description.getMethodName(), time);
-            testsStatistic.put(description.getMethodName(), time);
-        }
-    };
-
-    @AfterClass
-    public static void afterClass() {
-        Long totalTime = testsStatistic.values().stream().reduce((long) 0, (value, aLong) -> aLong += value);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
-        long milliseconds = totalTime - seconds * 1000;
-        log.info("Finished Vote Service testing [{} sec {} ms]", seconds, milliseconds);
-        testsStatistic.forEach((testName, testTime) -> log.info("{} - {} ms", testName, testTime));
-    }
 
     @Test
     public void create() {
@@ -136,7 +106,8 @@ public class VoteServiceTest {
 
     @Test
     public void updateTimeOver() {
-        exception.expect(TimeOverException.class);
+        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
+            exception.expect(TimeOverException.class);
         service.update(FIRST_VOTE, FIRST_USER_ID);
     }
 }

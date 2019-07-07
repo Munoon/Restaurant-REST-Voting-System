@@ -1,5 +1,6 @@
 package com.train4game.munoon.service;
 
+import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
@@ -8,10 +9,16 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
@@ -35,7 +42,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
         Restaurant newRestaurant = new Restaurant(null, "Burger King");
         Restaurant created = service.create(newRestaurant, FIRST_USER);
         newRestaurant.setId(created.getId());
-        assertMatch(service.getAll(), newRestaurant, SECOND_RESTAURANT, FIRST_RESTAURANT);
+        assertMatch(service.getAll(), newRestaurant, FIRST_RESTAURANT, SECOND_RESTAURANT);
     }
 
     @Test

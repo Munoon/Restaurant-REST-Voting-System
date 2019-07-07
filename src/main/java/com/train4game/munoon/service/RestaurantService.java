@@ -2,7 +2,7 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.model.User;
-import com.train4game.munoon.repository.RestaurantRepository;
+import com.train4game.munoon.repository.restaurant.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;

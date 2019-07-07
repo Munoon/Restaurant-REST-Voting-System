@@ -25,7 +25,7 @@ public class MealTestData {
 
     public static void assertMatchWithRestaurant(Meal actual, Meal expected) {
         assertMatch(actual, expected);
-        assertThat(actual.getRestaurant()).isEqualToComparingFieldByField(expected.getRestaurant());
+        assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "date");
     }
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {

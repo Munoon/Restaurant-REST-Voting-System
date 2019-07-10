@@ -22,7 +22,7 @@ public class VoteTestData {
 
     public static void assertMatch(Vote actual, Vote expected) {
         assertThat(actual.getUser()).isEqualToIgnoringGivenFields(expected.getUser(), "registered");
-        assertThat(actual.getRestaurant()).isEqualToComparingFieldByField(expected.getRestaurant());
+        assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "date");
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "user", "restaurant", "date");
     }
 

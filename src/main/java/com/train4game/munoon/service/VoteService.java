@@ -1,7 +1,7 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Vote;
-import com.train4game.munoon.repository.VoteRepository;
+import com.train4game.munoon.repository.vote.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;

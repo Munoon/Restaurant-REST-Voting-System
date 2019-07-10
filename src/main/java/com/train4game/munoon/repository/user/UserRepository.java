@@ -1,0 +1,42 @@
+package com.train4game.munoon.repository.user;
+
+import com.train4game.munoon.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+@Repository
+public class UserRepository {
+    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "registered");
+    private static final Sort SORT_BY_ID = new Sort(Sort.Direction.ASC, "id");
+
+    @Autowired
+    private CrudUserRepository repository;
+
+    public User save(User user) {
+        return repository.save(user);
+    }
+
+    public User get(int id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public boolean delete(int id) {
+        return repository.deleteUserById(id) != 0;
+    }
+
+    public User getByEmail(String email) {
+        return repository.getUserByEmail(email);
+    }
+
+    public List<User> getAll() {
+        return repository.findAll(SORT_BY_DATE);
+    }
+}

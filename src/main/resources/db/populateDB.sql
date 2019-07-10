@@ -5,10 +5,10 @@ DELETE FROM user_roles;
 DELETE FROM users;
 ALTER SEQUENCE GLOBAL_SEQ RESTART WITH 100;
 
-INSERT INTO users (name, email, password) VALUES
-    ('Nikita', 'munoon@yandex.ru', 'easyPass'),
-    ('Vasya', 'vasya@gmail.com', 'VasyaTheBest'),
-    ('Petr', 'petr@gmail.com', 'PertHasStrongPass123');
+INSERT INTO users (name, email, password, registered) VALUES
+    ('Nikita', 'munoon@yandex.ru', 'easyPass', '2019-07-01 10:00:00.000000'),
+    ('Vasya', 'vasya@gmail.com', 'VasyaTheBest', '2019-07-02 10:00:00.000000'),
+    ('Petr', 'petr@gmail.com', 'PertHasStrongPass123', '2019-07-03 10:00:00.000000');
 
 INSERT INTO user_roles (user_id, role) VALUES
     (100, 'ROLE_ADMIN'),

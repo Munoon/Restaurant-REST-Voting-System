@@ -1,7 +1,7 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.User;
-import com.train4game.munoon.repository.UserRepository;
+import com.train4game.munoon.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;

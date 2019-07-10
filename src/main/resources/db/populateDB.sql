@@ -15,9 +15,9 @@ INSERT INTO user_roles (user_id, role) VALUES
     (101, 'ROLE_USER'),
     (102, 'ROLE_USER');
 
-INSERT INTO restaurants (name) VALUES
-    ('McDonalds'),
-    ('KFC');
+INSERT INTO restaurants (name, date) VALUES
+    ('McDonalds', '2019-07-01 10:00:00.000000'),
+    ('KFC', '2019-07-02 10:00:00.000000');
 
 INSERT INTO meals (restaurant_id, name, price) VALUES
     (103, 'Burger', 50),

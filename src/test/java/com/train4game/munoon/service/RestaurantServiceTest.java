@@ -42,7 +42,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
         Restaurant newRestaurant = new Restaurant(null, "Burger King");
         Restaurant created = service.create(newRestaurant, FIRST_USER);
         newRestaurant.setId(created.getId());
-        assertMatch(service.getAll(), newRestaurant, FIRST_RESTAURANT, SECOND_RESTAURANT);
+        assertMatch(service.getAll(), newRestaurant, SECOND_RESTAURANT, FIRST_RESTAURANT);
     }
 
     @Test

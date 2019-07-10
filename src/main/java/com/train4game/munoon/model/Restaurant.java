@@ -2,20 +2,17 @@ package com.train4game.munoon.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
-@NamedQueries({
-        @NamedQuery(name = Restaurant.DELETE, query = "DELETE FROM Restaurant r WHERE r.id=:id"),
-        @NamedQuery(name = Restaurant.GET_ALL, query = "SELECT r FROM Restaurant r ORDER BY r.name")
-})
 @Entity
 @Table(name = "restaurants", uniqueConstraints = @UniqueConstraint(columnNames = "name", name = "restaurants_unique_name_idx"))
 public class Restaurant extends AbstractNamedEntity {
-    public static final String DELETE = "Restaurant.delete";
-    public static final String GET_ALL = "Restaurant.getAll";
-
     @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
-    public Date date = new Date();
+    private LocalDateTime date = LocalDateTime.now();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
+    @OrderBy("date desc")
+    private List<Meal> menu;
 
     public Restaurant() {
     }
@@ -28,17 +25,25 @@ public class Restaurant extends AbstractNamedEntity {
         super(id, name);
     }
 
-    public Restaurant(Integer id, String name, Date date) {
+    public Restaurant(Integer id, String name, LocalDateTime date) {
         super(id, name);
         this.date = date;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public List<Meal> getMenu() {
+        return menu;
+    }
+
+    public void setMenu(List<Meal> menu) {
+        this.menu = menu;
     }
 
     @Override

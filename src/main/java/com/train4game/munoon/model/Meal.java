@@ -5,18 +5,9 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NamedQueries({
-        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id"),
-        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.restaurant " +
-                "WHERE m.restaurant.id=:restaurantId " +
-                "ORDER BY m.name, m.date")
-})
 @Entity
 @Table(name = "meals", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "meal_unique_name_idx"))
 public class Meal extends AbstractNamedEntity {
-    public static final String DELETE = "Meal.delete";
-    public static final String GET_ALL = "Meal.getAll";
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @Nullable

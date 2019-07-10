@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
@@ -44,5 +45,11 @@ public class RestaurantService {
         checkUserForAdmin(user);
         Assert.notNull(restaurant, "Restaurant must be not null");
         return repository.save(restaurant);
+    }
+
+    public List<Restaurant> getBetween(LocalDateTime start, LocalDateTime end) {
+        Assert.notNull(start, "Start date must be not null");
+        Assert.notNull(end, "End date must be not null");
+        return repository.getBetween(start, end);
     }
 }

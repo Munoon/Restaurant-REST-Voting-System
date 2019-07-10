@@ -1,5 +1,6 @@
 package com.train4game.munoon.service;
 
+import com.train4game.munoon.data.MealTestData;
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -97,5 +99,13 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     public void updateNoPermission() {
         exception.expect(PermissionDeniedException.class);
         service.update(FIRST_RESTAURANT, SECOND_USER);
+    }
+
+    @Test
+    public void getBetween() {
+        assertMatch(service.getBetween(
+                LocalDateTime.of(2019, 7, 1, 0, 0),
+                LocalDateTime.of(2019, 7, 1, 23, 0)
+        ), FIRST_RESTAURANT);
     }
 }

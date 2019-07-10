@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -31,5 +32,9 @@ public class RestaurantRepository {
 
     public List<Restaurant> getAll() {
         return repository.findAll(SORT_BY_DATE);
+    }
+
+    public List<Restaurant> getBetween(LocalDateTime start, LocalDateTime end) {
+        return repository.getBetween(start, end);
     }
 }

@@ -6,12 +6,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public class RestaurantRepository {
-    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date");
+    private static final Sort SORT_BY_NAME = new Sort(Sort.Direction.ASC, "name");
 
     @Autowired
     private CrudRestaurantRepository repository;
@@ -31,10 +30,6 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getAll() {
-        return repository.findAll(SORT_BY_DATE);
-    }
-
-    public List<Restaurant> getBetween(LocalDateTime start, LocalDateTime end) {
-        return repository.getBetween(start, end);
+        return repository.findAll(SORT_BY_NAME);
     }
 }

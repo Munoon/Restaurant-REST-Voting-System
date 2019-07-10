@@ -46,10 +46,4 @@ public class RestaurantService {
         Assert.notNull(restaurant, "Restaurant must be not null");
         return repository.save(restaurant);
     }
-
-    public List<Restaurant> getBetween(LocalDateTime start, LocalDateTime end) {
-        Assert.notNull(start, "Start date must be not null");
-        Assert.notNull(end, "End date must be not null");
-        return repository.getBetween(start, end);
-    }
 }

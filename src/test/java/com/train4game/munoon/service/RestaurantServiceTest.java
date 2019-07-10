@@ -100,12 +100,4 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
         exception.expect(PermissionDeniedException.class);
         service.update(FIRST_RESTAURANT, SECOND_USER);
     }
-
-    @Test
-    public void getBetween() {
-        assertMatch(service.getBetween(
-                LocalDateTime.of(2019, 7, 1, 0, 0),
-                LocalDateTime.of(2019, 7, 1, 23, 0)
-        ), FIRST_RESTAURANT);
-    }
 }

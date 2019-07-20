@@ -113,25 +113,8 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
         service.update(FIRST_RESTAURANT, SECOND_USER);
     }
 
-/*
     @Test
     public void testValidation() {
-        validateRootCause(() -> service.create(
-                new Restaurant(null, "  "),
-                new User(new User(null, "User", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
-        ), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(
-                new Restaurant(null, "McDonnalds"),
-                new User(new User(null, "  ", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
-        ), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(
-                new Restaurant(null, "McDonnalds"),
-                new User(new User(null, "User", "  ", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
-        ), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(
-                new Restaurant(null, "McDonnalds"),
-                new User(new User(null, "User", "password", "  ", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
-        ), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new Restaurant(null, "  "), FIRST_USER), ConstraintViolationException.class);
     }
-*/
 }

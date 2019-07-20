@@ -18,6 +18,8 @@
         </encoder>
     </appender>
 
+    <logger name="com.train4game.munoon" level="debug"/>
+
     <root level="info">
         <appender-ref ref="file"/>
         <appender-ref ref="console"/>

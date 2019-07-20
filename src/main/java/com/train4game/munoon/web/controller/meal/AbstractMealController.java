@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.controller;
+package com.train4game.munoon.web.controller.meal;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.User;
@@ -14,14 +14,12 @@ import java.util.List;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
-@Controller
-public class MealRestController {
-    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
+abstract public class AbstractMealController {
+    private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
 
     private final MealService service;
 
-    @Autowired
-    public MealRestController(MealService service) {
+    public AbstractMealController(MealService service) {
         this.service = service;
     }
 

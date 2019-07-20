@@ -12,7 +12,7 @@
     <title>Vote</title>
 </head>
 <body>
-    <h2><a href="./">Main Page</a></h2>
+    <h2><a href="../..">Main Page</a></h2>
     <h1>Vote</h1>
 
     <table border="1" cellpadding="8" cellspacing="0">
@@ -30,8 +30,8 @@
                     <td>${vote.user}</td>
                     <td>${vote.restaurant}</td>
                     <td>${vote.date}</td>
-                    <td><a href="./vote?type=edit&editId=${vote.id}">Edit</a></td>
-                    <td><a href="./vote?type=delete&deleteId=${vote.id}">Delete</a></td>
+                    <td><a href="${pageContext.request.contextPath}/vote/edit?id=${vote.id}">Edit</a></td>
+                    <td><a href="${pageContext.request.contextPath}/vote/delete?id=${vote.id}">Delete</a></td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -39,8 +39,7 @@
 
     <div>
         <h2>${edit == null ? "Create new vote" : "Edit vote"}</h2>
-        <form method="post">
-            <input type="hidden" name="type" value="${edit == null ? "create" : "edit"}">
+        <form method="post" action="${pageContext.request.contextPath}/vote/${edit == null ? "create" : "update"}">
             <c:if test="${edit != null}">
                 <input type="hidden" name="editId" value="${edit.id}">
             </c:if>

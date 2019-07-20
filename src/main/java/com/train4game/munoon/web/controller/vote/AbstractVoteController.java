@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.controller;
+package com.train4game.munoon.web.controller.vote;
 
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.service.VoteService;
@@ -13,13 +13,11 @@ import java.util.List;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
-@Controller
-public class VoteRestController {
-    private static final Logger log = LoggerFactory.getLogger(VoteRestController.class);
+abstract public class AbstractVoteController {
+    private static final Logger log = LoggerFactory.getLogger(AbstractVoteController.class);
     private final VoteService service;
 
-    @Autowired
-    public VoteRestController(VoteService service) {
+    public AbstractVoteController(VoteService service) {
         this.service = service;
     }
 

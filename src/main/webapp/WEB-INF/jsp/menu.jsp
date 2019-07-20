@@ -12,7 +12,7 @@
     <title>Menu</title>
 </head>
 <body>
-    <h2><a href="./">Main Page</a></h2>
+    <h2><a href="../..">Main Page</a></h2>
     <h1>Menu</h1>
     <h2>Restaurant - ${restaurant.name}</h2>
 
@@ -33,15 +33,15 @@
                     <td>${meal.name}</td>
                     <td>${meal.price}</td>
                     <td>${meal.date}</td>
-                    <td><a href="./menu?type=delete&deleteId=${meal.id}&id=${restaurant.id}">Delete</a></td>
-                    <td><a href="./menu?type=edit&editId=${meal.id}&id=${restaurant.id}">Edit</a></td>
+                    <td><a href="${pageContext.request.contextPath}/menu/delete?deleteId=${meal.id}&id=${restaurant.id}">Delete</a></td>
+                    <td><a href="${pageContext.request.contextPath}/menu/edit&editId=${meal.id}&id=${restaurant.id}">Edit</a></td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
 
     <c:if test="${edit != null}">
-        <form method="post">
+        <form method="post" action="${pageContext.request.contextPath}/menu/update">
             <input type="hidden" name="type" value="edit">
             <input type="hidden" name="mealId" value="${edit.id}">
             <input type="hidden" name="restaurant" value="${restaurant.id}">
@@ -52,7 +52,7 @@
         </form>
     </c:if>
     <c:if test="${edit == null}">
-        <form method="post">
+        <form method="post" action="${pageContext.request.contextPath}/menu/create">
             <input type="hidden" name="type" value="create">
             <input type="hidden" name="restaurant" value="${restaurant.id}">
             <input type="text" name="name"><br>

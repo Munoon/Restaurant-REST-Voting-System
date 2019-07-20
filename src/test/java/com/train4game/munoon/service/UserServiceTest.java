@@ -67,6 +67,22 @@ public class UserServiceTest extends AbstractServiceTest  {
     }
 
     @Test
+    public void createWithoutRoles() {
+        User newUser = new User(
+                null,
+                "Alex",
+                "alex@gmail.com",
+                "qwerty",
+                LocalDateTime.now(),
+                true,
+                EnumSet.noneOf(Roles.class)
+        );
+        User created = service.create(newUser);
+        newUser.setId(created.getId());
+        assertMatch(service.getAll(), newUser, THIRD_USER, SECOND_USER, FIRST_USER);
+    }
+
+    @Test
     public void duplicateMailCreate() {
         exception.expect(DataAccessException.class);
         User newUser = new User(

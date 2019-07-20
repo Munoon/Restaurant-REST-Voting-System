@@ -1,26 +1,19 @@
 package com.train4game.munoon.service;
 
-import com.train4game.munoon.data.MealTestData;
-import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
@@ -36,8 +29,16 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private RestaurantService service;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
+    @Before
+    public void setUp() {
+        cacheManager.getCache("restaurants").clear();
+    }
 
     @Test
     public void create() {

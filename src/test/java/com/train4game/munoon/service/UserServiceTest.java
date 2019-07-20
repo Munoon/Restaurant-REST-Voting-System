@@ -3,11 +3,13 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -29,8 +31,16 @@ public class UserServiceTest extends AbstractServiceTest  {
     @Autowired
     private UserService service;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
+
+    @Before
+    public void setUp() {
+        cacheManager.getCache("users").clear();
+    }
 
     @Test
     public void create() {

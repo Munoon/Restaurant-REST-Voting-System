@@ -3,6 +3,8 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -20,11 +22,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         Assert.notNull(user, "User must be not null");
         return userRepository.save(user);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         checkNotFoundWithId(userRepository.delete(id), id);
     }
@@ -38,10 +42,12 @@ public class UserService {
         return checkNotFound(userRepository.getByEmail(email), "email=" + email);
     }
 
+    @Cacheable("users")
     public List<User> getAll() {
         return userRepository.getAll();
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void update(User user) {
         Assert.notNull(user, "User must be not null");
         checkNotFoundWithId(userRepository.save(user), user.getId());

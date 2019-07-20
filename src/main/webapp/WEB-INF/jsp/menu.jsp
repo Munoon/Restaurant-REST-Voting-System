@@ -38,25 +38,27 @@
         </tbody>
     </table>
 
-    <c:if test="${edit != null}">
-        <form method="post" action="${pageContext.request.contextPath}/menu/update">
-            <input type="hidden" name="mealId" value="${edit.id}">
-            <input type="hidden" name="restaurant" value="${restaurant.id}">
-            <input type="text" name="name" value="${edit.name}"><br>
-            <input type="number" name="price" value="${edit.price}"><br>
-            <input type="datetime-local" name="date" value="${edit.date}"><br>
-            <input type="submit" value="Edit">
-        </form>
-    </c:if>
-    <c:if test="${edit == null}">
-        <form method="post" action="${pageContext.request.contextPath}/menu/create">
-            <input type="hidden" name="restaurant" value="${restaurant.id}">
-            <input type="text" name="name"><br>
-            <input type="number" name="price"><br>
-            <input type="datetime-local" name="date"><br>
-            <input type="submit" value="Create">
-        </form>
-    </c:if>
+    <c:choose>
+        <c:when test="${edit == null}">
+            <form method="post" action="${pageContext.request.contextPath}/menu/create">
+                <input type="hidden" name="restaurant" value="${restaurant.id}">
+                <input type="text" name="name"><br>
+                <input type="number" name="price"><br>
+                <input type="datetime-local" name="date"><br>
+                <input type="submit" value="Create">
+            </form>
+        </c:when>
+        <c:otherwise>
+            <form method="post" action="${pageContext.request.contextPath}/menu/update">
+                <input type="hidden" name="mealId" value="${edit.id}">
+                <input type="hidden" name="restaurant" value="${restaurant.id}">
+                <input type="text" name="name" value="${edit.name}"><br>
+                <input type="number" name="price" value="${edit.price}"><br>
+                <input type="datetime-local" name="date" value="${edit.date}"><br>
+                <input type="submit" value="Edit">
+            </form>
+        </c:otherwise>
+    </c:choose>
 
     <jsp:include page="../fragments/footer.jsp"/>
 </body>

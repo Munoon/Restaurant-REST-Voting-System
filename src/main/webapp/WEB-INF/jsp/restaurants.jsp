@@ -12,6 +12,7 @@
 <body>
     <jsp:include page="../fragments/bodyHeader.jsp"/>
     <h1>Restaurants</h1>
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
@@ -26,28 +27,31 @@
                 <jsp:useBean id="restaurant" type="com.train4game.munoon.model.Restaurant" />
                 <tr>
                     <td>${restaurant.name}</td>
-                    <td><a href="./menu?id=${restaurant.id}">Menu</a></td>
+                    <td><a href="${pageContext.request.contextPath}/menu?id=${restaurant.id}">Menu</a></td>
                     <td><a href="${pageContext.request.contextPath}/restaurants/delete?id=${restaurant.id}">Delete</a></td>
                     <td><a href="${pageContext.request.contextPath}/restaurants/update?id=${restaurant.id}">Update</a></td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
-    <c:if test="${edit != null}">
-        <form method="post" action="${pageContext.request.contextPath}/restaurants/edit">
-            <input type="hidden" name="type" value="edit">
-            <input type="hidden" name="id" value="${edit.id}">
-            <input type="text" name="name" value="${edit.name}">
-            <input type="submit" value="Change">
-        </form>
-    </c:if>
-    <c:if test="${edit == null}">
-        <form method="post" action="${pageContext.request.contextPath}/restaurants/create">
-            <input type="hidden" name="type" value="create">
-            <input type="text" name="name">
-            <input type="submit" value="Create">
-        </form>
-    </c:if>
+
+    <c:choose>
+        <c:when test="${edit == null}">
+            <form method="post" action="${pageContext.request.contextPath}/restaurants/create">
+                <input type="hidden" name="type" value="create">
+                <input type="text" name="name">
+                <input type="submit" value="Create">
+            </form>
+        </c:when>
+        <c:otherwise>
+            <form method="post" action="${pageContext.request.contextPath}/restaurants/edit">
+                <input type="hidden" name="type" value="edit">
+                <input type="hidden" name="id" value="${edit.id}">
+                <input type="text" name="name" value="${edit.name}">
+                <input type="submit" value="Change">
+            </form>
+        </c:otherwise>
+    </c:choose>
 
     <jsp:include page="../fragments/footer.jsp"/>
 </body>

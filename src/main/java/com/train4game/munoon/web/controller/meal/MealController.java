@@ -45,6 +45,7 @@ public class MealController extends AbstractMealController {
         int restaurantId = Integer.parseInt(req.getParameter("id"));
         req.setAttribute("edit", get(id));
         req.setAttribute("menu", getAll(restaurantId));
+        req.setAttribute("restaurant", restaurantService.get(restaurantId));
         return "menu";
     }
 

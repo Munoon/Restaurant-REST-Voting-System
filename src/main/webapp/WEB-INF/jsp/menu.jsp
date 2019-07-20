@@ -34,7 +34,7 @@
                     <td>${meal.price}</td>
                     <td>${meal.date}</td>
                     <td><a href="${pageContext.request.contextPath}/menu/delete?deleteId=${meal.id}&id=${restaurant.id}">Delete</a></td>
-                    <td><a href="${pageContext.request.contextPath}/menu/edit&editId=${meal.id}&id=${restaurant.id}">Edit</a></td>
+                    <td><a href="${pageContext.request.contextPath}/menu/edit?editId=${meal.id}&id=${restaurant.id}">Edit</a></td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -42,7 +42,6 @@
 
     <c:if test="${edit != null}">
         <form method="post" action="${pageContext.request.contextPath}/menu/update">
-            <input type="hidden" name="type" value="edit">
             <input type="hidden" name="mealId" value="${edit.id}">
             <input type="hidden" name="restaurant" value="${restaurant.id}">
             <input type="text" name="name" value="${edit.name}"><br>
@@ -53,7 +52,6 @@
     </c:if>
     <c:if test="${edit == null}">
         <form method="post" action="${pageContext.request.contextPath}/menu/create">
-            <input type="hidden" name="type" value="create">
             <input type="hidden" name="restaurant" value="${restaurant.id}">
             <input type="text" name="name"><br>
             <input type="number" name="price"><br>

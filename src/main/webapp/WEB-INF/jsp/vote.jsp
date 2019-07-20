@@ -8,11 +8,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <title>Vote</title>
-</head>
+<jsp:include page="../fragments/header.jsp"/>
 <body>
-    <h2><a href="../..">Main Page</a></h2>
+    <jsp:include page="../fragments/bodyHeader.jsp"/>
     <h1>Vote</h1>
 
     <table border="1" cellpadding="8" cellspacing="0">
@@ -52,5 +50,7 @@
             <input type="submit" value="${edit == null ? "Create" : "Edit"}">
         </form>
     </div>
+
+    <jsp:include page="../fragments/footer.jsp"/>
 </body>
 </html>

@@ -8,11 +8,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <title>User</title>
-</head>
+<jsp:include page="../fragments/header.jsp"/>
 <body>
-    <h2><a href="${pageContext.request.contextPath}">Main Page</a></h2>
+    <jsp:include page="../fragments/bodyHeader.jsp"/>
     <h1>User Page</h1>
     <h2>Name - ${user.name}</h2>
     <h2>Email - ${user.email}</h2>
@@ -27,5 +25,7 @@
         </select>
         <input type="submit" value="Change user">
     </form>
+
+    <jsp:include page="../fragments/footer.jsp"/>
 </body>
 </html>

@@ -1,6 +1,9 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Restaurant;
+import com.train4game.munoon.model.Roles;
+import com.train4game.munoon.model.User;
+import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
 import org.junit.Before;
@@ -14,6 +17,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.EnumSet;
 
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
@@ -32,12 +39,16 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JpaUtil jpaUtil;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() {
         cacheManager.getCache("restaurants").clear();
+        jpaUtil.clear2ndLevelCache();
     }
 
     @Test
@@ -101,4 +112,26 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
         exception.expect(PermissionDeniedException.class);
         service.update(FIRST_RESTAURANT, SECOND_USER);
     }
+
+/*
+    @Test
+    public void testValidation() {
+        validateRootCause(() -> service.create(
+                new Restaurant(null, "  "),
+                new User(new User(null, "User", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
+        ), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(
+                new Restaurant(null, "McDonnalds"),
+                new User(new User(null, "  ", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
+        ), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(
+                new Restaurant(null, "McDonnalds"),
+                new User(new User(null, "User", "  ", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
+        ), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(
+                new Restaurant(null, "McDonnalds"),
+                new User(new User(null, "User", "password", "  ", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_ADMIN)))
+        ), ConstraintViolationException.class);
+    }
+*/
 }

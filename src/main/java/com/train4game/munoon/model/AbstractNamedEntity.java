@@ -7,9 +7,9 @@ import javax.validation.constraints.Size;
 
 @MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
-    @NotBlank
     @Size(min = 2, max = 200)
     @Column(name = "name", nullable = false)
+    @NotBlank
     protected String name;
 
     public AbstractNamedEntity() {

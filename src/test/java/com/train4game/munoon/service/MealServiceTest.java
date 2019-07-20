@@ -1,6 +1,8 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Meal;
+import com.train4game.munoon.model.Roles;
+import com.train4game.munoon.model.User;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
 import org.junit.Rule;
@@ -13,7 +15,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
@@ -95,5 +99,10 @@ public class MealServiceTest extends AbstractServiceTest {
     public void updateNoPermission() {
         exception.expect(PermissionDeniedException.class);
         service.update(FIRST_MEAL, SECOND_USER);
+    }
+
+    @Test
+    public void testValidation() {
+        validateRootCause(() -> service.create(new Meal(null, " ", FIRST_RESTAURANT, 500, LocalDateTime.now()), FIRST_USER), ConstraintViolationException.class);
     }
 }

@@ -2,6 +2,7 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,8 +17,11 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Date;
+import java.util.EnumSet;
 
 import static com.train4game.munoon.data.UserTestData.*;
 
@@ -34,12 +38,16 @@ public class UserServiceTest extends AbstractServiceTest  {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private JpaUtil jpaUtil;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() {
         cacheManager.getCache("users").clear();
+        jpaUtil.clear2ndLevelCache();
     }
 
     @Test
@@ -121,5 +129,12 @@ public class UserServiceTest extends AbstractServiceTest  {
         user.setRoles(Collections.singleton(Roles.ROLE_USER));
         service.update(user);
         assertMatch(service.get(FIRST_USER_ID), user);
+    }
+
+    @Test
+    public void testValidation() {
+        validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "User", "  ", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
     }
 }

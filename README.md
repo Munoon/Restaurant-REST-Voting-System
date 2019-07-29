@@ -7,6 +7,7 @@
 
 This is a [JavaOPS](http://javaops.ru/reg/topjava) graduation project.
 
+**[POSTMAN PROJECT](https://www.getpostman.com/collections/3e92cc8f53c7df7f1286)**
 
 ## Task
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.

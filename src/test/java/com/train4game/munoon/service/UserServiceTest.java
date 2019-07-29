@@ -4,33 +4,20 @@ import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumSet;
 
 import static com.train4game.munoon.data.UserTestData.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest extends AbstractServiceTest  {
     @Autowired
     private UserService service;
@@ -41,10 +28,7 @@ public class UserServiceTest extends AbstractServiceTest  {
     @Autowired
     private JpaUtil jpaUtil;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheManager.getCache("users").clear();
         jpaUtil.clear2ndLevelCache();
@@ -84,7 +68,6 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     public void duplicateMailCreate() {
-        exception.expect(DataAccessException.class);
         User newUser = new User(
                 null,
                 "Alex",
@@ -94,7 +77,7 @@ public class UserServiceTest extends AbstractServiceTest  {
                 true,
                 Collections.singleton(Roles.ROLE_USER
                 ));
-        service.create(newUser);
+        assertThrows(DataAccessException.class, () -> service.create(newUser));
     }
 
     @Test
@@ -105,8 +88,7 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     public void deletedNotFound() {
-        exception.expect(NotFoundException.class);
-        service.delete(9999);
+        assertThrows(NotFoundException.class, () -> service.delete(9999));
     }
 
     @Test
@@ -117,8 +99,7 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     public void getNotFound() {
-        exception.expect(NotFoundException.class);
-        service.get(999);
+        assertThrows(NotFoundException.class, () -> service.get(999));
     }
 
     @Test
@@ -129,8 +110,7 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     public void getByEmailNotFound() {
-        exception.expect(NotFoundException.class);
-        service.getByEmail("unknownEmail@email.com");
+        assertThrows(NotFoundException.class, () -> service.getByEmail("unknownEmail@email.com"));
     }
 
     @Test

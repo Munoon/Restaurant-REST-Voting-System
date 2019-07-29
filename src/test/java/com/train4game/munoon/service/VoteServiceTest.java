@@ -3,17 +3,9 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -23,19 +15,13 @@ import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
 import static com.train4game.munoon.data.UserTestData.*;
 import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class VoteServiceTest extends AbstractServiceTest  {
     @Autowired
     private VoteService service;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void create() {
@@ -49,21 +35,21 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     public void delete() {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
-            exception.expect(TimeOverException.class);
-
+        assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "IT is after 11");
         service.delete(FIRST_VOTE_ID, FIRST_USER_ID);
         assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE);
     }
 
     @Test
-    public void deleteNotOwn() {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
-            exception.expect(TimeOverException.class);
-        else
-            exception.expect(NotFoundException.class);
+    void deleteTimeOver() {
+        assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
+        assertThrows(TimeOverException.class, () -> service.delete(FIRST_VOTE_ID, FIRST_USER_ID));
+    }
 
-        service.delete(FIRST_VOTE_ID, SECOND_USER.getId());
+    @Test
+    public void deleteNotOwn() {
+        assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
+        assertThrows(NotFoundException.class, () -> service.delete(FIRST_VOTE_ID, SECOND_USER.getId()));
     }
 
     @Test
@@ -75,8 +61,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     public void getNotOwn() {
-        exception.expect(NotFoundException.class);
-        service.get(FIRST_VOTE_ID, SECOND_USER.getId());
+        assertThrows(NotFoundException.class, () -> service.get(FIRST_VOTE_ID, SECOND_USER.getId()));
     }
 
     @Test
@@ -86,29 +71,24 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     public void update() {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
-            exception.expect(TimeOverException.class);
+        assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
         Vote vote = new Vote(SECOND_VOTE);
         vote.setRestaurant(SECOND_RESTAURANT);
+
         service.update(vote, FIRST_USER_ID);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, vote);
     }
 
     @Test
     public void updateNotOwn() {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
-            exception.expect(TimeOverException.class);
-        else
-            exception.expect(NotFoundException.class);
-
-        service.update(FIRST_VOTE, SECOND_USER.getId());
+        assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
+        assertThrows(NotFoundException.class, () -> service.update(FIRST_VOTE, SECOND_USER.getId()));
     }
 
     @Test
     public void updateTimeOver() {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0)))
-            exception.expect(TimeOverException.class);
-        service.update(FIRST_VOTE, FIRST_USER_ID);
+        assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
+        assertThrows(TimeOverException.class, () -> service.update(FIRST_VOTE, FIRST_USER_ID));
     }
 }

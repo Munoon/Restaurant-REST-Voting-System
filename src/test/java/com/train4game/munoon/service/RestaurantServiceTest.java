@@ -1,37 +1,22 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Restaurant;
-import com.train4game.munoon.model.Roles;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-import java.util.EnumSet;
 
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private RestaurantService service;
@@ -42,10 +27,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private JpaUtil jpaUtil;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheManager.getCache("restaurants").clear();
         jpaUtil.clear2ndLevelCache();
@@ -61,8 +43,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
 
     @Test
     public void createNoPermission() {
-        exception.expect(PermissionDeniedException.class);
-        service.create(FIRST_RESTAURANT, SECOND_USER);
+        assertThrows(PermissionDeniedException.class, () -> service.create(FIRST_RESTAURANT, SECOND_USER));
     }
 
     @Test
@@ -73,14 +54,12 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
 
     @Test
     public void deleteNoPermission() {
-        exception.expect(PermissionDeniedException.class);
-        service.delete(FIRST_RESTAURANT_ID, SECOND_USER);
+        assertThrows(PermissionDeniedException.class, () -> service.delete(FIRST_RESTAURANT_ID, SECOND_USER));
     }
 
     @Test
     public void deleteNotFound() {
-        exception.expect(NotFoundException.class);
-        service.delete(9999, FIRST_USER);
+        assertThrows(NotFoundException.class, () -> service.delete(9999, FIRST_USER));
     }
 
     @Test
@@ -90,8 +69,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
 
     @Test
     public void getNotFound() {
-        exception.expect(NotFoundException.class);
-        service.get(999);
+        assertThrows(NotFoundException.class, () -> service.get(999));
     }
 
     @Test
@@ -109,8 +87,7 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
 
     @Test
     public void updateNoPermission() {
-        exception.expect(PermissionDeniedException.class);
-        service.update(FIRST_RESTAURANT, SECOND_USER);
+        assertThrows(PermissionDeniedException.class, () -> service.update(FIRST_RESTAURANT, SECOND_USER));
     }
 
     @Test

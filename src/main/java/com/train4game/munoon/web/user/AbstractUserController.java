@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.controller.user;
+package com.train4game.munoon.web.user;
 
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.UserService;
@@ -12,10 +12,10 @@ import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
 public abstract class AbstractUserController {
-    private Logger log = LoggerFactory.getLogger(AbstractUserController.class);
+    protected Logger log = LoggerFactory.getLogger(AbstractUserController.class);
 
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     public User create(User user) {
         log.info("Created user {}", user);

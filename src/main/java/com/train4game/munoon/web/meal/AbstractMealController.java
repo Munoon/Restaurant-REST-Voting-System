@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.controller.meal;
+package com.train4game.munoon.web.meal;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.User;
@@ -6,8 +6,6 @@ import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.web.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 

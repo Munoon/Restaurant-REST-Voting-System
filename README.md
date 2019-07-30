@@ -7,8 +7,6 @@
 
 This is a [JavaOPS](http://javaops.ru/reg/topjava) graduation project.
 
-**[POSTMAN PROJECT](https://www.getpostman.com/collections/3e92cc8f53c7df7f1286)**
-
 ## Task
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
 
@@ -26,3 +24,14 @@ Build a voting system for deciding where to have lunch.
     - If it is after 11:00 then it is too late, vote can't be changed
 
 Each restaurant provides new menu each day.
+
+# How to launch
+To launch it you need only to execute 2 console commands in project folder.
+```
+$ mvn package
+$ mvn cargo:run
+```
+After this commands you will start hosting website on page `localhost:8080/voter`
+
+# Link
+**[POSTMAN PROJECT](https://www.getpostman.com/collections/3e92cc8f53c7df7f1286)**

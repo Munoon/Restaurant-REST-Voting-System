@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class VoteTo extends AbstractBaseEntity {
     private int restaurantId;
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 
     public VoteTo() {
     }
@@ -19,6 +19,11 @@ public class VoteTo extends AbstractBaseEntity {
         super(id);
         this.restaurantId = restaurantId;
         this.date = date;
+    }
+
+    public VoteTo(Integer id, int restaurantId) {
+        super(id);
+        this.restaurantId = restaurantId;
     }
 
     public int getRestaurantId() {

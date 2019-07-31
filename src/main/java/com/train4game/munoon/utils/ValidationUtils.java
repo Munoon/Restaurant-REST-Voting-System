@@ -7,6 +7,8 @@ import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ValidationUtils {
@@ -67,5 +69,10 @@ public class ValidationUtils {
             result = cause;
         }
         return result;
+    }
+
+    public static void checkDateForToday(LocalDate date) {
+        if (!date.equals(LocalDate.now()))
+            throw new DateTimeException("You cant make vote for other date");
     }
 }

@@ -8,8 +8,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 
-import static com.train4game.munoon.utils.ValidationUtils.checkForTimeException;
-import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
+import static com.train4game.munoon.utils.ValidationUtils.*;
 
 @Service
 public class VoteService {
@@ -22,6 +21,7 @@ public class VoteService {
 
     public Vote create(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
+        checkDateForToday(vote.getDate());
         return repository.save(vote, userId);
     }
 

@@ -21,7 +21,7 @@ public class Meal extends AbstractNamedEntity {
     @Column(name = "price", nullable = false)
     private int price;
 
-    @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
     private LocalDate date;
 
     public Meal() {

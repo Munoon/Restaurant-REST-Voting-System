@@ -18,7 +18,7 @@ public class Vote extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private Restaurant restaurant;
 
-    @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
+    @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
     private LocalDate date;
 
     public Vote() {

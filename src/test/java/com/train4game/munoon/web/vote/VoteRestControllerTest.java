@@ -1,7 +1,6 @@
 package com.train4game.munoon.web.vote;
 
 import com.train4game.munoon.model.Vote;
-import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
@@ -11,15 +10,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER_ID;
 import static com.train4game.munoon.data.VoteTestData.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,6 +88,26 @@ class VoteRestControllerTest extends AbstractControllerTest {
         Vote expectedVote = VoteUtil.createVote(expected, FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, expected);
+        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
+    }
+
+    @Test
+    void twoVoteInOneDate() throws Exception {
+        VoteTo firstVote = new VoteTo(null, FIRST_RESTAURANT_ID);
+        VoteTo secondVote = new VoteTo(null, SECOND_RESTAURANT_ID);
+
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(firstVote)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(secondVote)))
+                .andDo(print());
+//                .andExpect(status().is5xxServerError());
+
+        Vote expectedVote = VoteUtil.createVote(firstVote, FIRST_RESTAURANT);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
     }
 }

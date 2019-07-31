@@ -6,6 +6,7 @@ import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.web.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -14,11 +15,9 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
 abstract public class AbstractRestaurantController {
     private final static Logger log = LoggerFactory.getLogger(AbstractRestaurantController.class);
-    private final RestaurantService service;
 
-    public AbstractRestaurantController(RestaurantService service) {
-        this.service = service;
-    }
+    @Autowired
+    private RestaurantService service;
 
     public Restaurant create(Restaurant restaurant) {
         User user = SecurityUtil.getUser();

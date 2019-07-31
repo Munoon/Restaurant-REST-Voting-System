@@ -1,5 +1,6 @@
 package com.train4game.munoon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.Nullable;
@@ -14,6 +15,7 @@ public class Meal extends AbstractNamedEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Nullable
+    @JsonIgnore
     private Restaurant restaurant;
 
     @Column(name = "price", nullable = false)

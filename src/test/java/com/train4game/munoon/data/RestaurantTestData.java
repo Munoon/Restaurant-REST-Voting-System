@@ -1,9 +1,13 @@
 package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Restaurant;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Arrays;
+import java.util.List;
 
+import static com.train4game.munoon.TestUtil.readFromJsonMvcResult;
+import static com.train4game.munoon.TestUtil.readListFromJsonMvcResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestaurantTestData {
@@ -24,5 +28,13 @@ public class RestaurantTestData {
 
     public static void assertMatch(Iterable<Restaurant> actual, Iterable<Restaurant> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("menu").isEqualTo(expected);
+    }
+
+    public static ResultMatcher contentJson(Restaurant... expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Restaurant.class), List.of(expected));
+    }
+
+    public static ResultMatcher contentJson(Restaurant expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Restaurant.class), expected);
     }
 }

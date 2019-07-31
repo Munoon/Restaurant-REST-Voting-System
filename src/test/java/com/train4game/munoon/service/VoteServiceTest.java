@@ -6,6 +6,7 @@ import com.train4game.munoon.utils.exceptions.TimeOverException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,7 +26,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     void create() {
-        Vote newVote = new Vote(null, null, FIRST_RESTAURANT, LocalDateTime.now());
+        Vote newVote = new Vote(null, null, FIRST_RESTAURANT, LocalDate.now());
         Vote created = service.create(newVote, FIRST_USER_ID);
         newVote.setId(created.getId());
         newVote.setUser(created.getUser());

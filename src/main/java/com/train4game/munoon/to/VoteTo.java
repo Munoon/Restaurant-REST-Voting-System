@@ -2,11 +2,11 @@ package com.train4game.munoon.to;
 
 import com.train4game.munoon.model.AbstractBaseEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class VoteTo extends AbstractBaseEntity {
     private int restaurantId;
-    private LocalDateTime date;
+    private LocalDate date;
 
     public VoteTo() {
     }
@@ -15,7 +15,7 @@ public class VoteTo extends AbstractBaseEntity {
         this(v.getId(), v.getRestaurantId(), v.getDate());
     }
 
-    public VoteTo(Integer id, int restaurantId, LocalDateTime date) {
+    public VoteTo(Integer id, int restaurantId, LocalDate date) {
         super(id);
         this.restaurantId = restaurantId;
         this.date = date;
@@ -29,11 +29,11 @@ public class VoteTo extends AbstractBaseEntity {
         this.restaurantId = restaurantId;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

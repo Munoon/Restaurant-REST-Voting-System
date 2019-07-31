@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,7 +22,7 @@ public class Meal extends AbstractNamedEntity {
     private int price;
 
     @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
-    private LocalDateTime date;
+    private LocalDate date;
 
     public Meal() {
     }
@@ -30,7 +31,7 @@ public class Meal extends AbstractNamedEntity {
         this(m.getId(), m.getName(), m.getRestaurant(), m.getPrice(), m.getDate());
     }
 
-    public Meal(Integer id, String name, Restaurant restaurant, int price, LocalDateTime date) {
+    public Meal(Integer id, String name, Restaurant restaurant, int price, LocalDate date) {
         super(id, name);
         this.restaurant = restaurant;
         this.price = price;
@@ -53,11 +54,11 @@ public class Meal extends AbstractNamedEntity {
         this.price = price;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

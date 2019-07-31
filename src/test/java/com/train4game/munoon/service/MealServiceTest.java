@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.train4game.munoon.data.MealTestData.*;
@@ -23,7 +24,7 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDateTime.now());
+        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDate.now());
         Meal created = service.create(newMeal, FIRST_USER);
         newMeal.setId(created.getId());
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal);
@@ -82,6 +83,6 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidation() {
-        validateRootCause(() -> service.create(new Meal(null, " ", FIRST_RESTAURANT, 500, LocalDateTime.now()), FIRST_USER), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new Meal(null, " ", FIRST_RESTAURANT, 500, LocalDate.now()), FIRST_USER), ConstraintViolationException.class);
     }
 }

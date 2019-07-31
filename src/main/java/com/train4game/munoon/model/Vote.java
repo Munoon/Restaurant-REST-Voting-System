@@ -1,12 +1,10 @@
 package com.train4game.munoon.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_votes", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date"}, name = "users_votes_unique_date_idx"))
@@ -21,7 +19,7 @@ public class Vote extends AbstractBaseEntity {
     private Restaurant restaurant;
 
     @Column(name = "date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
-    private LocalDateTime date;
+    private LocalDate date;
 
     public Vote() {
     }
@@ -30,7 +28,7 @@ public class Vote extends AbstractBaseEntity {
         this(v.getId(), v.getUser(), v.getRestaurant(), v.getDate());
     }
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDateTime time) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate time) {
         super(id);
         this.user = user;
         this.restaurant = restaurant;
@@ -53,11 +51,11 @@ public class Vote extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -74,7 +75,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID, LocalDateTime.now());
+        VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID, LocalDate.now());
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))

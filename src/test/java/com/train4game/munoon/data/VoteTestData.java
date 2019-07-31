@@ -4,6 +4,7 @@ import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.to.VoteTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -18,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class VoteTestData {
     public static final int FIRST_VOTE_ID = 109;
-    public static final Vote FIRST_VOTE = new Vote(FIRST_VOTE_ID, FIRST_USER, SECOND_RESTAURANT, LocalDateTime.of(2019, 7, 1, 10, 0, 0));
-    public static final Vote SECOND_VOTE = new Vote(FIRST_VOTE_ID + 1, FIRST_USER, FIRST_RESTAURANT, LocalDateTime.of(2019, 7, 2, 10, 0, 0));
-    public static final Vote THIRD_VOTE = new Vote(FIRST_VOTE_ID + 2, SECOND_USER, FIRST_RESTAURANT, LocalDateTime.of(2019, 7, 1, 10, 0, 0));
+    public static final Vote FIRST_VOTE = new Vote(FIRST_VOTE_ID, FIRST_USER, SECOND_RESTAURANT, LocalDate.of(2019, 7, 1));
+    public static final Vote SECOND_VOTE = new Vote(FIRST_VOTE_ID + 1, FIRST_USER, FIRST_RESTAURANT, LocalDate.of(2019, 7, 2));
+    public static final Vote THIRD_VOTE = new Vote(FIRST_VOTE_ID + 2, SECOND_USER, FIRST_RESTAURANT, LocalDate.of(2019, 7, 1));
 
     private VoteTestData() {
     }

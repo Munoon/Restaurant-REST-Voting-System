@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
@@ -66,7 +67,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        Meal expected = new Meal(null, "New Meal", FIRST_RESTAURANT, 500, LocalDateTime.now());
+        Meal expected = new Meal(null, "New Meal", FIRST_RESTAURANT, 500, LocalDate.now());
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))

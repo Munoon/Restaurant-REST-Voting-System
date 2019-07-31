@@ -6,6 +6,7 @@ import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.web.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -15,11 +16,8 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 abstract public class AbstractMealController {
     private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
 
-    private final MealService service;
-
-    public AbstractMealController(MealService service) {
-        this.service = service;
-    }
+    @Autowired
+    private MealService service;
 
     public Meal get(int id) {
         log.info("Get meal with id {}", id);

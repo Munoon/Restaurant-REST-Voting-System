@@ -1,10 +1,14 @@
 package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Meal;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
+import static com.train4game.munoon.TestUtil.readFromJsonMvcResult;
+import static com.train4game.munoon.TestUtil.readListFromJsonMvcResult;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,5 +38,13 @@ public class MealTestData {
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("restaurant", "date", "menu").isEqualTo(expected);
+    }
+
+    public static ResultMatcher contentJson(Meal... expected) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, Meal.class), List.of(expected));
+    }
+
+    public static ResultMatcher contentJson(Meal expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, Meal.class), expected);
     }
 }

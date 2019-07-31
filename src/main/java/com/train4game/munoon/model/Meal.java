@@ -15,7 +15,6 @@ public class Meal extends AbstractNamedEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Nullable
-    @JsonIgnore
     private Restaurant restaurant;
 
     @Column(name = "price", nullable = false)
@@ -60,5 +59,16 @@ public class Meal extends AbstractNamedEntity {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "restaurant=" + restaurant +
+                ", price=" + price +
+                ", date=" + date +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

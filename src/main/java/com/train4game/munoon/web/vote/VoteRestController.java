@@ -1,6 +1,6 @@
 package com.train4game.munoon.web.vote;
 
-import com.train4game.munoon.model.Vote;
+import com.train4game.munoon.to.VoteTo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ public class VoteRestController extends AbstractVoteController {
 
     @Override
     @GetMapping
-    public List<Vote> getAll() {
+    public List<VoteTo> getAll() {
         return super.getAll();
     }
 
     @Override
     @GetMapping("/{id}")
-    public Vote get(@PathVariable int id) {
+    public VoteTo get(@PathVariable int id) {
         return super.get(id);
     }
 
@@ -37,13 +37,13 @@ public class VoteRestController extends AbstractVoteController {
     @Override
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Vote vote, @PathVariable int id) {
+    public void update(@RequestBody VoteTo vote, @PathVariable int id) {
         super.update(vote, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@RequestBody Vote vote) {
-        Vote created = super.create(vote);
+    public ResponseEntity<VoteTo> createWithLocation(@RequestBody VoteTo vote) {
+        VoteTo created = super.create(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

@@ -1,6 +1,7 @@
 package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Vote;
+import com.train4game.munoon.to.VoteTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
@@ -38,12 +39,27 @@ public class VoteTestData {
         assertThat(actual).usingElementComparatorIgnoringFields("date", "user", "restaurant").isEqualTo(expected);
     }
 
-
-    public static ResultMatcher contentJson(Vote... expected) {
-        return result -> assertMatch(readListFromJsonMvcResult(result, Vote.class), List.of(expected));
+    public static void assertMatchVoteTo(Iterable<VoteTo> actual, VoteTo... expected) {
+        assertMatchVoteTo(actual, Arrays.asList(expected));
     }
 
-    public static ResultMatcher contentJson(Vote expected) {
-        return result -> assertMatch(readFromJsonMvcResult(result, Vote.class), expected);
+    public static void assertMatchVoteTo(Iterable<VoteTo> actual, Iterable<VoteTo> expected) {
+        assertThat(actual).usingFieldByFieldElementComparator().isEqualTo(expected);
+    }
+
+    public static void assertMatchVoteTo(VoteTo actual, VoteTo expected) {
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+    }
+
+    public static ResultMatcher contentJsonVoteTo(List<VoteTo> expected) {
+        return result -> assertMatchVoteTo(readListFromJsonMvcResult(result, VoteTo.class), expected);
+    }
+
+    public static ResultMatcher contentJsonVoteTo(VoteTo... expected) {
+        return result -> assertMatchVoteTo(readListFromJsonMvcResult(result, VoteTo.class), List.of(expected));
+    }
+
+    public static ResultMatcher contentJsonVoteTo(VoteTo expected) {
+        return result -> assertMatchVoteTo(readFromJsonMvcResult(result, VoteTo.class), expected);
     }
 }

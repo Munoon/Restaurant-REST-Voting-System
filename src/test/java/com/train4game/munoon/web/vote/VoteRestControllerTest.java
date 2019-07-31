@@ -1,8 +1,11 @@
 package com.train4game.munoon.web.vote;
 
 import com.train4game.munoon.model.Vote;
+import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
+import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
+import com.train4game.munoon.utils.VoteUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
-import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
-import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
-import static com.train4game.munoon.data.UserTestData.FIRST_USER;
+import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER_ID;
 import static com.train4game.munoon.data.VoteTestData.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,7 +37,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(FIRST_VOTE, SECOND_VOTE));
+                .andExpect(contentJsonVoteTo(VoteUtil.parseVote(FIRST_VOTE, SECOND_VOTE)));
     }
 
     @Test
@@ -45,7 +45,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_VOTE_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(FIRST_VOTE));
+                .andExpect(contentJsonVoteTo(VoteUtil.parseVote(FIRST_VOTE)));
     }
 
     @Test
@@ -61,31 +61,31 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
-        Vote updated = new Vote(FIRST_VOTE);
-        updated.setRestaurant(FIRST_RESTAURANT);
+        VoteTo updated = new VoteTo(VoteUtil.parseVote(FIRST_VOTE));
+        updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isNoContent());
 
-        assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), updated);
+        assertMatchVoteTo(VoteUtil.parseVote(service.get(FIRST_VOTE_ID, FIRST_USER_ID)), updated);
     }
 
     @Test
     void testCreate() throws Exception {
-        Vote expected = new Vote(null, FIRST_USER, SECOND_RESTAURANT, LocalDateTime.now());
+        VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID, LocalDateTime.now());
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
 
-        Vote returned = readFromJson(actions, Vote.class);
+        VoteTo returned = readFromJson(actions, VoteTo.class);
         expected.setId(returned.getId());
 
-        System.out.println(returned);
-        System.out.println(expected);
-        assertMatch(returned, expected);
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expected);
+        Vote expectedVote = VoteUtil.createVote(expected, FIRST_RESTAURANT);
+
+        assertMatchVoteTo(returned, expected);
+        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
     }
 }

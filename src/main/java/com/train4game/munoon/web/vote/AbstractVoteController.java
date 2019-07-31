@@ -5,6 +5,7 @@ import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.web.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -13,11 +14,9 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
 abstract public class AbstractVoteController {
     private static final Logger log = LoggerFactory.getLogger(AbstractVoteController.class);
-    private final VoteService service;
 
-    public AbstractVoteController(VoteService service) {
-        this.service = service;
-    }
+    @Autowired
+    private VoteService service;
 
     public Vote create(Vote vote) {
         int userId = SecurityUtil.authUserId();

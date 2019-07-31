@@ -20,8 +20,8 @@ public class VoteRepository {
 
     @Transactional
     public Vote save(Vote vote, int userId) {
-        User ref = userRepository.getOne(userId);
-        vote.setUser(ref);
+        User user = userRepository.findById(userId).orElse(null);
+        vote.setUser(user);
 
         if (vote.isNew()) {
             return repository.save(vote);

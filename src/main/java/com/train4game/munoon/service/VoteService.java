@@ -21,7 +21,7 @@ public class VoteService {
 
     public Vote create(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
-        checkDateForToday(vote.getDate());
+        checkDateForToday(vote.getDate(), "You cant make vote for other day");
         return repository.save(vote, userId);
     }
 
@@ -40,6 +40,7 @@ public class VoteService {
 
     public void update(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
+        checkForSameDate(vote.getDate(), get(vote.getId(), userId).getDate(), "You cant change vote date");
         checkForTimeException();
         checkNotFoundWithId(repository.save(vote, userId), vote.getId());
     }

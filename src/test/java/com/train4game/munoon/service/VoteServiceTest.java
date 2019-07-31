@@ -24,7 +24,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
     private VoteService service;
 
     @Test
-    public void create() {
+    void create() {
         Vote newVote = new Vote(null, null, FIRST_RESTAURANT, LocalDateTime.now());
         Vote created = service.create(newVote, FIRST_USER_ID);
         newVote.setId(created.getId());
@@ -34,7 +34,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "IT is after 11");
         service.delete(FIRST_VOTE_ID, FIRST_USER_ID);
         assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE);
@@ -47,30 +47,30 @@ public class VoteServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void deleteNotOwn() {
+    void deleteNotOwn() {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
         assertThrows(NotFoundException.class, () -> service.delete(FIRST_VOTE_ID, SECOND_USER.getId()));
     }
 
     @Test
-    public void get() {
+    void get() {
         Vote vote = new Vote(FIRST_VOTE);
         vote.setUser(FIRST_USER);
         assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), vote);
     }
 
     @Test
-    public void getNotOwn() {
+    void getNotOwn() {
         assertThrows(NotFoundException.class, () -> service.get(FIRST_VOTE_ID, SECOND_USER.getId()));
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
     }
 
     @Test
-    public void update() {
+    void update() {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
         Vote vote = new Vote(SECOND_VOTE);
@@ -81,13 +81,13 @@ public class VoteServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void updateNotOwn() {
+    void updateNotOwn() {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
         assertThrows(NotFoundException.class, () -> service.update(FIRST_VOTE, SECOND_USER.getId()));
     }
 
     @Test
-    public void updateTimeOver() {
+    void updateTimeOver() {
         assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
         assertThrows(TimeOverException.class, () -> service.update(FIRST_VOTE, FIRST_USER_ID));
     }

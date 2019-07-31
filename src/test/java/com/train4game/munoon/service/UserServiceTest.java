@@ -29,13 +29,13 @@ public class UserServiceTest extends AbstractServiceTest  {
     private JpaUtil jpaUtil;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         cacheManager.getCache("users").clear();
         jpaUtil.clear2ndLevelCache();
     }
 
     @Test
-    public void create() {
+    void create() {
         User newUser = new User(
                 null,
                 "Alex",
@@ -51,7 +51,7 @@ public class UserServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void createWithoutRoles() {
+    void createWithoutRoles() {
         User newUser = new User(
                 null,
                 "Alex",
@@ -67,7 +67,7 @@ public class UserServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void duplicateMailCreate() {
+    void duplicateMailCreate() {
         User newUser = new User(
                 null,
                 "Alex",
@@ -81,45 +81,45 @@ public class UserServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         service.delete(FIRST_USER_ID);
         assertMatch(service.getAll(), THIRD_USER, SECOND_USER);
     }
 
     @Test
-    public void deletedNotFound() {
+    void deletedNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(9999));
     }
 
     @Test
-    public void get() {
+    void get() {
         User user = service.get(FIRST_USER_ID);
         assertMatch(user, FIRST_USER);
     }
 
     @Test
-    public void getNotFound() {
+    void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(999));
     }
 
     @Test
-    public void getByEmail() {
+    void getByEmail() {
         User user = service.getByEmail(FIRST_USER_EMAIL);
         assertMatch(user, FIRST_USER);
     }
 
     @Test
-    public void getByEmailNotFound() {
+    void getByEmailNotFound() {
         assertThrows(NotFoundException.class, () -> service.getByEmail("unknownEmail@email.com"));
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         assertMatch(service.getAll(), THIRD_USER, SECOND_USER, FIRST_USER);
     }
 
     @Test
-    public void update() {
+    void update() {
         User user = new User(FIRST_USER);
         user.setEmail("munoon@gmail.com");
         user.setRoles(Collections.singleton(Roles.ROLE_USER));
@@ -128,7 +128,7 @@ public class UserServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void testValidation() {
+    void testValidation() {
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);

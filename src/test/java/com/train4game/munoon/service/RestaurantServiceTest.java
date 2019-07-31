@@ -28,13 +28,13 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     private JpaUtil jpaUtil;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         cacheManager.getCache("restaurants").clear();
         jpaUtil.clear2ndLevelCache();
     }
 
     @Test
-    public void create() {
+    void create() {
         Restaurant newRestaurant = new Restaurant(null, "Burger King");
         Restaurant created = service.create(newRestaurant, FIRST_USER);
         newRestaurant.setId(created.getId());
@@ -42,43 +42,43 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void createNoPermission() {
+    void createNoPermission() {
         assertThrows(PermissionDeniedException.class, () -> service.create(FIRST_RESTAURANT, SECOND_USER));
     }
 
     @Test
-    public void delete() {
+    void delete() {
         service.delete(FIRST_RESTAURANT_ID, FIRST_USER);
         assertMatch(service.getAll(), SECOND_RESTAURANT);
     }
 
     @Test
-    public void deleteNoPermission() {
+    void deleteNoPermission() {
         assertThrows(PermissionDeniedException.class, () -> service.delete(FIRST_RESTAURANT_ID, SECOND_USER));
     }
 
     @Test
-    public void deleteNotFound() {
+    void deleteNotFound() {
         assertThrows(NotFoundException.class, () -> service.delete(9999, FIRST_USER));
     }
 
     @Test
-    public void get() {
+    void get() {
         assertMatch(service.get(FIRST_RESTAURANT_ID), FIRST_RESTAURANT);
     }
 
     @Test
-    public void getNotFound() {
+    void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(999));
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT);
     }
 
     @Test
-    public void update() {
+    void update() {
         Restaurant restaurant = new Restaurant(FIRST_RESTAURANT);
         restaurant.setName("Another Restaurant");
         service.update(restaurant, FIRST_USER);
@@ -86,12 +86,12 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    public void updateNoPermission() {
+    void updateNoPermission() {
         assertThrows(PermissionDeniedException.class, () -> service.update(FIRST_RESTAURANT, SECOND_USER));
     }
 
     @Test
-    public void testValidation() {
+    void testValidation() {
         validateRootCause(() -> service.create(new Restaurant(null, "  "), FIRST_USER), ConstraintViolationException.class);
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Table(name = "user_votes", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date"}, name = "users_votes_unique_date_idx"))
 public class Vote extends AbstractBaseEntity {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "global_seq", foreignKeyDefinition = "START WITH 100"))
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 

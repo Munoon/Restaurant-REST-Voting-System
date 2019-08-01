@@ -6,6 +6,7 @@ import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.utils.VoteUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -92,6 +93,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Disabled
     void twoVoteInOneDate() throws Exception {
         VoteTo firstVote = new VoteTo(null, FIRST_RESTAURANT_ID);
         VoteTo secondVote = new VoteTo(null, SECOND_RESTAURANT_ID);

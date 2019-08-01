@@ -73,7 +73,7 @@ public class MealServiceTest extends AbstractServiceTest {
         Meal meal = new Meal(FIRST_MEAL);
         meal.setPrice(999);
         service.update(meal, FIRST_USER);
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), meal, SECOND_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, meal);
     }
 
     @Test

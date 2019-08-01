@@ -27,6 +27,11 @@ public class MealRestController extends AbstractMealController {
         return super.get(id);
     }
 
+    @GetMapping("/with/{id}")
+    public Meal getWithRestaurant(@PathVariable int id) {
+        return super.getWithRestaurant(id);
+    }
+
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

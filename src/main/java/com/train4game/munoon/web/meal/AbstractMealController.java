@@ -24,6 +24,11 @@ abstract public class AbstractMealController {
         return service.get(id);
     }
 
+    public Meal getWithRestaurant(int id) {
+        log.info("Get meal with restaurant and id {}", id);
+        return service.getWithRestaurant(id);
+    }
+
     public void delete(int id) {
         User user = SecurityUtil.getUser();
         log.info("Delete meal with id {}, {}", id, user);

@@ -26,11 +26,12 @@ abstract public class AbstractRestaurantController {
     private ModelMapper modelMapper = new ModelMapper();
     private Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
-    public RestaurantTo create(Restaurant restaurant) {
+    public RestaurantTo create(RestaurantTo restaurant) {
         User user = SecurityUtil.getUser();
         checkNew(restaurant);
         log.info("Create {} from user {}", restaurant, user);
-        return modelMapper.map(service.create(restaurant, user), RestaurantTo.class);
+        Restaurant created = service.create(modelMapper.map(restaurant, Restaurant.class), user);
+        return modelMapper.map(created, RestaurantTo.class);
     }
 
     public void delete(int id) {
@@ -49,10 +50,11 @@ abstract public class AbstractRestaurantController {
         return modelMapper.map(service.getAll(), mapperType);
     }
 
-    public RestaurantTo update(Restaurant restaurant, int id) {
+    public RestaurantTo update(RestaurantTo restaurant, int id) {
         User user = SecurityUtil.getUser();
         assureIdConsistent(restaurant, id);
         log.info("Update {} from user {}", restaurant, user);
-        return modelMapper.map(service.update(restaurant, user), RestaurantTo.class);
+        Restaurant created = service.update(modelMapper.map(restaurant, Restaurant.class), user);
+        return modelMapper.map(created, RestaurantTo.class);
     }
 }

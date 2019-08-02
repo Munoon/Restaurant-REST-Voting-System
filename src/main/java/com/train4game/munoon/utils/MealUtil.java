@@ -2,7 +2,7 @@ package com.train4game.munoon.utils;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
-import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.meal.MealTo;
 
 import java.util.List;
 import java.util.stream.Collectors;

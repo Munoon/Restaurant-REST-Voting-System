@@ -1,6 +1,7 @@
 package com.train4game.munoon.web.meal;
 
-import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.meal.MealTo;
+import com.train4game.munoon.to.meal.MealToWithRestaurant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping("/with/{id}")
-    public MealTo getWithRestaurant(@PathVariable int id) {
+    public MealToWithRestaurant getWithRestaurant(@PathVariable int id) {
         return super.getWithRestaurant(id);
     }
 

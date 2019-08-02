@@ -4,17 +4,18 @@ import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.RestaurantService;
-import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.meal.MealTo;
+import com.train4game.munoon.to.meal.MealToWithRestaurant;
 import com.train4game.munoon.utils.MealUtil;
 import com.train4game.munoon.web.SecurityUtil;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static com.train4game.munoon.utils.MealUtil.parse;
-import static com.train4game.munoon.utils.MealUtil.parseAll;
+import static com.train4game.munoon.utils.MealUtil.*;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -27,14 +28,16 @@ abstract public class AbstractMealController {
     @Autowired
     private RestaurantService restaurantService;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     public MealTo get(int id) {
         log.info("Get meal with id {}", id);
         return parse(service.get(id));
     }
 
-    public MealTo getWithRestaurant(int id) {
+    public MealToWithRestaurant getWithRestaurant(int id) {
         log.info("Get meal with restaurant and id {}", id);
-        return parse(service.getWithRestaurant(id));
+        return modelMapper.map(service.getWithRestaurant(id), MealToWithRestaurant.class);
     }
 
     public void delete(int id) {

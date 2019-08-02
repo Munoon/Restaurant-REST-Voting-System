@@ -28,7 +28,8 @@ abstract public class AbstractMealController {
     @Autowired
     private RestaurantService restaurantService;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ModelMapper modelMapper;
 
     public MealTo get(int id) {
         log.info("Get meal with id {}", id);

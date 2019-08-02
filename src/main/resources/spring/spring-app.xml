@@ -9,4 +9,6 @@
 
     <context:component-scan base-package="com.train4game.munoon.**.service" />
 
+    <bean class="org.modelmapper.ModelMapper" />
+
 </beans>

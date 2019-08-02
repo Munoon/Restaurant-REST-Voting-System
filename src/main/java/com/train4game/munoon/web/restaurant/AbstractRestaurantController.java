@@ -23,7 +23,9 @@ abstract public class AbstractRestaurantController {
     @Autowired
     private RestaurantService service;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ModelMapper modelMapper;
+
     private Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
     public RestaurantTo create(RestaurantTo restaurant) {

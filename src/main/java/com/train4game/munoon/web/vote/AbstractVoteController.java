@@ -1,6 +1,5 @@
 package com.train4game.munoon.web.vote;
 
-import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;

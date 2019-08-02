@@ -1,6 +1,7 @@
 package com.train4game.munoon.web.restaurant;
 
 import com.train4game.munoon.model.Restaurant;
+import com.train4game.munoon.to.RestaurantTo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,13 @@ public class RestaurantRestController extends AbstractRestaurantController {
 
     @Override
     @GetMapping
-    public List<Restaurant> getAll() {
+    public List<RestaurantTo> getAll() {
         return super.getAll();
     }
 
     @Override
     @GetMapping("/{id}")
-    public Restaurant get(@PathVariable int id) {
+    public RestaurantTo get(@PathVariable int id) {
         return super.get(id);
     }
 
@@ -37,13 +38,13 @@ public class RestaurantRestController extends AbstractRestaurantController {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Restaurant update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+    public RestaurantTo update(@RequestBody Restaurant restaurant, @PathVariable int id) {
         return super.update(restaurant, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
-        Restaurant created = super.create(restaurant);
+    public ResponseEntity<RestaurantTo> createWithLocation(@RequestBody Restaurant restaurant) {
+        RestaurantTo created = super.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

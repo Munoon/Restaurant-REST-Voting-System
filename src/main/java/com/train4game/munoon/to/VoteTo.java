@@ -1,10 +1,8 @@
 package com.train4game.munoon.to;
 
-import com.train4game.munoon.model.AbstractBaseEntity;
-
 import java.time.LocalDate;
 
-public class VoteTo extends AbstractBaseEntity {
+public class VoteTo extends AbstractBaseTo {
     private int restaurantId;
     private LocalDate date = LocalDate.now();
 

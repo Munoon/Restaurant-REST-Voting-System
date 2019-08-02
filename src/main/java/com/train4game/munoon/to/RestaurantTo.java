@@ -3,18 +3,9 @@ package com.train4game.munoon.to;
 import java.time.LocalDate;
 import java.util.List;
 
-public class RestaurantTo {
-    private Integer id;
+public class RestaurantTo extends AbstractBaseTo {
     private String name;
     private List<MealToForRestaurant> menu;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -33,8 +24,7 @@ public class RestaurantTo {
     }
 }
 
-class MealToForRestaurant {
-    private Integer id;
+class MealToForRestaurant extends AbstractBaseTo {
     private String name;
     private int price;
     private LocalDate date = LocalDate.now();
@@ -53,14 +43,6 @@ class MealToForRestaurant {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

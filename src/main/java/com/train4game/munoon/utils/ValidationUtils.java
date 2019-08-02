@@ -3,6 +3,7 @@ package com.train4game.munoon.utils;
 import com.train4game.munoon.model.AbstractBaseEntity;
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.to.AbstractBaseTo;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
@@ -52,8 +53,22 @@ public class ValidationUtils {
         }
     }
 
+    public static void checkNew(AbstractBaseTo entity) {
+        if (!entity.isNew()) {
+            throw new IllegalArgumentException(entity + " must be new (id=null)");
+        }
+    }
+
     public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
 //      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
+        if (entity.isNew()) {
+            entity.setId(id);
+        } else if (entity.getId() != id) {
+            throw new IllegalArgumentException(entity + " must be with id=" + id);
+        }
+    }
+
+    public static void assureIdConsistent(AbstractBaseTo entity, int id) {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.getId() != id) {

@@ -3,19 +3,21 @@ package com.train4game.munoon.web.vote;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
+import com.train4game.munoon.to.meal.MealTo;
 import com.train4game.munoon.utils.JsonUtil;
-import com.train4game.munoon.utils.VoteUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.data.RestaurantTestData.*;
@@ -34,13 +36,17 @@ class VoteRestControllerTest extends AbstractControllerTest {
     @Autowired
     private VoteService service;
 
+    private Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
+
     @Test
     void testGetAll() throws Exception {
+        List<VoteTo> expected = modelMapper.map(Arrays.asList(FIRST_VOTE, SECOND_VOTE), mapperType);
+
         mockMvc.perform(get(REST_URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonVoteTo(VoteUtil.parseVote(FIRST_VOTE, SECOND_VOTE)));
+                .andExpect(contentJsonVoteTo(expected));
     }
 
     @Test
@@ -48,7 +54,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_VOTE_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonVoteTo(VoteUtil.parseVote(FIRST_VOTE)));
+                .andExpect(contentJsonVoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class)));
     }
 
     @Test
@@ -64,7 +70,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
-        VoteTo updated = new VoteTo(VoteUtil.parseVote(FIRST_VOTE));
+        VoteTo updated = new VoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class));
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
@@ -72,7 +78,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        assertMatchVoteTo(VoteUtil.parseVote(service.get(FIRST_VOTE_ID, FIRST_USER_ID)), updated);
+        assertMatchVoteTo(modelMapper.map(service.get(FIRST_VOTE_ID, FIRST_USER_ID), mapperType), updated);
     }
 
     @Test
@@ -86,7 +92,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
         VoteTo returned = readFromJson(actions, VoteTo.class);
         expected.setId(returned.getId());
 
-        Vote expectedVote = VoteUtil.createVote(expected, FIRST_RESTAURANT);
+        Vote expectedVote = modelMapper.map(expected, Vote.class);
+        expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, expected);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
@@ -109,7 +116,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .andDo(print());
 //                .andExpect(status().is5xxServerError());
 
-        Vote expectedVote = VoteUtil.createVote(firstVote, FIRST_RESTAURANT);
+        Vote expectedVote = modelMapper.map(firstVote, Vote.class);
+        expectedVote.setRestaurant(FIRST_RESTAURANT);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
     }
 }

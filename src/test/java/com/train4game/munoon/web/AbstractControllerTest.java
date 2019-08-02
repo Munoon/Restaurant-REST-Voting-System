@@ -3,6 +3,7 @@ package com.train4game.munoon.web;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -33,6 +34,9 @@ public class AbstractControllerTest {
 
     @Autowired
     private JpaUtil jpaUtil;
+
+    @Autowired
+    protected ModelMapper modelMapper;
 
     protected MockMvc mockMvc;
 

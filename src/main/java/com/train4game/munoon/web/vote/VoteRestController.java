@@ -1,6 +1,10 @@
 package com.train4game.munoon.web.vote;
 
+import com.train4game.munoon.service.RestaurantService;
+import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,11 @@ import java.util.List;
 @RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController extends AbstractVoteController {
     public static final String REST_URL = "/vote";
+
+    @Autowired
+    public VoteRestController(VoteService service, RestaurantService restaurantService, ModelMapper modelMapper) {
+        super(service, restaurantService, modelMapper);
+    }
 
     @Override
     @GetMapping

@@ -25,22 +25,25 @@ abstract public class AbstractVoteController {
 
     private VoteService service;
     private ModelMapper modelMapper;
-    private TypeMap<VoteTo, Vote> typeMap;
+    private TypeMap<VoteTo, Vote> toVote;
+    private TypeMap<Vote, VoteTo> toVoteTo;
 
     public AbstractVoteController(VoteService service, RestaurantService restaurantService, ModelMapper modelMapper) {
         this.service = service;
         this.modelMapper = modelMapper;
 
         Converter<Integer, Restaurant> converter = num -> restaurantService.get(num.getSource());
-        typeMap = modelMapper.createTypeMap(VoteTo.class, Vote.class)
+        toVote = modelMapper.createTypeMap(VoteTo.class, Vote.class)
                 .addMappings(mapper -> mapper.using(converter).map(VoteTo::getRestaurantId, Vote::setRestaurant));
+
+        toVoteTo = modelMapper.createTypeMap(Vote.class, VoteTo.class);
     }
 
     public VoteTo create(VoteTo voteTo) {
         int userId = SecurityUtil.authUserId();
         log.info("Create {}", voteTo);
         checkNew(voteTo);
-        return modelMapper.map(service.create(typeMap.map(voteTo), userId), VoteTo.class);
+        return toVoteTo.map(service.create(toVote.map(voteTo), userId));
     }
 
     public void delete(int id) {
@@ -52,7 +55,7 @@ abstract public class AbstractVoteController {
     public VoteTo get(int id) {
         int userId = SecurityUtil.authUserId();
         log.info("Get vote {} with user {}", id, userId);
-        return modelMapper.map(service.get(id, userId), VoteTo.class);
+        return toVoteTo.map(service.get(id, userId));
     }
 
     public List<VoteTo> getAll() {
@@ -65,10 +68,6 @@ abstract public class AbstractVoteController {
         int userId = SecurityUtil.authUserId();
         assureIdConsistent(voteTo, id);
         log.info("Update {} with id {} from user {}", voteTo, id, userId);
-        service.update(typeMap.map(voteTo), userId);
+        service.update(toVote.map(voteTo), userId);
     }
-
-//    private Vote createVote(VoteTo voteTo) {
-//        return VoteUtil.createVote(voteTo, restaurantService.get(voteTo.getRestaurantId()));
-//    }
 }

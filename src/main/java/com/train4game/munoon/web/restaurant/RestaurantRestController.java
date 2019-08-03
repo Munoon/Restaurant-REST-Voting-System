@@ -1,6 +1,9 @@
 package com.train4game.munoon.web.restaurant;
 
+import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.to.RestaurantTo;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,11 @@ import java.util.List;
 @RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantRestController extends AbstractRestaurantController {
     public static final String REST_URL = "/restaurant";
+
+    @Autowired
+    public RestaurantRestController(RestaurantService service, ModelMapper modelMapper) {
+        super(service, modelMapper);
+    }
 
     @Override
     @GetMapping

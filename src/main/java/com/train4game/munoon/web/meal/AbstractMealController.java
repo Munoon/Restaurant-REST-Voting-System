@@ -25,27 +25,32 @@ abstract public class AbstractMealController {
     private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
     private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
-    private MealService service;
-    private TypeMap<MealTo, Meal> typeMap;
-    private ModelMapper modelMapper;
+    private final MealService service;
+    private final TypeMap<MealTo, Meal> toMeal;
+    private final TypeMap<Meal, MealTo> toMealTo;
+    private final TypeMap<Meal, MealToWithRestaurant> toMealToWithRestaurant;
+    private final ModelMapper modelMapper;
 
     public AbstractMealController(MealService service, RestaurantService restaurantService, ModelMapper modelMapper) {
         this.service = service;
         this.modelMapper = modelMapper;
 
+        toMealTo = modelMapper.createTypeMap(Meal.class, MealTo.class);
+        toMealToWithRestaurant = modelMapper.createTypeMap(Meal.class, MealToWithRestaurant.class);
+
         Converter<Integer, Restaurant> converter = num -> restaurantService.get(num.getSource());
-        typeMap = modelMapper.createTypeMap(MealTo.class, Meal.class)
+        toMeal = modelMapper.createTypeMap(MealTo.class, Meal.class)
                 .addMappings(mapper -> mapper.using(converter).map(MealTo::getRestaurantId, Meal::setRestaurant));
     }
 
     public MealTo get(int id) {
         log.info("Get meal with id {}", id);
-        return modelMapper.map(service.get(id), MealTo.class);
+        return toMealTo.map(service.get(id));
     }
 
     public MealToWithRestaurant getWithRestaurant(int id) {
         log.info("Get meal with restaurant and id {}", id);
-        return modelMapper.map(service.getWithRestaurant(id), MealToWithRestaurant.class);
+        return toMealToWithRestaurant.map(service.getWithRestaurant(id));
     }
 
     public void delete(int id) {
@@ -63,14 +68,14 @@ abstract public class AbstractMealController {
         User user = SecurityUtil.getUser();
         checkNew(mealTo);
         log.info("Create {}, {}", mealTo, user);
-        Meal meal = typeMap.map(mealTo);
-        return modelMapper.map(service.create(meal, user), MealTo.class);
+        Meal meal = toMeal.map(mealTo);
+        return toMealTo.map(service.create(meal, user));
     }
 
     public void update(MealTo meal, int id) {
         User user = SecurityUtil.getUser();
         assureIdConsistent(meal, id);
         log.info("Update {}, {}", meal, user);
-        service.update(typeMap.map(meal), user);
+        service.update(toMeal.map(meal), user);
     }
 }

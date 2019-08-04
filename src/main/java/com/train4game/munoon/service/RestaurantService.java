@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
@@ -43,6 +44,10 @@ public class RestaurantService {
     @Cacheable("restaurants")
     public List<Restaurant> getAll() {
         return repository.getAll();
+    }
+
+    public List<Restaurant> getAllByMealDate(LocalDate date) {
+        return repository.getAllByMealDate(date);
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -23,10 +24,14 @@ public class RestaurantRestController extends AbstractRestaurantController {
         super(service, modelMapper);
     }
 
-    @Override
-    @GetMapping
+    @GetMapping("/all")
     public List<RestaurantTo> getAll() {
         return super.getAll();
+    }
+
+    @GetMapping
+    public List<RestaurantTo> getAllWithTodayMeals(@RequestParam(required = false) LocalDate date) {
+        return super.getAllByMealDate(date == null ? LocalDate.now() : date);
     }
 
     @Override

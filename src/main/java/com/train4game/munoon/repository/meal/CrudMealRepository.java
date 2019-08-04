@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -28,4 +29,6 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     Meal getMealById(int id);
 
     List<Meal> getMealsByRestaurantId(int restaurantId, Sort sort);
+
+    List<Meal> getMealsByRestaurantIdAndDate(int restaurantId, LocalDate date, Sort sort);
 }

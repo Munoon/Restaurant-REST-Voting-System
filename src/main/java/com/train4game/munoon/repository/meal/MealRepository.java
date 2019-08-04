@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -28,6 +29,10 @@ public class MealRepository {
 
     public List<Meal> getAll(int restaurantId) {
         return repository.getMealsByRestaurantId(restaurantId, SORT_BY_DATE);
+    }
+
+    public List<Meal> getAllByDate(int restaurantId, LocalDate date) {
+        return repository.getMealsByRestaurantIdAndDate(restaurantId, date, SORT_BY_DATE);
     }
 
     public Meal getWithRestaurant(int id) {

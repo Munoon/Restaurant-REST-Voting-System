@@ -95,7 +95,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        assertMatchVoteTo(modelMapper.map(service.get(FIRST_VOTE_ID, FIRST_USER_ID), mapperType), updated);
+        List<VoteTo> expected = modelMapper.map(service.get(FIRST_VOTE_ID, FIRST_USER_ID), mapperType);
+        assertMatchVoteTo(expected, updated);
     }
 
     @Test

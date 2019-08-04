@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
@@ -38,6 +39,11 @@ public class MealService {
 
     public List<Meal> getAll(int restaurantId) {
         return repository.getAll(restaurantId);
+    }
+
+    public List<Meal> getAllByDate(int restaurantId, LocalDate date) {
+        Assert.notNull(date, "Date must be not null");
+        return repository.getAllByDate(restaurantId, date);
     }
 
     public void update(Meal meal, User user) {

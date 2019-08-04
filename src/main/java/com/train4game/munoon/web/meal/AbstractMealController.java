@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
@@ -62,6 +63,11 @@ abstract public class AbstractMealController {
     public List<MealTo> getAll(int restaurantId) {
         log.info("Get all meals of restaurant {}", restaurantId);
         return modelMapper.map(service.getAll(restaurantId), mapperType);
+    }
+
+    public List<MealTo> getAllByDate(int restaurantId, LocalDate date) {
+        log.info("Get all meals of restaurant {} by date {}", restaurantId, date);
+        return modelMapper.map(service.getAllByDate(restaurantId, date), mapperType);
     }
 
     public MealTo create(MealTo mealTo) {

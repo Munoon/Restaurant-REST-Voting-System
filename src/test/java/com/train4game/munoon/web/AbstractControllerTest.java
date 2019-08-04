@@ -29,22 +29,20 @@ public class AbstractControllerTest {
         CHARACTER_ENCODING_FILTER.setForceEncoding(true);
     }
 
-    @Autowired
-    protected UserService userService;
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
-    @Autowired
-    protected ModelMapper modelMapper;
-
+    protected final UserService userService;
+    protected final ModelMapper modelMapper;
+    private final JpaUtil jpaUtil;
+    private final CacheManager cacheManager;
+    private final WebApplicationContext webApplicationContext;
     protected MockMvc mockMvc;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    public AbstractControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext) {
+        this.userService = userService;
+        this.modelMapper = modelMapper;
+        this.jpaUtil = jpaUtil;
+        this.cacheManager = cacheManager;
+        this.webApplicationContext = webApplicationContext;
+    }
 
     @PostConstruct
     private void postConstruct() {

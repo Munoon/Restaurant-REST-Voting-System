@@ -1,13 +1,18 @@
 package com.train4game.munoon.web.restaurant;
 
 import com.train4game.munoon.model.Restaurant;
+import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.RestaurantService;
+import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.data.RestaurantTestData.*;
@@ -19,8 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";
 
-    @Autowired
     private RestaurantService service;
+
+    @Autowired
+    public RestaurantRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, RestaurantService service) {
+        super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+        this.service = service;
+    }
 
     @Test
     void testGetAll() throws Exception {

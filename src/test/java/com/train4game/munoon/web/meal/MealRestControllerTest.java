@@ -1,15 +1,21 @@
 package com.train4game.munoon.web.meal;
 
 import com.train4game.munoon.model.Meal;
+import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.MealService;
+import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.to.meal.MealTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -27,11 +33,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class MealRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = MealRestController.REST_URL + "/";
+    private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
+
+    private MealService service;
+    private TypeMap<Meal, MealTo> toMealTo;
 
     @Autowired
-    private MealService service;
+    public MealRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, MealService service) {
+        super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+        this.service = service;
+        this.toMealTo = modelMapper.getTypeMap(Meal.class, MealTo.class);
+    }
 
-    private Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
     @Test
     void testGetAll() throws Exception {
@@ -49,7 +62,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_MEAL_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(modelMapper.map(FIRST_MEAL, MealTo.class)));
+                .andExpect(contentJson(toMealTo.map(FIRST_MEAL)));
     }
 
     @Test
@@ -65,20 +78,20 @@ class MealRestControllerTest extends AbstractControllerTest {
         meal.setName("New Name");
         meal.setPrice(1000);
 
-        MealTo updated = modelMapper.map(meal, MealTo.class);
+        MealTo updated = toMealTo.map(meal);
 
         mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        assertMatchMealTo(modelMapper.map(service.get(FIRST_MEAL_ID), MealTo.class), updated);
+        assertMatchMealTo(toMealTo.map(service.get(FIRST_MEAL_ID)), updated);
     }
 
     @Test
     void testCreate() throws Exception {
         Meal meal = new Meal(null, "New Meal", FIRST_RESTAURANT, 500, LocalDate.now());
-        MealTo expected = modelMapper.map(meal, MealTo.class);
+        MealTo expected = toMealTo.map(meal);
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))

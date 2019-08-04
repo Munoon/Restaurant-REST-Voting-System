@@ -1,6 +1,8 @@
 package com.train4game.munoon.web.vote;
 
 import com.train4game.munoon.model.Vote;
+import com.train4game.munoon.repository.JpaUtil;
+import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.to.meal.MealTo;
@@ -8,10 +10,15 @@ import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.lang.reflect.Type;
@@ -34,11 +41,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class VoteRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = VoteRestController.REST_URL + "/";
+    private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
+
+    private VoteService service;
+    private TypeMap<Vote, VoteTo> toVoteTo;
+    private TypeMap<VoteTo, Vote> toVote;
 
     @Autowired
-    private VoteService service;
-
-    private Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
+    public VoteRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, VoteService service) {
+        super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+        this.service = service;
+        this.toVoteTo = modelMapper.getTypeMap(Vote.class, VoteTo.class);
+        this.toVote = modelMapper.getTypeMap(VoteTo.class, Vote.class);
+    }
 
     @Test
     void testGetAll() throws Exception {
@@ -56,7 +71,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_VOTE_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonVoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class)));
+                .andExpect(contentJsonVoteTo(toVoteTo.map(FIRST_VOTE)));
     }
 
     @Test
@@ -72,7 +87,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
-        VoteTo updated = new VoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class));
+        VoteTo updated = toVoteTo.map(FIRST_VOTE);
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
@@ -94,7 +109,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         VoteTo returned = readFromJson(actions, VoteTo.class);
         expected.setId(returned.getId());
 
-        Vote expectedVote = modelMapper.map(expected, Vote.class);
+        Vote expectedVote = toVote.map(expected);
         expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, expected);
@@ -105,7 +120,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void updateTimeOver() throws Exception {
         assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
 
-        VoteTo updated = new VoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class));
+        VoteTo updated = toVoteTo.map(FIRST_VOTE);
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         assertThrows(NestedServletException.class, () -> {
@@ -115,8 +130,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                     .andExpect(status().is5xxServerError());
         });
 
-        Vote expected = modelMapper.map(FIRST_VOTE, Vote.class);
-        assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), expected);
+        assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), FIRST_VOTE);
     }
 
     @Test
@@ -148,7 +162,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .andDo(print());
 //                .andExpect(status().is5xxServerError());
 
-        Vote expectedVote = modelMapper.map(firstVote, Vote.class);
+        Vote expectedVote = toVote.map(firstVote);
         expectedVote.setRestaurant(FIRST_RESTAURANT);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
     }

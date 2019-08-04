@@ -2,18 +2,24 @@ package com.train4game.munoon.web.user;
 
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.repository.JpaUtil;
+import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.data.UserTestData.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,6 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AdminRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminRestController.REST_URL + "/";
+
+    @Autowired
+    public AdminRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext) {
+        super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+    }
 
     @Test
     void testGetAll() throws Exception {

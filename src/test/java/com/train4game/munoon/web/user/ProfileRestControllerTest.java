@@ -1,10 +1,16 @@
 package com.train4game.munoon.web.user;
 
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.repository.JpaUtil;
+import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.WebApplicationContext;
 
 import static com.train4game.munoon.data.UserTestData.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -13,6 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ProfileRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ProfileRestController.REST_URL + "/";
+
+    @Autowired
+    public ProfileRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext) {
+        super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+    }
 
     @Test
     void testGet() throws Exception {

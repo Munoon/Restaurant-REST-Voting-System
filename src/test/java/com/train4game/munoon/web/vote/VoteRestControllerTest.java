@@ -12,6 +12,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.util.NestedServletException;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.List;
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER_ID;
+import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -97,6 +99,36 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
         assertMatchVoteTo(returned, expected);
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
+    }
+
+    @Test
+    void updateTimeOver() throws Exception {
+        assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
+
+        VoteTo updated = new VoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class));
+        updated.setRestaurantId(FIRST_RESTAURANT.getId());
+
+        assertThrows(NestedServletException.class, () -> {
+            mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updated)))
+                    .andExpect(status().is5xxServerError());
+        });
+
+        Vote expected = modelMapper.map(FIRST_VOTE, Vote.class);
+        assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), expected);
+    }
+
+    @Test
+    void deleteTimeOver() {
+        assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
+
+        assertThrows(NestedServletException.class, () -> {
+            mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID))
+                    .andExpect(status().is5xxServerError());
+        });
+
+        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
     }
 
     @Test

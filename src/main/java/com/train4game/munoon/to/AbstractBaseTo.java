@@ -1,7 +1,7 @@
 package com.train4game.munoon.to;
 
 abstract public class AbstractBaseTo {
-    private Integer id;
+    protected Integer id;
 
     public AbstractBaseTo() {
     }

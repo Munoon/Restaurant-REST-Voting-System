@@ -1,6 +1,7 @@
 package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Restaurant;
+import com.train4game.munoon.to.RestaurantTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Arrays;
@@ -31,8 +32,16 @@ public class RestaurantTestData {
         assertThat(actual).usingElementComparatorIgnoringFields("menu").isEqualTo(expected);
     }
 
+    public static void assertMatchWithMenu(Iterable<RestaurantTo> actual, Iterable<RestaurantTo> expected) {
+        assertThat(actual).usingRecursiveFieldByFieldElementComparator().isEqualTo(expected);
+    }
+
     public static ResultMatcher contentJson(Restaurant... expected) {
         return result -> assertMatch(readListFromJsonMvcResult(result, Restaurant.class), List.of(expected));
+    }
+
+    public static ResultMatcher contentJsonWithMenu(RestaurantTo... expected) {
+        return result -> assertMatchWithMenu(readListFromJsonMvcResult(result, RestaurantTo.class), List.of(expected));
     }
 
     public static ResultMatcher contentJson(Restaurant expected) {

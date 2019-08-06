@@ -2,6 +2,7 @@ package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.to.meal.MealTo;
+import com.train4game.munoon.to.meal.MealToWithRestaurant;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
@@ -17,16 +18,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MealTestData {
     public static final int FIRST_MEAL_ID = 105;
-    public static final Meal FIRST_MEAL = new Meal(FIRST_MEAL_ID, "Burger", FIRST_RESTAURANT, 50, LocalDate.now());
-    public static final Meal SECOND_MEAL = new Meal(FIRST_MEAL_ID + 1, "French Fries", FIRST_RESTAURANT, 20, LocalDate.now());
-    public static final Meal THIRD_MEAL = new Meal(FIRST_MEAL_ID + 2, "Burger", SECOND_RESTAURANT, 30, LocalDate.now());
-    public static final Meal FOURTH_MEAL = new Meal(FIRST_MEAL_ID + 3, "Chicken", SECOND_RESTAURANT, 35, LocalDate.now());
+    public static final Meal FIRST_MEAL = new Meal(FIRST_MEAL_ID, "Burger", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
+    public static final Meal SECOND_MEAL = new Meal(FIRST_MEAL_ID + 1, "French Fries", FIRST_RESTAURANT, 20, LocalDate.of(2019, 8, 6));
+    public static final Meal THIRD_MEAL = new Meal(FIRST_MEAL_ID + 2, "Burger", SECOND_RESTAURANT, 30, LocalDate.of(2019, 8, 6));
+    public static final Meal FOURTH_MEAL = new Meal(FIRST_MEAL_ID + 3, "Chicken", FIRST_RESTAURANT, 35, LocalDate.of(2019, 8, 7));
 
     private MealTestData() {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant", "date");
+    }
+
+    public static void assertMatchToWithRestaurant(MealToWithRestaurant actual, MealToWithRestaurant expected) {
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 
     public static void assertMatchWithRestaurant(Meal actual, Meal expected) {
@@ -56,5 +61,9 @@ public class MealTestData {
 
     public static ResultMatcher contentJson(MealTo expected) {
         return result -> assertMatchMealTo(readFromJsonMvcResult(result, MealTo.class), expected);
+    }
+
+    public static ResultMatcher contentJson(MealToWithRestaurant expected) {
+        return result -> assertMatchToWithRestaurant(readFromJsonMvcResult(result, MealToWithRestaurant.class), expected);
     }
 }

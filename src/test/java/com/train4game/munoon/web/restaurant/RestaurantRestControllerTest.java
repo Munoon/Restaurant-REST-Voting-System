@@ -1,9 +1,11 @@
 package com.train4game.munoon.web.restaurant;
 
+import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.UserService;
+import com.train4game.munoon.to.RestaurantTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static com.train4game.munoon.TestUtil.readFromJson;
+import static com.train4game.munoon.data.MealTestData.FOURTH_MEAL;
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -34,11 +43,23 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL + "all"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(SECOND_RESTAURANT, FIRST_RESTAURANT));
+    }
+
+    @Test
+    void testGetAllForDate() throws Exception {
+        Restaurant expected = new Restaurant(FIRST_RESTAURANT);
+        expected.setMenu(Collections.singletonList(FOURTH_MEAL));
+
+        mockMvc.perform(get(REST_URL + "?date=" + LocalDate.of(2019, 8, 7)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonWithMenu(modelMapper.map(expected, RestaurantTo.class)));
     }
 
     @Test

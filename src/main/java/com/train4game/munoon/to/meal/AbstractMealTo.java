@@ -5,9 +5,9 @@ import com.train4game.munoon.to.AbstractBaseTo;
 import java.time.LocalDate;
 
 public abstract class AbstractMealTo extends AbstractBaseTo {
-    private String name;
-    private int price;
-    private LocalDate date = LocalDate.now();
+    protected String name;
+    protected int price;
+    protected LocalDate date = LocalDate.now();
 
     public AbstractMealTo() {
     }

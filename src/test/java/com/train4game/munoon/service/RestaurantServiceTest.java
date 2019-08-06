@@ -12,6 +12,10 @@ import org.springframework.cache.CacheManager;
 
 import javax.validation.ConstraintViolationException;
 
+import java.time.LocalDate;
+import java.util.Collections;
+
+import static com.train4game.munoon.data.MealTestData.FOURTH_MEAL;
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
@@ -75,6 +79,13 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Test
     void getAll() {
         assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT);
+    }
+
+    @Test
+    void getAllByMealDate() {
+        Restaurant expected = new Restaurant(FIRST_RESTAURANT);
+        expected.setMenu(Collections.singletonList(FOURTH_MEAL));
+        assertMatch(service.getAllByMealDate(LocalDate.of(2019, 8, 7)), expected);
     }
 
     @Test

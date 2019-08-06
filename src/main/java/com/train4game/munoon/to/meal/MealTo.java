@@ -20,4 +20,14 @@ public class MealTo extends AbstractMealTo {
     public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
     }
+
+    @Override
+    public String toString() {
+        return "MealTo{" +
+                "restaurantId=" + restaurantId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", date=" + date +
+                '}';
+    }
 }

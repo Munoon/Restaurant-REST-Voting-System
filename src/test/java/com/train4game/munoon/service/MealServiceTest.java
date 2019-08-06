@@ -24,28 +24,28 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDate.now());
+        Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
         Meal created = service.create(newMeal, FIRST_USER);
         newMeal.setId(created.getId());
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal, FOURTH_MEAL);
     }
 
     @Test
     void createNoPermission() {
         assertThrows(PermissionDeniedException.class, () -> service.create(FIRST_MEAL, SECOND_USER));
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
     }
 
     @Test
     void delete() {
         service.delete(FIRST_MEAL_ID, FIRST_USER);
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, FOURTH_MEAL);
     }
 
     @Test
     void deleteNoPermission() {
         assertThrows(PermissionDeniedException.class, () -> service.delete(FIRST_MEAL_ID, SECOND_USER));
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
     }
 
     @Test
@@ -65,7 +65,12 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void getAll() {
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
+    }
+
+    @Test
+    void getAllByDate() {
+        assertMatch(service.getAllByDate(FIRST_RESTAURANT_ID, LocalDate.of(2019, 8, 7)), FOURTH_MEAL);
     }
 
     @Test
@@ -73,7 +78,7 @@ public class MealServiceTest extends AbstractServiceTest {
         Meal meal = new Meal(FIRST_MEAL);
         meal.setPrice(999);
         service.update(meal, FIRST_USER);
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, meal);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, meal, FOURTH_MEAL);
     }
 
     @Test

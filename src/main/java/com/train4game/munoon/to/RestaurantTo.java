@@ -22,6 +22,15 @@ public class RestaurantTo extends AbstractBaseTo {
     public void setMenu(List<MealToForRestaurant> menu) {
         this.menu = menu;
     }
+
+    @Override
+    public String toString() {
+        return "RestaurantTo{" +
+                "name='" + name + '\'' +
+                ", menu=" + menu +
+                ", id=" + id +
+                '}';
+    }
 }
 
 class MealToForRestaurant extends AbstractBaseTo {
@@ -51,5 +60,15 @@ class MealToForRestaurant extends AbstractBaseTo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "MealToForRestaurant{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", date=" + date +
+                ", id=" + id +
+                '}';
     }
 }

@@ -19,11 +19,11 @@ INSERT INTO restaurants (name) VALUES
     ('McDonalds'),
     ('KFC');
 
-INSERT INTO meals (restaurant_id, name, price) VALUES
-    (103, 'Burger', 50),
-    (103, 'French Fries', 20),
-    (104, 'Burger', 30),
-    (104, 'Chicken', 35);
+INSERT INTO meals (restaurant_id, name, price, date) VALUES
+    (103, 'Burger', 50, '2019-08-06'),
+    (103, 'French Fries', 20, '2019-08-06'),
+    (104, 'Burger', 30, '2019-08-06'),
+    (103, 'Chicken', 35, '2019-08-07');
 
 INSERT INTO user_votes (user_id, restaurant_id, date) VALUES
     (100, 104, '2019-07-01'),

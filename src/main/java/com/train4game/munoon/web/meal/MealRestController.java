@@ -2,8 +2,8 @@ package com.train4game.munoon.web.meal;
 
 import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.RestaurantService;
-import com.train4game.munoon.to.meal.MealTo;
-import com.train4game.munoon.to.meal.MealToWithRestaurant;
+import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.MealToWithRestaurant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -10,12 +10,14 @@ import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";
+    private static final Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
     private RestaurantService service;
 
@@ -43,11 +46,12 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
+        List<RestaurantTo> expected = modelMapper.map(Arrays.asList(SECOND_RESTAURANT, FIRST_RESTAURANT), mapperType);
         mockMvc.perform(get(REST_URL + "all"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(SECOND_RESTAURANT, FIRST_RESTAURANT));
+                .andExpect(contentJson(expected));
     }
 
     @Test
@@ -67,7 +71,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(FIRST_RESTAURANT));
+                .andExpect(contentJson(modelMapper.map(FIRST_RESTAURANT, RestaurantTo.class)));
     }
 
     @Test

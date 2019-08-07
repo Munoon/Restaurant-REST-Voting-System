@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class VoteTo extends AbstractBaseTo {
     private int restaurantId;
     private LocalDate date = LocalDate.now();
+    private int userId;
 
     public VoteTo() {
     }
@@ -38,5 +39,23 @@ public class VoteTo extends AbstractBaseTo {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "VoteTo{" +
+                "restaurantId=" + restaurantId +
+                ", date=" + date +
+                ", userId=" + userId +
+                ", id=" + id +
+                '}';
     }
 }

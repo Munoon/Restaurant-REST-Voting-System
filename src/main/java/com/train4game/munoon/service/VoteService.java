@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.*;
@@ -20,8 +21,8 @@ public class VoteService {
     }
 
     public Vote create(Vote vote, int userId) {
+        vote.setDate(LocalDate.now());
         Assert.notNull(vote, "Vote must be not null");
-        checkDateForToday(vote.getDate(), "You cant make vote for other day");
         return repository.save(vote, userId);
     }
 

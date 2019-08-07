@@ -86,11 +86,6 @@ public class ValidationUtils {
         return result;
     }
 
-    public static void checkDateForToday(LocalDate date, String msg) {
-        if (!date.equals(LocalDate.now()))
-            throw new DateTimeException(msg);
-    }
-
     public static void checkForSameDate(LocalDate actual, LocalDate expected, String msg) {
         if (!actual.equals(expected))
             throw new DateTimeException(msg);

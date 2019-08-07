@@ -5,8 +5,8 @@ import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.RestaurantService;
-import com.train4game.munoon.to.meal.MealTo;
-import com.train4game.munoon.to.meal.MealToWithRestaurant;
+import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.web.SecurityUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -27,31 +27,32 @@ abstract public class AbstractMealController {
     private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
     private final MealService service;
-    private final TypeMap<MealTo, Meal> toMeal;
-    private final TypeMap<Meal, MealTo> toMealTo;
-    private final TypeMap<Meal, MealToWithRestaurant> toMealToWithRestaurant;
     private final ModelMapper modelMapper;
+    private final TypeMap<MealTo, Meal> parseMeal;
+    private final TypeMap<Meal, MealTo> parseMealTo;
+    private final TypeMap<Meal, MealToWithRestaurant> parseMealToWithRestaurant;
 
     public AbstractMealController(MealService service, RestaurantService restaurantService, ModelMapper modelMapper) {
         this.service = service;
         this.modelMapper = modelMapper;
 
-        toMealTo = modelMapper.createTypeMap(Meal.class, MealTo.class);
-        toMealToWithRestaurant = modelMapper.createTypeMap(Meal.class, MealToWithRestaurant.class);
+        Converter<Integer, Restaurant> intToRestaurantParser = num -> restaurantService.get(num.getSource());
 
-        Converter<Integer, Restaurant> converter = num -> restaurantService.get(num.getSource());
-        toMeal = modelMapper.createTypeMap(MealTo.class, Meal.class)
-                .addMappings(mapper -> mapper.using(converter).map(MealTo::getRestaurantId, Meal::setRestaurant));
+        parseMeal = modelMapper.createTypeMap(MealTo.class, Meal.class)
+                .addMappings(mapper -> mapper.using(intToRestaurantParser).map(MealTo::getRestaurantId, Meal::setRestaurant));
+
+        parseMealTo = modelMapper.createTypeMap(Meal.class, MealTo.class);
+        parseMealToWithRestaurant = modelMapper.createTypeMap(Meal.class, MealToWithRestaurant.class);
     }
 
     public MealTo get(int id) {
         log.info("Get meal with id {}", id);
-        return toMealTo.map(service.get(id));
+        return parseMealTo.map(service.get(id));
     }
 
     public MealToWithRestaurant getWithRestaurant(int id) {
         log.info("Get meal with restaurant and id {}", id);
-        return toMealToWithRestaurant.map(service.getWithRestaurant(id));
+        return parseMealToWithRestaurant.map(service.getWithRestaurant(id));
     }
 
     public void delete(int id) {
@@ -74,14 +75,14 @@ abstract public class AbstractMealController {
         User user = SecurityUtil.getUser();
         checkNew(mealTo);
         log.info("Create {}, {}", mealTo, user);
-        Meal meal = toMeal.map(mealTo);
-        return toMealTo.map(service.create(meal, user));
+        Meal meal = parseMeal.map(mealTo);
+        return parseMealTo.map(service.create(meal, user));
     }
 
     public void update(MealTo meal, int id) {
         User user = SecurityUtil.getUser();
         assureIdConsistent(meal, id);
         log.info("Update {}, {}", meal, user);
-        service.update(toMeal.map(meal), user);
+        service.update(parseMeal.map(meal), user);
     }
 }

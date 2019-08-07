@@ -1,8 +1,8 @@
 package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Meal;
-import com.train4game.munoon.to.meal.MealTo;
-import com.train4game.munoon.to.meal.MealToWithRestaurant;
+import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.MealToWithRestaurant;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
@@ -22,6 +22,7 @@ public class MealTestData {
     public static final Meal SECOND_MEAL = new Meal(FIRST_MEAL_ID + 1, "French Fries", FIRST_RESTAURANT, 20, LocalDate.of(2019, 8, 6));
     public static final Meal THIRD_MEAL = new Meal(FIRST_MEAL_ID + 2, "Burger", SECOND_RESTAURANT, 30, LocalDate.of(2019, 8, 6));
     public static final Meal FOURTH_MEAL = new Meal(FIRST_MEAL_ID + 3, "Chicken", FIRST_RESTAURANT, 35, LocalDate.of(2019, 8, 7));
+    public static final List<Meal> FIRST_RESTAURANT_MENU = Arrays.asList(FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL);
 
     private MealTestData() {
     }

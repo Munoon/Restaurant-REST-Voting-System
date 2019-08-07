@@ -42,7 +42,7 @@ CREATE TABLE meals
     date            DATE DEFAULT now()      NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX meals_unique_name_idx ON meals (restaurant_id, name);
+CREATE UNIQUE INDEX meals_unique_name_idx ON meals (restaurant_id, name, date);
 
 CREATE TABLE user_votes
 (

@@ -5,8 +5,8 @@ import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.UserService;
-import com.train4game.munoon.to.meal.MealTo;
-import com.train4game.munoon.to.meal.MealToWithRestaurant;
+import com.train4game.munoon.to.MealTo;
+import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -81,10 +81,15 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetWithRestaurant() throws Exception {
+        Meal meal = new Meal(FIRST_MEAL);
+        meal.setRestaurant(FIRST_RESTAURANT);
+        meal.getRestaurant().setMenu(FIRST_RESTAURANT_MENU);
+        MealToWithRestaurant expected = modelMapper.map(FIRST_MEAL, MealToWithRestaurant.class);
+
         mockMvc.perform(get(REST_URL + "with/" + FIRST_MEAL_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(modelMapper.map(FIRST_MEAL, MealToWithRestaurant.class)));
+                .andExpect(contentJson(expected));
     }
 
     @Test

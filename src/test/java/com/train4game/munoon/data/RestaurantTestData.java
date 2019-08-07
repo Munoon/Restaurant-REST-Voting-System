@@ -1,14 +1,18 @@
 package com.train4game.munoon.data;
 
+import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.to.RestaurantTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJsonMvcResult;
 import static com.train4game.munoon.TestUtil.readListFromJsonMvcResult;
+import static com.train4game.munoon.data.MealTestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestaurantTestData {
@@ -36,15 +40,23 @@ public class RestaurantTestData {
         assertThat(actual).usingRecursiveFieldByFieldElementComparator().isEqualTo(expected);
     }
 
-    public static ResultMatcher contentJson(Restaurant... expected) {
-        return result -> assertMatch(readListFromJsonMvcResult(result, Restaurant.class), List.of(expected));
+    public static void assertMatchTo(RestaurantTo actual, RestaurantTo expected) {
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "menu");
+    }
+
+    public static void assertMatchTo(Iterable<RestaurantTo> actual, Iterable<RestaurantTo> expected) {
+        assertThat(actual).usingElementComparatorIgnoringFields("menu").isEqualTo(expected);
+    }
+
+    public static ResultMatcher contentJson(List<RestaurantTo> expected) {
+        return result -> assertMatchTo(readListFromJsonMvcResult(result, RestaurantTo.class), expected);
     }
 
     public static ResultMatcher contentJsonWithMenu(RestaurantTo... expected) {
         return result -> assertMatchWithMenu(readListFromJsonMvcResult(result, RestaurantTo.class), List.of(expected));
     }
 
-    public static ResultMatcher contentJson(Restaurant expected) {
-        return result -> assertMatch(readFromJsonMvcResult(result, Restaurant.class), expected);
+    public static ResultMatcher contentJson(RestaurantTo expected) {
+        return result -> assertMatchTo(readFromJsonMvcResult(result, RestaurantTo.class), expected);
     }
 }

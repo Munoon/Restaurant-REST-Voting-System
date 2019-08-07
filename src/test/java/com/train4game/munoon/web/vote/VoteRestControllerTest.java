@@ -5,7 +5,6 @@ import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
-import com.train4game.munoon.to.meal.MealTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Disabled;
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class VoteRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = VoteRestController.REST_URL + "/";
-    private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
+    private static final Type mapperType = new TypeToken<List<VoteTo>>() {}.getType();
 
     private VoteService service;
     private TypeMap<Vote, VoteTo> toVoteTo;
@@ -101,7 +100,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID, LocalDate.now());
+        VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID);
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
@@ -109,6 +108,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
         VoteTo returned = readFromJson(actions, VoteTo.class);
         expected.setId(returned.getId());
+        expected.setUserId(returned.getUserId());
 
         Vote expectedVote = toVote.map(expected);
         expectedVote.setRestaurant(FIRST_RESTAURANT);

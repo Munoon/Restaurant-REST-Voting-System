@@ -6,7 +6,6 @@ import com.train4game.munoon.to.MealToWithRestaurant;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class MealTestData {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant", "date");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant");
     }
 
     public static void assertMatchToWithRestaurant(MealToWithRestaurant actual, MealToWithRestaurant expected) {
@@ -37,7 +36,7 @@ public class MealTestData {
 
     public static void assertMatchWithRestaurant(Meal actual, Meal expected) {
         assertMatch(actual, expected);
-        assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "date", "menu");
+        assertThat(actual.getRestaurant()).isEqualToComparingFieldByFieldRecursively(expected.getRestaurant());
     }
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
@@ -45,15 +44,15 @@ public class MealTestData {
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("restaurant", "date", "menu").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("restaurant").isEqualTo(expected);
     }
 
     public static void assertMatchMealTo(Iterable<MealTo> actual, Iterable<MealTo> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("restaurant", "date").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("restaurant").isEqualTo(expected);
     }
 
     public static void assertMatchMealTo(MealTo actual, MealTo expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant", "date");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant");
     }
 
     public static ResultMatcher contentJson(List<MealTo> expected) {

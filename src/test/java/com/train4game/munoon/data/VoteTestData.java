@@ -28,8 +28,8 @@ public class VoteTestData {
 
     public static void assertMatch(Vote actual, Vote expected) {
         assertThat(actual.getUser()).isEqualToIgnoringGivenFields(expected.getUser(), "registered");
-        assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "date", "menu");
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "user", "restaurant", "date");
+        assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "menu");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "user", "restaurant");
     }
 
     public static void assertMatch(Iterable<Vote> actual, Vote... expected) {
@@ -37,7 +37,7 @@ public class VoteTestData {
     }
 
     public static void assertMatch(Iterable<Vote> actual, Iterable<Vote> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("date", "user", "restaurant").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("user", "restaurant").isEqualTo(expected);
     }
 
     public static void assertMatchVoteTo(Iterable<VoteTo> actual, VoteTo... expected) {

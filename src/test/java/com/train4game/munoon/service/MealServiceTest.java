@@ -60,7 +60,9 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void getWithRestaurant() {
-        assertMatchWithRestaurant(service.getWithRestaurant(FIRST_MEAL_ID), FIRST_MEAL);
+        Meal expected = new Meal(FIRST_MEAL);
+        expected.getRestaurant().setMenu(FIRST_RESTAURANT_MENU);
+        assertMatchWithRestaurant(service.getWithRestaurant(FIRST_MEAL_ID), expected);
     }
 
     @Test

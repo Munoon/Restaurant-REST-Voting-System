@@ -1,18 +1,14 @@
 package com.train4game.munoon.data;
 
-import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.to.RestaurantTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJsonMvcResult;
 import static com.train4game.munoon.TestUtil.readListFromJsonMvcResult;
-import static com.train4game.munoon.data.MealTestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestaurantTestData {

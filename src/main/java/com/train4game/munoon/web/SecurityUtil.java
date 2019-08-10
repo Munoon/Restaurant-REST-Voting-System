@@ -1,37 +1,35 @@
 package com.train4game.munoon.web;
 
-import com.train4game.munoon.model.AbstractBaseEntity;
-import com.train4game.munoon.model.Roles;
+import com.train4game.munoon.AuthorizedUser;
 import com.train4game.munoon.model.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
+import static java.util.Objects.requireNonNull;
 
 public class SecurityUtil {
-    private static int id = AbstractBaseEntity.START_SEQ;
-    private static User user = new User(AbstractBaseEntity.START_SEQ, "Nikita", "munoon@yandex.ru", "easyPass", LocalDateTime.now(), true, Collections.singleton(Roles.ROLE_ADMIN));
-
     private SecurityUtil() {
     }
 
-    public static void setUserAndId(User user, int id) {
-        SecurityUtil.user = user;
-        SecurityUtil.id = id;
+    public static AuthorizedUser saveGet() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null)
+            return null;
+        Object principal = auth.getPrincipal();
+        return principal instanceof AuthorizedUser ? (AuthorizedUser) principal : null;
     }
 
-    public static User getUser() {
+    public static AuthorizedUser get() {
+        AuthorizedUser user = saveGet();
+        requireNonNull(user, "No authorized user found");
         return user;
     }
 
-    public static void setUser(User user) {
-        SecurityUtil.user = user;
-    }
-
     public static int authUserId() {
-        return id;
+        return get().getUser().getId();
     }
 
-    public static void setId(int id) {
-        SecurityUtil.id = id;
+    public static User getUser() {
+        return get().getUser();
     }
 }

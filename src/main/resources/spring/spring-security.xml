@@ -23,13 +23,8 @@
     <beans:bean name="noopEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
 
     <authentication-manager>
-        <authentication-provider>
+        <authentication-provider user-service-ref="userService">
             <password-encoder ref="noopEncoder"/>
-            <user-service>
-                <user name="munoon@yandex.ru" password="easyPass" authorities="ROLE_ADMIN"/>
-                <user name="vasya@gmail.com" password="VasyaTheBest" authorities="ROLE_USER"/>
-                <user name="petr@gmail.com" password="PertHasStrongPass123" authorities="ROLE_USER"/>
-            </user-service>
         </authentication-provider>
     </authentication-manager>
 </beans:beans>

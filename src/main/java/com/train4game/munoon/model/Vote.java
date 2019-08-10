@@ -4,6 +4,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -19,6 +20,7 @@ public class Vote extends AbstractBaseEntity {
     private Restaurant restaurant;
 
     @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
+    @NotNull
     private LocalDate date;
 
     public Vote() {

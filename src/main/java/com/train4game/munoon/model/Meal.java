@@ -2,9 +2,11 @@ package com.train4game.munoon.model;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -17,9 +19,11 @@ public class Meal extends AbstractNamedEntity {
     private Restaurant restaurant;
 
     @Column(name = "price", nullable = false)
+    @Range(min = 10, max = 50000)
     private int price;
 
     @Column(name = "date", nullable = false, columnDefinition = "DATE DEFAULT now()")
+    @NotNull
     private LocalDate date;
 
     public Meal() {

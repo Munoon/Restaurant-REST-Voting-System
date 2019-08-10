@@ -1,9 +1,14 @@
 package com.train4game.munoon.to;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class RestaurantTo extends AbstractBaseTo {
+    @Size(min = 2, max = 200)
+    @NotBlank
     private String name;
+
     private List<MealTo> menu;
 
     public String getName() {

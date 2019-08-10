@@ -1,10 +1,14 @@
 package com.train4game.munoon.to;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class VoteTo extends AbstractBaseTo {
     private int restaurantId;
+
+    @NotNull
     private LocalDate date = LocalDate.now();
+
     private int userId;
 
     public VoteTo() {

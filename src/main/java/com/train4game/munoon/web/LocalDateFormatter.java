@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.converter;
+package com.train4game.munoon.web;
 
 import org.springframework.format.Formatter;
 

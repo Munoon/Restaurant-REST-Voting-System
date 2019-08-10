@@ -21,7 +21,7 @@
     <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
         <property name="formatters">
             <set>
-                <bean class="com.train4game.munoon.web.converter.LocalDateFormatter"/>
+                <bean class="com.train4game.munoon.web.LocalDateFormatter"/>
             </set>
         </property>
     </bean>

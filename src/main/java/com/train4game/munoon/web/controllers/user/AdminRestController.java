@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.user;
+package com.train4game.munoon.web.controllers.user;
 
 import com.train4game.munoon.model.User;
 import org.springframework.http.HttpStatus;

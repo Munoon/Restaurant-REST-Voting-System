@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.meal;
+package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
@@ -14,16 +14,26 @@ import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
-abstract public class AbstractMealController {
-    private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
+@RestController
+@RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class MealRestController {
+    public static final String REST_URL = "/meals";
+    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
     private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
     private final MealService service;
@@ -32,7 +42,8 @@ abstract public class AbstractMealController {
     private final TypeMap<Meal, MealTo> parseMealTo;
     private final TypeMap<Meal, MealToWithRestaurant> parseMealToWithRestaurant;
 
-    public AbstractMealController(MealService service, RestaurantService restaurantService, ModelMapper modelMapper) {
+    @Autowired
+    public MealRestController(MealService service, RestaurantService restaurantService, ModelMapper modelMapper) {
         this.service = service;
         this.modelMapper = modelMapper;
 
@@ -45,28 +56,60 @@ abstract public class AbstractMealController {
         parseMealToWithRestaurant = modelMapper.createTypeMap(Meal.class, MealToWithRestaurant.class);
     }
 
-    public MealTo get(int id) {
+    @GetMapping("/all/{restaurant}")
+    public List<MealTo> getAll(@PathVariable int restaurant, @RequestParam(required = false) LocalDate date) {
+        return date == null ? getAll(restaurant) : getAllByDate(restaurant, date);
+    }
+
+    @GetMapping("/today/{restaurant}")
+    public List<MealTo> getAllForToday(@PathVariable int restaurant) {
+        return getAllByDate(restaurant, LocalDate.now());
+    }
+
+    @GetMapping("/{id}")
+    public MealTo get(@PathVariable int id) {
         log.info("Get meal with id {}", id);
         return parseMealTo.map(service.get(id));
     }
 
-    public MealToWithRestaurant getWithRestaurant(int id) {
+    @GetMapping("/with/{id}")
+    public MealToWithRestaurant getWithRestaurant(@PathVariable int id) {
         log.info("Get meal with restaurant and id {}", id);
         return parseMealToWithRestaurant.map(service.getWithRestaurant(id));
     }
 
-    public void delete(int id) {
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
         User user = SecurityUtil.getUser();
         log.info("Delete meal with id {}, {}", id, user);
         service.delete(id, user);
     }
 
-    public List<MealTo> getAll(int restaurantId) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody MealTo meal, @PathVariable int id) {
+        User user = SecurityUtil.getUser();
+        assureIdConsistent(meal, id);
+        log.info("Update {}, {}", meal, user);
+        service.update(parseMeal.map(meal), user);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MealTo> createWithLocation(@RequestBody MealTo meal) {
+        MealTo created = create(meal);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path(REST_URL + "/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
+    private List<MealTo> getAll(int restaurantId) {
         log.info("Get all meals of restaurant {}", restaurantId);
         return modelMapper.map(service.getAll(restaurantId), mapperType);
     }
 
-    public List<MealTo> getAllByDate(int restaurantId, LocalDate date) {
+    private List<MealTo> getAllByDate(int restaurantId, LocalDate date) {
         log.info("Get all meals of restaurant {} by date {}", restaurantId, date);
         return modelMapper.map(service.getAllByDate(restaurantId, date), mapperType);
     }
@@ -77,12 +120,5 @@ abstract public class AbstractMealController {
         log.info("Create {}, {}", mealTo, user);
         Meal meal = parseMeal.map(mealTo);
         return parseMealTo.map(service.create(meal, user));
-    }
-
-    public void update(MealTo meal, int id) {
-        User user = SecurityUtil.getUser();
-        assureIdConsistent(meal, id);
-        log.info("Update {}, {}", meal, user);
-        service.update(parseMeal.map(meal), user);
     }
 }

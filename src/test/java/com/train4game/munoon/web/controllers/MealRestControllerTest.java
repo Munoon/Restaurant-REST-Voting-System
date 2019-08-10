@@ -1,7 +1,6 @@
-package com.train4game.munoon.web.meal;
+package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.model.Meal;
-import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.UserService;
@@ -9,6 +8,7 @@ import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
+import com.train4game.munoon.web.controllers.MealRestController;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -26,9 +26,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
+import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT_ID;
+import static com.train4game.munoon.data.UserTestData.FIRST_USER;
+import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -94,7 +97,8 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID))
+        mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, FOURTH_MEAL);
     }
@@ -108,6 +112,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         MealTo updated = toMealTo.map(meal);
 
         mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -120,6 +125,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         Meal meal = new Meal(null, "New Meal", FIRST_RESTAURANT, 500, LocalDate.of(2019, 8, 6));
         MealTo expected = toMealTo.map(meal);
         ResultActions actions = mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
@@ -131,5 +137,14 @@ class MealRestControllerTest extends AbstractControllerTest {
 
         assertMatchMealTo(returned, expected);
         assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), mapperType), expectedList);
+    }
+
+    @Test
+    void noPermission() throws Exception {
+        mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID)
+                .with(userAuth(SECOND_USER)))
+                .andExpect(status().isForbidden());
+
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
     }
 }

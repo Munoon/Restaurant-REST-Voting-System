@@ -1,6 +1,5 @@
-package com.train4game.munoon.web.restaurant;
+package com.train4game.munoon.web.controllers;
 
-import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.RestaurantService;
@@ -8,6 +7,7 @@ import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.to.RestaurantTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
+import com.train4game.munoon.web.controllers.RestaurantRestController;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -19,14 +19,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
+import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.MealTestData.FOURTH_MEAL;
 import static com.train4game.munoon.data.RestaurantTestData.*;
+import static com.train4game.munoon.data.UserTestData.FIRST_USER;
+import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -76,7 +78,8 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + FIRST_RESTAURANT_ID))
+        mockMvc.perform(delete(REST_URL + FIRST_RESTAURANT_ID)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
 
         assertMatch(service.getAll(), SECOND_RESTAURANT);
@@ -88,6 +91,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         updated.setName("Updated Name");
 
         mockMvc.perform(put(REST_URL + FIRST_RESTAURANT_ID)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -99,6 +103,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void testCreate() throws Exception {
         Restaurant expected = new Restaurant(null, "New Restaurant");
         ResultActions actions = mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
@@ -108,5 +113,14 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, expected);
         assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT, expected);
+    }
+
+    @Test
+    void noPermission() throws Exception {
+        mockMvc.perform(delete(REST_URL + FIRST_RESTAURANT_ID)
+                .with(userAuth(SECOND_USER)))
+                .andExpect(status().isForbidden());
+
+        assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT);
     }
 }

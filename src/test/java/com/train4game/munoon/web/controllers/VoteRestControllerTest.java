@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.vote;
+package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.repository.JpaUtil;
@@ -7,6 +7,7 @@ import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
+import com.train4game.munoon.web.controllers.VoteRestController;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -15,19 +16,19 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
+import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.RestaurantTestData.*;
+import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER_ID;
 import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
@@ -58,7 +59,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testGetAll() throws Exception {
         List<VoteTo> expected = modelMapper.map(Arrays.asList(FIRST_VOTE, SECOND_VOTE), mapperType);
 
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL)
+                .with(userAuth(FIRST_USER)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -67,7 +69,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + FIRST_VOTE_ID))
+        mockMvc.perform(get(REST_URL + FIRST_VOTE_ID)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonVoteTo(toVoteTo.map(FIRST_VOTE)));
@@ -77,7 +80,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testDelete() throws Exception {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
-        mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID))
+        mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
         assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE);
     }
@@ -90,6 +94,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -102,6 +107,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testCreate() throws Exception {
         VoteTo expected = new VoteTo(null, FIRST_RESTAURANT_ID);
         ResultActions actions = mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
@@ -126,6 +132,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
         assertThrows(NestedServletException.class, () -> {
             mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
+                    .with(userAuth(FIRST_USER))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(JsonUtil.writeValue(updated)))
                     .andExpect(status().is5xxServerError());
@@ -139,7 +146,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
         assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
 
         assertThrows(NestedServletException.class, () -> {
-            mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID))
+            mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID)
+                    .with(userAuth(FIRST_USER)))
                     .andExpect(status().is5xxServerError());
         });
 
@@ -153,11 +161,13 @@ class VoteRestControllerTest extends AbstractControllerTest {
         VoteTo secondVote = new VoteTo(null, SECOND_RESTAURANT_ID);
 
         mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(firstVote)))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(secondVote)))
                 .andDo(print());

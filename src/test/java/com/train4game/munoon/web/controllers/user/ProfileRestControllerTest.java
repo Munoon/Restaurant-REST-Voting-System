@@ -1,4 +1,4 @@
-package com.train4game.munoon.web.user;
+package com.train4game.munoon.web.controllers.user;
 
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
@@ -12,6 +12,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.UserTestData.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -27,7 +28,8 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(FIRST_USER));
@@ -35,7 +37,8 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL))
+        mockMvc.perform(delete(REST_URL)
+                .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), THIRD_USER, SECOND_USER);
     }
@@ -47,10 +50,17 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         updated.setEmail("newEmail@gmail.com");
 
         mockMvc.perform(put(REST_URL)
+                .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
         assertMatch(userService.get(FIRST_USER_ID), updated);
+    }
+
+    @Test
+    void notAuthorized() throws Exception {
+        mockMvc.perform(get(REST_URL))
+                .andExpect(status().isUnauthorized());
     }
 }

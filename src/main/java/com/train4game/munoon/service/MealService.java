@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
-import static com.train4game.munoon.utils.ValidationUtils.checkUserForAdmin;
 
 @Service
 public class MealService {
@@ -24,15 +23,13 @@ public class MealService {
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
-    public Meal create(Meal meal, User user) {
-        checkUserForAdmin(user);
+    public Meal create(Meal meal) {
         Assert.notNull(meal, "Meal must be not null");
         return repository.save(meal);
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
-    public void delete(int id, User user) {
-        checkUserForAdmin(user);
+    public void delete(int id) {
         checkNotFoundWithId(repository.delete(id), id);
     }
 
@@ -50,8 +47,7 @@ public class MealService {
     }
 
     @CacheEvict(value = "restaurants", allEntries = true)
-    public void update(Meal meal, User user) {
-        checkUserForAdmin(user);
+    public void update(Meal meal) {
         Assert.notNull(meal, "Meal must be not null");
         repository.save(meal);
     }

@@ -81,18 +81,16 @@ public class MealRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        User user = SecurityUtil.getUser();
-        log.info("Delete meal with id {}, {}", id, user);
-        service.delete(id, user);
+        log.info("Delete meal with id {}, {}", id);
+        service.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody MealTo meal, @PathVariable int id) {
-        User user = SecurityUtil.getUser();
         assureIdConsistent(meal, id);
-        log.info("Update {}, {}", meal, user);
-        service.update(parseMeal.map(meal), user);
+        log.info("Update {}", meal);
+        service.update(parseMeal.map(meal));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -115,10 +113,9 @@ public class MealRestController {
     }
 
     public MealTo create(MealTo mealTo) {
-        User user = SecurityUtil.getUser();
         checkNew(mealTo);
-        log.info("Create {}, {}", mealTo, user);
+        log.info("Create {}", mealTo);
         Meal meal = parseMeal.map(mealTo);
-        return parseMealTo.map(service.create(meal, user));
+        return parseMealTo.map(service.create(meal));
     }
 }

@@ -3,8 +3,6 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
-import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,30 +38,20 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Test
     void create() {
         Restaurant newRestaurant = new Restaurant(null, "Burger King");
-        Restaurant created = service.create(newRestaurant, FIRST_USER);
+        Restaurant created = service.create(newRestaurant);
         newRestaurant.setId(created.getId());
         assertMatch(service.getAll(), newRestaurant, SECOND_RESTAURANT, FIRST_RESTAURANT);
     }
 
     @Test
-    void createNoPermission() {
-        assertThrows(PermissionDeniedException.class, () -> service.create(FIRST_RESTAURANT, SECOND_USER));
-    }
-
-    @Test
     void delete() {
-        service.delete(FIRST_RESTAURANT_ID, FIRST_USER);
+        service.delete(FIRST_RESTAURANT_ID);
         assertMatch(service.getAll(), SECOND_RESTAURANT);
     }
 
     @Test
-    void deleteNoPermission() {
-        assertThrows(PermissionDeniedException.class, () -> service.delete(FIRST_RESTAURANT_ID, SECOND_USER));
-    }
-
-    @Test
     void deleteNotFound() {
-        assertThrows(NotFoundException.class, () -> service.delete(9999, FIRST_USER));
+        assertThrows(NotFoundException.class, () -> service.delete(9999));
     }
 
     @Test
@@ -92,17 +80,12 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     void update() {
         Restaurant restaurant = new Restaurant(FIRST_RESTAURANT);
         restaurant.setName("Another Restaurant");
-        service.update(restaurant, FIRST_USER);
+        service.update(restaurant);
         assertMatch(service.getAll(), restaurant, SECOND_RESTAURANT);
     }
 
     @Test
-    void updateNoPermission() {
-        assertThrows(PermissionDeniedException.class, () -> service.update(FIRST_RESTAURANT, SECOND_USER));
-    }
-
-    @Test
     void testValidation() {
-        validateRootCause(() -> service.create(new Restaurant(null, "  "), FIRST_USER), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new Restaurant(null, "  ")), ConstraintViolationException.class);
     }
 }

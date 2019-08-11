@@ -29,7 +29,7 @@ public class SecurityUtil {
         return get().getUser().getId();
     }
 
-    public static User getUser() {
-        return get().getUser();
-    }
+//    public static User getUser() {
+//        return get().getUser();
+//    }
 }

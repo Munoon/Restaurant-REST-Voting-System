@@ -1,11 +1,8 @@
 package com.train4game.munoon.utils;
 
 import com.train4game.munoon.model.AbstractBaseEntity;
-import com.train4game.munoon.model.Roles;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.to.AbstractBaseTo;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
-import com.train4game.munoon.utils.exceptions.PermissionDeniedException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
 
 import java.time.DateTimeException;
@@ -33,11 +30,6 @@ public class ValidationUtils {
         if (!found) {
             throw new NotFoundException("Not found entity with " + msg);
         }
-    }
-
-    public static void checkUserForAdmin(User user) {
-        if (!user.getRoles().contains(Roles.ROLE_ADMIN))
-            throw new PermissionDeniedException("User didnt have admin role");
     }
 
     public static void checkForTimeException() {

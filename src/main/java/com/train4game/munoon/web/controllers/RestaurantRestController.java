@@ -67,18 +67,16 @@ public class RestaurantRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        User user = SecurityUtil.getUser();
-        log.info("Delete restaurant {} from user {}", id, user);
-        service.delete(id, user);
+        log.info("Delete restaurant {}", id);
+        service.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public RestaurantTo update(@RequestBody RestaurantTo restaurant, @PathVariable int id) {
-        User user = SecurityUtil.getUser();
         assureIdConsistent(restaurant, id);
-        log.info("Update {} from user {}", restaurant, user);
-        Restaurant created = service.update(toRestaurant.map(restaurant), user);
+        log.info("Update {}", restaurant);
+        Restaurant created = service.update(toRestaurant.map(restaurant));
         return toRestaurantTo.map(created);
     }
 
@@ -92,10 +90,9 @@ public class RestaurantRestController {
     }
 
     private RestaurantTo create(RestaurantTo restaurant) {
-        User user = SecurityUtil.getUser();
         checkNew(restaurant);
-        log.info("Create {} from user {}", restaurant, user);
-        Restaurant created = service.create(toRestaurant.map(restaurant), user);
+        log.info("Create {}", restaurant);
+        Restaurant created = service.create(toRestaurant.map(restaurant));
         return toRestaurantTo.map(created);
     }
 }

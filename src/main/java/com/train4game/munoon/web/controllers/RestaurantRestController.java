@@ -1,10 +1,9 @@
 package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.model.Restaurant;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.RestaurantService;
+import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.RestaurantTo;
-import com.train4game.munoon.web.SecurityUtil;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
@@ -33,13 +32,15 @@ public class RestaurantRestController {
     private final static Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
     private final RestaurantService service;
+    private final VoteService voteService;
     private final ModelMapper modelMapper;
     private final TypeMap<Restaurant, RestaurantTo> toRestaurantTo;
     private final TypeMap<RestaurantTo, Restaurant> toRestaurant;
 
     @Autowired
-    public RestaurantRestController(RestaurantService service, ModelMapper modelMapper) {
+    public RestaurantRestController(RestaurantService service, VoteService voteService, ModelMapper modelMapper) {
         this.service = service;
+        this.voteService = voteService;
         this.modelMapper = modelMapper;
         this.toRestaurantTo = modelMapper.createTypeMap(Restaurant.class, RestaurantTo.class);
         this.toRestaurant = modelMapper.createTypeMap(RestaurantTo.class, Restaurant.class);
@@ -62,6 +63,11 @@ public class RestaurantRestController {
     public RestaurantTo get(@PathVariable int id) {
         log.info("Get restaurant with id {}", id);
         return toRestaurantTo.map(service.get(id));
+    }
+
+    @GetMapping("/votes/{id}")
+    public int getRestaurantVotes(@PathVariable int id) {
+        return voteService.getCount(id, LocalDate.now());
     }
 
     @DeleteMapping("/{id}")

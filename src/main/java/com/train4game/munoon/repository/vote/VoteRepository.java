@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -41,5 +42,9 @@ public class VoteRepository {
 
     public List<Vote> getAll(int userId) {
         return repository.getAllByUser_id(userId);
+    }
+
+    public int getCount(int restaurantId, LocalDate date) {
+        return repository.getCount(restaurantId, date);
     }
 }

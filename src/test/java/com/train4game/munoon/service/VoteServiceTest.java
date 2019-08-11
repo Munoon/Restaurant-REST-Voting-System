@@ -5,17 +5,18 @@ import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
-import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
+import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.*;
 import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -91,5 +92,22 @@ public class VoteServiceTest extends AbstractServiceTest  {
     void updateTimeOver() {
         assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
         assertThrows(TimeOverException.class, () -> service.update(FIRST_VOTE, FIRST_USER_ID));
+    }
+
+    @Test
+    void getCount() {
+        assertEquals(service.getCount(FIRST_RESTAURANT_ID, LocalDate.of(2019, 7, 1)), 1);
+    }
+
+    @Test
+    void twoVoteInOneDay() {
+        LocalDate date = LocalDate.of(2019, 8, 11);
+        Vote firstVote = new Vote(null, FIRST_USER, FIRST_RESTAURANT, date);
+        Vote secondVote = new Vote(null, FIRST_USER, FIRST_RESTAURANT, date);
+
+        service.create(firstVote, FIRST_USER_ID);
+        assertThrows(DataIntegrityViolationException.class, () -> service.create(secondVote, FIRST_USER_ID));
+
+        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, firstVote);
     }
 }

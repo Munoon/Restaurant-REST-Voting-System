@@ -153,28 +153,4 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
     }
-
-    @Test
-    @Disabled
-    void twoVoteInOneDate() throws Exception {
-        VoteTo firstVote = new VoteTo(null, FIRST_RESTAURANT_ID);
-        VoteTo secondVote = new VoteTo(null, SECOND_RESTAURANT_ID);
-
-        mockMvc.perform(post(REST_URL)
-                .with(userAuth(FIRST_USER))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(firstVote)))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(post(REST_URL)
-                .with(userAuth(FIRST_USER))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(secondVote)))
-                .andDo(print());
-//                .andExpect(status().is5xxServerError());
-
-        Vote expectedVote = toVote.map(firstVote);
-        expectedVote.setRestaurant(FIRST_RESTAURANT);
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
-    }
 }

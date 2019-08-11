@@ -78,5 +78,7 @@ public class MealServiceTest extends AbstractServiceTest {
     @Test
     void testValidation() {
         validateRootCause(() -> service.create(new Meal(null, " ", FIRST_RESTAURANT, 500, LocalDate.now())), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new Meal(null, "New Meal", FIRST_RESTAURANT, 5, LocalDate.now())), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new Meal(null, "New Meal", FIRST_RESTAURANT, 50100, LocalDate.now())), ConstraintViolationException.class);
     }
 }

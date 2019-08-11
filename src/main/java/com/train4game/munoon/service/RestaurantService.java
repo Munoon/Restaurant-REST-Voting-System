@@ -1,11 +1,9 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Restaurant;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.restaurant.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -23,13 +21,13 @@ public class RestaurantService {
         this.repository = repository;
     }
 
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "meals", allEntries = true)
     public Restaurant create(Restaurant restaurant) {
         Assert.notNull(restaurant, "Restaurant must be not null");
         return repository.save(restaurant);
     }
 
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "meals", allEntries = true)
     public void delete(int id) {
         checkNotFoundWithId(repository.delete(id), id);
     }
@@ -38,7 +36,6 @@ public class RestaurantService {
         return checkNotFoundWithId(repository.get(id), id);
     }
 
-    @Cacheable("restaurants")
     public List<Restaurant> getAll() {
         return repository.getAll();
     }
@@ -47,7 +44,7 @@ public class RestaurantService {
         return repository.getAllByMealDate(date);
     }
 
-    @CacheEvict(value = "restaurants", allEntries = true)
+    @CacheEvict(value = "meals", allEntries = true)
     public Restaurant update(Restaurant restaurant) {
         Assert.notNull(restaurant, "Restaurant must be not null");
         return repository.save(restaurant);

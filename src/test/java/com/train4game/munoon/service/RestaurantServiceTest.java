@@ -23,15 +23,9 @@ public class RestaurantServiceTest extends AbstractServiceTest  {
     @Autowired
     private RestaurantService service;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
     @BeforeEach
     void setUp() {
-        cacheManager.getCache("restaurants").clear();
+        cacheManager.getCache("meals").clear();
         jpaUtil.clear2ndLevelCache();
     }
 

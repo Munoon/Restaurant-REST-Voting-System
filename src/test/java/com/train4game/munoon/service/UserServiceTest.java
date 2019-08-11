@@ -22,12 +22,6 @@ public class UserServiceTest extends AbstractServiceTest  {
     @Autowired
     private UserService service;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
     @BeforeEach
     void setUp() {
         cacheManager.getCache("users").clear();

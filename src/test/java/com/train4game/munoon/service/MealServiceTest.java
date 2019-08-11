@@ -2,6 +2,7 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MealServiceTest extends AbstractServiceTest {
     @Autowired
     private MealService service;
+
+    @BeforeEach
+    void setUp() {
+        cacheManager.getCache("meals").clear();
+        jpaUtil.clear2ndLevelCache();
+    }
 
     @Test
     void create() {

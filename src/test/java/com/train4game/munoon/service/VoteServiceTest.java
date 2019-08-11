@@ -3,6 +3,7 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +25,12 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 public class VoteServiceTest extends AbstractServiceTest  {
     @Autowired
     private VoteService service;
+
+    @BeforeEach
+    void setUp() {
+        cacheManager.getCache("votes").clear();
+        jpaUtil.clear2ndLevelCache();
+    }
 
     @Test
     void create() {

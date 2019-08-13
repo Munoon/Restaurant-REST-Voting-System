@@ -7,6 +7,7 @@ import com.train4game.munoon.service.MealService;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
+import com.train4game.munoon.utils.ParserUtil;
 import com.train4game.munoon.web.SecurityUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -34,7 +36,6 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 public class MealRestController {
     public static final String REST_URL = "/meals";
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-    private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
     private final MealService service;
     private final ModelMapper modelMapper;
@@ -104,12 +105,12 @@ public class MealRestController {
 
     private List<MealTo> getAll(int restaurantId) {
         log.info("Get all meals of restaurant {}", restaurantId);
-        return modelMapper.map(service.getAll(restaurantId), mapperType);
+        return modelMapper.map(service.getAll(restaurantId), MEAL_LIST_MAPPER);
     }
 
     private List<MealTo> getAllByDate(int restaurantId, LocalDate date) {
         log.info("Get all meals of restaurant {} by date {}", restaurantId, date);
-        return modelMapper.map(service.getAllByDate(restaurantId, date), mapperType);
+        return modelMapper.map(service.getAllByDate(restaurantId, date), MEAL_LIST_MAPPER);
     }
 
     public MealTo create(MealTo mealTo) {

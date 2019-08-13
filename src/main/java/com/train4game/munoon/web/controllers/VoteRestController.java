@@ -5,6 +5,7 @@ import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
+import com.train4game.munoon.utils.ParserUtil;
 import com.train4game.munoon.web.SecurityUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 
+import static com.train4game.munoon.utils.ParserUtil.VOTE_LIST_MAPPER;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -31,7 +33,6 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 public class VoteRestController {
     public static final String REST_URL = "/vote";
     private static final Logger log = LoggerFactory.getLogger(VoteRestController.class);
-    private static Type mapperType = new TypeToken<List<VoteTo>>() {}.getType();
 
     private final VoteService service;
     private final ModelMapper modelMapper;
@@ -54,7 +55,7 @@ public class VoteRestController {
     public List<VoteTo> getAll() {
         int userId = SecurityUtil.authUserId();
         log.info("Get all votes of user {}", userId);
-        return modelMapper.map(service.getAll(userId), mapperType);
+        return modelMapper.map(service.getAll(userId), VOTE_LIST_MAPPER);
     }
 
     @GetMapping("/{id}")

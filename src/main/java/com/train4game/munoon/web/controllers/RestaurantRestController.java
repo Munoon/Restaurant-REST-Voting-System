@@ -6,6 +6,7 @@ import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
 import com.train4game.munoon.to.RestaurantToWithVotes;
+import com.train4game.munoon.utils.ParserUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -24,8 +25,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
-import static com.train4game.munoon.utils.ParserUtil.parseRestaurantWithVotes;
+import static com.train4game.munoon.utils.ParserUtil.*;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -34,7 +34,6 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 public class RestaurantRestController {
     public static final String REST_URL = "/restaurant";
     private final static Logger log = LoggerFactory.getLogger(RestaurantRestController.class);
-    private final static Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
     private final RestaurantService service;
     private final VoteService voteService;
@@ -60,7 +59,7 @@ public class RestaurantRestController {
     @GetMapping("/all")
     public List<RestaurantTo> getAll() {
         log.info("Get all restaurants");
-        return modelMapper.map(service.getAll(), mapperType);
+        return modelMapper.map(service.getAll(), RESTAURANT_LIST_MAPPER);
     }
 
     @GetMapping

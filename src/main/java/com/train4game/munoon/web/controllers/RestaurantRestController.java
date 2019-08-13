@@ -3,7 +3,10 @@ package com.train4game.munoon.web.controllers;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
+import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
+import com.train4game.munoon.to.RestaurantToWithVotes;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
@@ -21,6 +24,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
+import static com.train4game.munoon.utils.ParserUtil.parseRestaurantWithVotes;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -44,6 +49,12 @@ public class RestaurantRestController {
         this.modelMapper = modelMapper;
         this.toRestaurantTo = modelMapper.createTypeMap(Restaurant.class, RestaurantTo.class);
         this.toRestaurant = modelMapper.createTypeMap(RestaurantTo.class, Restaurant.class);
+        modelMapper.addConverter((Converter<Restaurant, RestaurantToWithVotes>) mappingContext -> {
+            Restaurant source = mappingContext.getSource();
+            List<MealTo> menu = modelMapper.map(source.getMenu(), MEAL_LIST_MAPPER);
+            int votes = voteService.getCount(source.getId(), LocalDate.now());
+            return new RestaurantToWithVotes(source.getId(), source.getName(), menu, votes);
+        });
     }
 
     @GetMapping("/all")
@@ -53,16 +64,16 @@ public class RestaurantRestController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAllWithTodayMeals(@RequestParam(required = false) LocalDate date) {
+    public List<RestaurantToWithVotes> getAllByDate(@RequestParam(required = false) LocalDate date) {
         LocalDate localDate = date == null ? LocalDate.now() : date;
         log.info("Get all restaurants by meal date {}", localDate);
-        return modelMapper.map(service.getAllByMealDate(localDate), mapperType);
+        return parseRestaurantWithVotes(service.getAllByMealDate(localDate), modelMapper, voteService, localDate);
     }
 
     @GetMapping("/{id}")
-    public RestaurantTo get(@PathVariable int id) {
+    public RestaurantToWithVotes get(@PathVariable int id) {
         log.info("Get restaurant with id {}", id);
-        return toRestaurantTo.map(service.get(id));
+        return modelMapper.map(service.get(id), RestaurantToWithVotes.class);
     }
 
     @GetMapping("/votes/{id}")

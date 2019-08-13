@@ -2,6 +2,7 @@ package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.to.RestaurantTo;
+import com.train4game.munoon.to.RestaurantToWithVotes;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.Arrays;
@@ -24,6 +25,10 @@ public class RestaurantTestData {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "menu");
     }
 
+    public static void assertMatch(RestaurantToWithVotes actual, RestaurantToWithVotes expected) {
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
+    }
+
     public static void assertMatch(Iterable<Restaurant> actual, Restaurant... expected) {
         assertMatch(actual, Arrays.asList(expected));
     }
@@ -32,7 +37,7 @@ public class RestaurantTestData {
         assertThat(actual).usingElementComparatorIgnoringFields("menu").isEqualTo(expected);
     }
 
-    public static void assertMatchWithMenu(Iterable<RestaurantTo> actual, Iterable<RestaurantTo> expected) {
+    public static void assertMatchWithVotes(Iterable<RestaurantToWithVotes> actual, Iterable<RestaurantToWithVotes> expected) {
         assertThat(actual).usingRecursiveFieldByFieldElementComparator().isEqualTo(expected);
     }
 
@@ -48,11 +53,15 @@ public class RestaurantTestData {
         return result -> assertMatchTo(readListFromJsonMvcResult(result, RestaurantTo.class), expected);
     }
 
-    public static ResultMatcher contentJsonWithMenu(RestaurantTo... expected) {
-        return result -> assertMatchWithMenu(readListFromJsonMvcResult(result, RestaurantTo.class), List.of(expected));
+    public static ResultMatcher contentJsonWithVotes(List<RestaurantToWithVotes> expected) {
+        return result -> assertMatchWithVotes(readListFromJsonMvcResult(result, RestaurantToWithVotes.class), expected);
     }
 
     public static ResultMatcher contentJson(RestaurantTo expected) {
         return result -> assertMatchTo(readFromJsonMvcResult(result, RestaurantTo.class), expected);
+    }
+
+    public static ResultMatcher contentJson(RestaurantToWithVotes expected) {
+        return result -> assertMatch(readFromJsonMvcResult(result, RestaurantToWithVotes.class), expected);
     }
 }

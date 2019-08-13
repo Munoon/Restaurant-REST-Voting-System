@@ -4,7 +4,10 @@ import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.UserService;
+import com.train4game.munoon.service.VoteService;
+import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
+import com.train4game.munoon.to.RestaurantToWithVotes;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import com.train4game.munoon.web.controllers.RestaurantRestController;
@@ -19,16 +22,19 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.TestUtil.userAuth;
+import static com.train4game.munoon.data.MealTestData.FIRST_RESTAURANT_MENU;
 import static com.train4game.munoon.data.MealTestData.FOURTH_MEAL;
 import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
+import static com.train4game.munoon.utils.ParserUtil.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,19 +42,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";
-    private static final Type mapperType = new TypeToken<List<RestaurantTo>>() {}.getType();
 
     private RestaurantService service;
+    private VoteService voteService;
 
     @Autowired
-    public RestaurantRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, RestaurantService service) {
+    public RestaurantRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, RestaurantService service, VoteService voteService) {
         super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
         this.service = service;
+        this.voteService = voteService;
     }
 
     @Test
     void testGetAll() throws Exception {
-        List<RestaurantTo> expected = modelMapper.map(Arrays.asList(SECOND_RESTAURANT, FIRST_RESTAURANT), mapperType);
+        List<RestaurantTo> expected = modelMapper.map(Arrays.asList(SECOND_RESTAURANT, FIRST_RESTAURANT), RESTAURANT_LIST_MAPPER);
         mockMvc.perform(get(REST_URL + "all"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -57,23 +64,28 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void testGetAllForDate() throws Exception {
+    void testGetAllByDate() throws Exception {
+        LocalDate date = LocalDate.of(2019, 8, 7);
         Restaurant expected = new Restaurant(FIRST_RESTAURANT);
         expected.setMenu(Collections.singletonList(FOURTH_MEAL));
+        List<RestaurantToWithVotes> expectedList = parseWithVotes(Collections.singletonList(expected), date);
 
-        mockMvc.perform(get(REST_URL + "?date=" + LocalDate.of(2019, 8, 7)))
+        mockMvc.perform(get(REST_URL + "?date=" + date))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonWithMenu(modelMapper.map(expected, RestaurantTo.class)));
+                .andExpect(contentJsonWithVotes(expectedList));
     }
 
     @Test
     void testGet() throws Exception {
+        Restaurant expected = new Restaurant(FIRST_RESTAURANT);
+        expected.setMenu(FIRST_RESTAURANT_MENU);
+
         mockMvc.perform(get(REST_URL + FIRST_RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(modelMapper.map(FIRST_RESTAURANT, RestaurantTo.class)));
+                .andExpect(contentJson(parseWithVotes(expected, LocalDate.now())));
     }
 
     @Test
@@ -122,5 +134,19 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isForbidden());
 
         assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT);
+    }
+
+    // пришлось скопировать из контроллера
+    // не нащел способ это вынести куда-то
+    private List<RestaurantToWithVotes> parseWithVotes(List<Restaurant> restaurants, LocalDate date) {
+        List<RestaurantToWithVotes> result = new ArrayList<>();
+        restaurants.forEach(restaurant -> result.add(parseWithVotes(restaurant, date)));
+        return result;
+    }
+
+    private RestaurantToWithVotes parseWithVotes(Restaurant restaurant, LocalDate date) {
+        List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
+        int votes = voteService.getCount(restaurant.getId(), date);
+        return parseRestaurantWithVotes(restaurant, menu, votes);
     }
 }

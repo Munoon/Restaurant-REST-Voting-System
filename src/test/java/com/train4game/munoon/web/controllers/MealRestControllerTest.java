@@ -7,6 +7,7 @@ import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.utils.JsonUtil;
+import com.train4game.munoon.utils.ParserUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import com.train4game.munoon.web.controllers.MealRestController;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT_ID;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
+import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class MealRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = MealRestController.REST_URL + "/";
-    private static final Type mapperType = new TypeToken<List<MealTo>>() {}.getType();
 
     private MealService service;
     private TypeMap<Meal, MealTo> toMealTo;
@@ -54,7 +55,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        List<MealTo> expected = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL), mapperType);
+        List<MealTo> expected = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL), MEAL_LIST_MAPPER);
 
         mockMvc.perform(get(REST_URL + "all/" + FIRST_RESTAURANT_ID))
                 .andDo(print())
@@ -133,10 +134,10 @@ class MealRestControllerTest extends AbstractControllerTest {
         MealTo returned = readFromJson(actions, MealTo.class);
         expected.setId(returned.getId());
 
-        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, expected, FOURTH_MEAL), mapperType);
+        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, expected, FOURTH_MEAL), MEAL_LIST_MAPPER);
 
         assertMatchMealTo(returned, expected);
-        assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), mapperType), expectedList);
+        assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), MEAL_LIST_MAPPER), expectedList);
     }
 
     @Test

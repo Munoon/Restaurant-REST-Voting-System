@@ -6,6 +6,7 @@ import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
+import com.train4game.munoon.utils.ParserUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import com.train4game.munoon.web.controllers.VoteRestController;
 import org.junit.jupiter.api.Disabled;
@@ -32,6 +33,7 @@ import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER_ID;
 import static com.train4game.munoon.data.VoteTestData.assertMatch;
 import static com.train4game.munoon.data.VoteTestData.*;
+import static com.train4game.munoon.utils.ParserUtil.VOTE_LIST_MAPPER;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class VoteRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = VoteRestController.REST_URL + "/";
-    private static final Type mapperType = new TypeToken<List<VoteTo>>() {}.getType();
 
     private VoteService service;
     private TypeMap<Vote, VoteTo> toVoteTo;
@@ -57,7 +58,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        List<VoteTo> expected = modelMapper.map(Arrays.asList(FIRST_VOTE, SECOND_VOTE), mapperType);
+        List<VoteTo> expected = modelMapper.map(Arrays.asList(FIRST_VOTE, SECOND_VOTE), VOTE_LIST_MAPPER);
 
         mockMvc.perform(get(REST_URL)
                 .with(userAuth(FIRST_USER)))

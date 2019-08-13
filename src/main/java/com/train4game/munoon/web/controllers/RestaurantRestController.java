@@ -1,5 +1,6 @@
 package com.train4game.munoon.web.controllers;
 
+import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
@@ -70,11 +71,12 @@ public class RestaurantRestController {
     @GetMapping("/{id}")
     public RestaurantToWithVotes get(@PathVariable int id) {
         log.info("Get restaurant with id {}", id);
-        return modelMapper.map(service.get(id), RestaurantToWithVotes.class);
+        return parseWithVotes(service.get(id), LocalDate.now());
     }
 
     @GetMapping("/votes/{id}")
     public int getRestaurantVotes(@PathVariable int id) {
+        log.info("Get restaurant {} votes", id);
         return voteService.getCount(id, LocalDate.now());
     }
 
@@ -112,11 +114,13 @@ public class RestaurantRestController {
 
     private List<RestaurantToWithVotes> parseWithVotes(List<Restaurant> restaurants, LocalDate date) {
         List<RestaurantToWithVotes> result = new ArrayList<>();
-        restaurants.forEach(restaurant -> {
-            List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
-            int votes = voteService.getCount(restaurant.getId(), date);
-            result.add(parseRestaurantWithVotes(restaurant, menu, votes));
-        });
+        restaurants.forEach(restaurant -> result.add(parseWithVotes(restaurant, date)));
         return result;
+    }
+
+    private RestaurantToWithVotes parseWithVotes(Restaurant restaurant, LocalDate date) {
+        List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
+        int votes = voteService.getCount(restaurant.getId(), date);
+        return parseRestaurantWithVotes(restaurant, menu, votes);
     }
 }

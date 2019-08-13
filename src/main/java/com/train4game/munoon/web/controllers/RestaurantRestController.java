@@ -6,11 +6,9 @@ import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
 import com.train4game.munoon.to.RestaurantToWithVotes;
-import com.train4game.munoon.utils.ParserUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ParserUtil.*;
@@ -66,7 +64,7 @@ public class RestaurantRestController {
     public List<RestaurantToWithVotes> getAllByDate(@RequestParam(required = false) LocalDate date) {
         LocalDate localDate = date == null ? LocalDate.now() : date;
         log.info("Get all restaurants by meal date {}", localDate);
-        return parseRestaurantWithVotes(service.getAllByMealDate(localDate), modelMapper, voteService, localDate);
+        return parseWithVotes(service.getAllByMealDate(localDate), localDate);
     }
 
     @GetMapping("/{id}")
@@ -110,5 +108,15 @@ public class RestaurantRestController {
         log.info("Create {}", restaurant);
         Restaurant created = service.create(toRestaurant.map(restaurant));
         return toRestaurantTo.map(created);
+    }
+
+    private List<RestaurantToWithVotes> parseWithVotes(List<Restaurant> restaurants, LocalDate date) {
+        List<RestaurantToWithVotes> result = new ArrayList<>();
+        restaurants.forEach(restaurant -> {
+            List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
+            int votes = voteService.getCount(restaurant.getId(), date);
+            result.add(parseRestaurantWithVotes(restaurant, menu, votes));
+        });
+        return result;
     }
 }

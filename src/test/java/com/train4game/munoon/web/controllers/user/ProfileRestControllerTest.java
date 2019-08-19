@@ -47,7 +47,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         User updated = new User(FIRST_USER);
         updated.setName("New Name");
-        updated.setEmail("newEmail@gmail.com");
+        updated.setEmail("newemail@gmail.com");
 
         mockMvc.perform(put(REST_URL)
                 .with(userAuth(FIRST_USER))

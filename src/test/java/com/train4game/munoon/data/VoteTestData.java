@@ -27,7 +27,7 @@ public class VoteTestData {
     }
 
     public static void assertMatch(Vote actual, Vote expected) {
-        assertThat(actual.getUser()).isEqualToIgnoringGivenFields(expected.getUser(), "registered");
+        assertThat(actual.getUser()).isEqualToIgnoringGivenFields(expected.getUser(), "registered", "password");
         assertThat(actual.getRestaurant()).isEqualToIgnoringGivenFields(expected.getRestaurant(), "menu");
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "user", "restaurant");
     }

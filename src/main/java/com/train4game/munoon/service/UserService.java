@@ -11,8 +11,11 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -23,16 +26,18 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNotFoundWithId;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         Assert.notNull(user, "User must be not null");
-        return userRepository.save(user);
+        return userRepository.save(prepareToSave(user));
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -55,9 +60,10 @@ public class UserService implements UserDetailsService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
+    @Transactional
     public void update(User user) {
         Assert.notNull(user, "User must be not null");
-        checkNotFoundWithId(userRepository.save(user), user.getId());
+        userRepository.save(prepareToSave(user));
     }
 
     @Override
@@ -66,5 +72,12 @@ public class UserService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException(String.format("User %s is not found", email));
         return new AuthorizedUser(user);
+    }
+
+    private User prepareToSave(User user) {
+        String password = user.getPassword();
+        user.setPassword(StringUtils.hasText(password) ? passwordEncoder.encode(password) : password);
+        user.setEmail(user.getEmail().toLowerCase());
+        return user;
     }
 }

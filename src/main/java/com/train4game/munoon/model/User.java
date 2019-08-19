@@ -105,7 +105,6 @@ public class User extends AbstractNamedEntity implements Serializable {
     public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", registered=" + registered +
                 ", enabled=" + enabled +
                 ", roles=" + roles +

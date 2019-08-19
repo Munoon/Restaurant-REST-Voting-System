@@ -55,7 +55,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        List<MealTo> expected = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL), MEAL_LIST_MAPPER);
+        List<MealTo> expected = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL), MEAL_LIST_MAPPER );
 
         mockMvc.perform(get(REST_URL + "all/" + FIRST_RESTAURANT_ID))
                 .andDo(print())

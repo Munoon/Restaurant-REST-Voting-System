@@ -3,6 +3,8 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
+import com.train4game.munoon.to.UserTo;
+import com.train4game.munoon.utils.UserUtil;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -120,6 +122,16 @@ public class UserServiceTest extends AbstractServiceTest  {
         user.setRoles(Collections.singleton(Roles.ROLE_USER));
         service.update(user);
         assertMatch(service.get(FIRST_USER_ID), user);
+    }
+
+    @Test
+    void updateTo() {
+        User user = new User(FIRST_USER);
+        UserTo updated = UserUtil.parseTo(user);
+        updated.setEmail("newemail@email.com");
+        updated.setName("new name");
+        service.update(updated);
+        assertMatch(service.get(FIRST_USER_ID), UserUtil.updateFromTo(user, updated));
     }
 
     @Test

@@ -3,6 +3,8 @@ package com.train4game.munoon.service;
 import com.train4game.munoon.AuthorizedUser;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.user.UserRepository;
+import com.train4game.munoon.to.UserTo;
+import com.train4game.munoon.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -60,10 +62,18 @@ public class UserService implements UserDetailsService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
-    @Transactional
     public void update(User user) {
         Assert.notNull(user, "User must be not null");
         userRepository.save(prepareToSave(user));
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Transactional
+    public void update(UserTo userTo) {
+        Assert.notNull(userTo, "UserTo must be not null");
+        User user = get(userTo.getId());
+        User updated = UserUtil.updateFromTo(user, userTo);
+        userRepository.save(prepareToSave(updated));
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.train4game.munoon.web.controllers.user;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.UserService;
+import com.train4game.munoon.to.UserTo;
 import com.train4game.munoon.utils.JsonUtil;
+import com.train4game.munoon.utils.UserUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -45,7 +47,8 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testUpdate() throws Exception {
-        User updated = new User(FIRST_USER);
+        User expected = new User(FIRST_USER);
+        UserTo updated = UserUtil.parseTo(expected);
         updated.setName("New Name");
         updated.setEmail("newemail@gmail.com");
 
@@ -55,7 +58,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        assertMatch(userService.get(FIRST_USER_ID), updated);
+        assertMatch(userService.get(FIRST_USER_ID), UserUtil.updateFromTo(expected, updated));
     }
 
     @Test

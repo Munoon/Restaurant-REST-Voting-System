@@ -2,6 +2,12 @@ package com.train4game.munoon.web.controllers.user;
 
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.UserService;
+import com.train4game.munoon.to.UserTo;
+import com.train4game.munoon.utils.UserUtil;
+import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +22,13 @@ public abstract class AbstractUserController {
 
     @Autowired
     protected UserService service;
+
+    public User create(UserTo userTo) {
+        log.info("Created user {}", userTo);
+        checkNew(userTo);
+        User user = UserUtil.createNewFromTo(userTo);
+        return service.create(user);
+    }
 
     public User create(User user) {
         log.info("Created user {}", user);
@@ -41,6 +54,12 @@ public abstract class AbstractUserController {
     public List<User> getAll() {
         log.info("Get all users");
         return service.getAll();
+    }
+
+    public void update(UserTo userTo, int id) {
+        log.info("Update {} with id {}", userTo, id);
+        assureIdConsistent(userTo, id);
+        service.update(userTo);
     }
 
     public void update(User user, int id) {

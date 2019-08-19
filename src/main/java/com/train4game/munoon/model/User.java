@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -62,11 +63,12 @@ public class User extends AbstractNamedEntity implements Serializable {
         this.roles = roles;
     }
 
-    public User(Integer id, String name, String email, String password) {
+    public User(Integer id, String name, String email, String password, Roles role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.roles = Collections.singleton(role);
     }
 
     public String getEmail() {

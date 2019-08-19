@@ -3,12 +3,14 @@ package com.train4game.munoon.web.controllers.user;
 import com.train4game.munoon.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.train4game.munoon.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(ProfileRestController.REST_URL)
+@PreAuthorize("isAuthenticated()")
 public class ProfileRestController extends AbstractUserController {
     static final String REST_URL = "/profile";
 

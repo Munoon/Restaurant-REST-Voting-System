@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -81,6 +82,7 @@ public class MealRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable int id) {
         log.info("Delete meal with id {}, {}", id);
         service.delete(id);
@@ -88,6 +90,7 @@ public class MealRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void update(@RequestBody MealTo meal, @PathVariable int id) {
         assureIdConsistent(meal, id);
         log.info("Update {}", meal);
@@ -95,6 +98,7 @@ public class MealRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MealTo> createWithLocation(@RequestBody MealTo meal) {
         MealTo created = create(meal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()

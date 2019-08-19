@@ -22,6 +22,7 @@
     </logger>
 
     <logger name="com.train4game.munoon" level="debug"/>
+    <logger name="org.springframework.security.web.csrf.CsrfFilter" level="debug"/>
 
     <root level="INFO">
         <appender-ref ref="console"/>

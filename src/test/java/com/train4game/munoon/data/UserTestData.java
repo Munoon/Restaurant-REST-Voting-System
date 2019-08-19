@@ -2,6 +2,7 @@ package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.utils.JsonUtil;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
@@ -42,5 +43,9 @@ public class UserTestData {
 
     public static ResultMatcher contentJson(User expected) {
         return result -> assertMatch(readFromJsonMvcResult(result, User.class), expected);
+    }
+
+    public static String jsonWithPassword(User user, String passw) {
+        return JsonUtil.writeAdditionProps(user, "password", passw);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EnumSet;
 
 import static com.train4game.munoon.data.UserTestData.*;
@@ -35,7 +36,7 @@ public class UserServiceTest extends AbstractServiceTest  {
                 "Alex",
                 "alex@gmail.com",
                 "qwerty",
-                LocalDateTime.now(),
+                new Date(),
                 true,
                 Collections.singleton(Roles.ROLE_USER
         ));
@@ -51,7 +52,7 @@ public class UserServiceTest extends AbstractServiceTest  {
                 "Alex",
                 "alex@gmail.com",
                 "qwerty",
-                LocalDateTime.now(),
+                new Date(),
                 true,
                 EnumSet.noneOf(Roles.class)
         );
@@ -67,7 +68,7 @@ public class UserServiceTest extends AbstractServiceTest  {
                 "Alex",
                 FIRST_USER_EMAIL,
                 "qwerty",
-                LocalDateTime.now(),
+                new Date(),
                 true,
                 Collections.singleton(Roles.ROLE_USER
                 ));
@@ -123,8 +124,8 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     void testValidation() {
-        validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "  ", "password", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", LocalDateTime.now(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", new Date(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "User", "  ", "password", new Date(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", new Date(), true, EnumSet.of(Roles.ROLE_USER))), ConstraintViolationException.class);
     }
 }

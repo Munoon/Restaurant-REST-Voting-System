@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 // https://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
@@ -32,7 +33,7 @@ public class User extends AbstractNamedEntity implements Serializable {
 
     @Column(name = "registered", nullable = false, columnDefinition = "TIMESTAMP DEFAULT now()")
     @NotNull
-    private LocalDateTime registered;
+    private Date registered = new Date();
 
     @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean enabled;
@@ -52,7 +53,7 @@ public class User extends AbstractNamedEntity implements Serializable {
         this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getRegistered(), u.isEnabled(), u.getRoles());
     }
 
-    public User(Integer id, String name, String email, String password, LocalDateTime registered, boolean enabled, Set<Roles> roles) {
+    public User(Integer id, String name, String email, String password, Date registered, boolean enabled, Set<Roles> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
@@ -77,11 +78,11 @@ public class User extends AbstractNamedEntity implements Serializable {
         this.password = password;
     }
 
-    public LocalDateTime getRegistered() {
+    public Date getRegistered() {
         return registered;
     }
 
-    public void setRegistered(LocalDateTime registered) {
+    public void setRegistered(Date registered) {
         this.registered = registered;
     }
 

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
@@ -54,7 +55,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        User expected = new User(null, "new", "new@gmail.com", "newPass", LocalDateTime.now(), true, Set.of(Roles.ROLE_USER));
+        User expected = new User(null, "new", "new@gmail.com", "newPass", new Date(), true, Set.of(Roles.ROLE_USER));
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)

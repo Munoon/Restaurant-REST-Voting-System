@@ -1,5 +1,7 @@
 package com.train4game.munoon.to;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -16,6 +18,7 @@ public class UserTo extends AbstractBaseTo {
 
     @NotBlank
     @Size(min = 5, max = 200)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 
     public UserTo() {

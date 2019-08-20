@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class RestaurantRestController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public RestaurantTo update(@RequestBody RestaurantTo restaurant, @PathVariable int id) {
+    public RestaurantTo update(@Valid @RequestBody RestaurantTo restaurant, @PathVariable int id) {
         assureIdConsistent(restaurant, id);
         log.info("Update {}", restaurant);
         Restaurant created = service.update(toRestaurant.map(restaurant));
@@ -101,7 +102,7 @@ public class RestaurantRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RestaurantTo> createWithLocation(@RequestBody RestaurantTo restaurant) {
+    public ResponseEntity<RestaurantTo> createWithLocation(@Valid @RequestBody RestaurantTo restaurant) {
         RestaurantTo created = create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")

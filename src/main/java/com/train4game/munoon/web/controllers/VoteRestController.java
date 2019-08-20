@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
@@ -77,7 +78,7 @@ public class VoteRestController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody VoteTo voteTo, @PathVariable int id) {
+    public void update(@Valid @RequestBody VoteTo voteTo, @PathVariable int id) {
         int userId = SecurityUtil.authUserId();
         assureIdConsistent(voteTo, id);
         log.info("Update {} with id {} from user {}", voteTo, id, userId);
@@ -85,14 +86,13 @@ public class VoteRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<VoteTo> createWithLocation(@RequestBody VoteTo vote) {
+    public ResponseEntity<VoteTo> createWithLocation(@Valid @RequestBody VoteTo vote) {
         VoteTo created = create(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
-
 
     private VoteTo create(VoteTo voteTo) {
         int userId = SecurityUtil.authUserId();

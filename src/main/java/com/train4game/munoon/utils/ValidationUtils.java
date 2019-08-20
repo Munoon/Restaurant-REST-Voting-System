@@ -4,10 +4,13 @@ import com.train4game.munoon.model.AbstractBaseEntity;
 import com.train4game.munoon.to.AbstractBaseTo;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
 import com.train4game.munoon.utils.exceptions.TimeOverException;
+import org.springframework.validation.FieldError;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ValidationUtils {
     private ValidationUtils() {
@@ -81,5 +84,11 @@ public class ValidationUtils {
     public static void checkForSameDate(LocalDate actual, LocalDate expected, String msg) {
         if (!actual.equals(expected))
             throw new DateTimeException(msg);
+    }
+
+    public static List<String> getErrorsFieldList(List<FieldError> fieldErrors) {
+        return fieldErrors.stream()
+                .map(error -> String.format("%s - %s", error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.toList());
     }
 }

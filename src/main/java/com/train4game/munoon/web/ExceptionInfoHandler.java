@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 
 import java.util.List;
 
@@ -61,21 +60,21 @@ public class ExceptionInfoHandler {
         return warnAndGetErrorInfo(req.getRequestURL(), ACCESS_DENIED, e);
     }
 
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, e);
     }
 
-    @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BindException.class)
     public ErrorInfo beanValidationExceptionHandler(HttpServletRequest req, BindException e) {
         List<String> errors = ValidationUtils.getErrorsFieldList(e.getFieldErrors());
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, errors);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorInfo argumentNotValidHandler(HttpServletRequest req, MethodArgumentNotValidException e) {
         List<String> errors = ValidationUtils.getErrorsFieldList(e.getBindingResult().getFieldErrors());
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, errors);

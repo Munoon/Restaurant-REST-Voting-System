@@ -7,14 +7,14 @@
 
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d{dd-MM-yyyy HH:mm:ss} [%thread] %-5level %logger{36}.%M - %msg%n</pattern>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss} %-5level %logger{36}.%M - %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d{dd-MM-yyyy HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %highlight(%msg%n)</pattern>
+            <pattern>%d{dd-MM-yyyy HH:mm:ss} %highlight(%-5level) %logger{36}.%M - %highlight(%msg%n)</pattern>
         </encoder>
     </appender>
 

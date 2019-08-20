@@ -131,26 +131,22 @@ class VoteRestControllerTest extends AbstractControllerTest {
         VoteTo updated = toVoteTo.map(FIRST_VOTE);
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
-        assertThrows(NestedServletException.class, () -> {
-            mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
-                    .with(userAuth(FIRST_USER))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(updated)))
-                    .andExpect(status().is5xxServerError());
-        });
+        mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().is5xxServerError());
 
         assertMatch(service.get(FIRST_VOTE_ID, FIRST_USER_ID), FIRST_VOTE);
     }
 
     @Test
-    void deleteTimeOver() {
+    void deleteTimeOver() throws Exception {
         assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
 
-        assertThrows(NestedServletException.class, () -> {
-            mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID)
-                    .with(userAuth(FIRST_USER)))
-                    .andExpect(status().is5xxServerError());
-        });
+        mockMvc.perform(delete(REST_URL + FIRST_VOTE_ID)
+                .with(userAuth(FIRST_USER)))
+                .andExpect(status().is5xxServerError());
 
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
     }

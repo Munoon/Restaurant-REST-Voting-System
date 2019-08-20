@@ -81,7 +81,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         User updated = new User(FIRST_USER);
         updated.setName("update name");
-        updated.setEmail("new email");
+        updated.setEmail("newemail@email.com");
 
         mockMvc.perform(put(REST_URL + FIRST_USER_ID)
                 .with(userAuth(FIRST_USER))
@@ -105,7 +105,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void noPermission() throws Exception {
         mockMvc.perform(get(REST_URL + FIRST_USER_ID)
                 .with(userAuth(SECOND_USER)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

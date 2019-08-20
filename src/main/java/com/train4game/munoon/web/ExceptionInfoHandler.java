@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -54,21 +55,27 @@ public class ExceptionInfoHandler {
         return warnAndGetErrorInfo(url, DATA_ERROR, e);
     }
 
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorInfo accessDeniedHandler(HttpServletRequest req, AccessDeniedException e) {
+        return warnAndGetErrorInfo(req.getRequestURL(), ACCESS_DENIED, e);
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, e);
     }
 
     @ExceptionHandler(BindException.class)
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorInfo beanValidationExceptionHandler(HttpServletRequest req, BindException e) {
         List<String> errors = ValidationUtils.getErrorsFieldList(e.getFieldErrors());
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, errors);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorInfo argumentNotValidHandler(HttpServletRequest req, MethodArgumentNotValidException e) {
         List<String> errors = ValidationUtils.getErrorsFieldList(e.getBindingResult().getFieldErrors());
         return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, errors);

@@ -2,6 +2,7 @@ package com.train4game.munoon.data;
 
 import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
+import com.train4game.munoon.to.UserTo;
 import com.train4game.munoon.utils.JsonUtil;
 import org.springframework.test.web.servlet.ResultMatcher;
 
@@ -46,6 +47,10 @@ public class UserTestData {
     }
 
     public static String jsonWithPassword(User user, String passw) {
+        return JsonUtil.writeAdditionProps(user, "password", passw);
+    }
+
+    public static String jsonWithPassword(UserTo user, String passw) {
         return JsonUtil.writeAdditionProps(user, "password", passw);
     }
 }

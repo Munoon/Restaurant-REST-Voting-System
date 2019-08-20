@@ -144,7 +144,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     void noPermission() throws Exception {
         mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(SECOND_USER)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
 
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
     }

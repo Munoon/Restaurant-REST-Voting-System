@@ -105,7 +105,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void noPermission() throws Exception {
         mockMvc.perform(get(REST_URL + FIRST_USER_ID)
                 .with(userAuth(SECOND_USER)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test

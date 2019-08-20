@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -32,7 +31,6 @@ import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
 @RestController
 @RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("isAuthenticated()")
 public class VoteRestController {
     public static final String REST_URL = "/vote";
     private static final Logger log = LoggerFactory.getLogger(VoteRestController.class);

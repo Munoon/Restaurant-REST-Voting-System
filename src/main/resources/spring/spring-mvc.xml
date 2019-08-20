@@ -27,6 +27,4 @@
             </set>
         </property>
     </bean>
-
-    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
 </beans>

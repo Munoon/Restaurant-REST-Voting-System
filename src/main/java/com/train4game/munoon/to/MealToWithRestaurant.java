@@ -18,7 +18,7 @@ public class MealToWithRestaurant extends AbstractBaseTo {
     private RestaurantTo restaurant;
 
     @NotNull
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 
     public String getName() {
         return name;

@@ -54,12 +54,6 @@ public class ExceptionInfoHandler {
         return warnAndGetErrorInfo(url, DATA_ERROR, e);
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ErrorInfo accessDeniedHandler(HttpServletRequest req, AccessDeniedException e) {
-        return warnAndGetErrorInfo(req.getRequestURL(), ACCESS_DENIED, e);
-    }
-
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {

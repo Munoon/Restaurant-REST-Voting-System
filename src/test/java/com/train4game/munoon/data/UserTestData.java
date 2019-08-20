@@ -19,9 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserTestData {
     public static final int FIRST_USER_ID = 100;
     public static final String FIRST_USER_EMAIL = "admin@gmail.com";
-    public static final User FIRST_USER = new User(FIRST_USER_ID, "Nikita", "admin@gmail.com", "easyPass", new Date(), true, Collections.singleton(Roles.ROLE_ADMIN));
-    public static final User SECOND_USER = new User(FIRST_USER_ID + 1, "Vasya", "vasya@gmail.com", "VasyaTheBest", new Date(), true, Collections.singleton(Roles.ROLE_USER));
-    public static final User THIRD_USER = new User(FIRST_USER_ID + 2, "Petr", "petr@gmail.com", "PertHasStrongPass123", new Date(), true, Collections.singleton(Roles.ROLE_USER));
+    public static final User FIRST_USER = new User(FIRST_USER_ID, "Admin", "admin@gmail.com", "admin", new Date(), true, Collections.singleton(Roles.ROLE_ADMIN));
+    public static final User SECOND_USER = new User(FIRST_USER_ID + 1, "User", "user@gmail.com", "user", new Date(), true, Collections.singleton(Roles.ROLE_USER));
 
     private UserTestData() {
     }

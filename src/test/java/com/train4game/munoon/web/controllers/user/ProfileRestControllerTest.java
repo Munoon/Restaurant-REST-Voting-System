@@ -42,7 +42,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL)
                 .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
-        assertMatch(userService.getAll(), THIRD_USER, SECOND_USER);
+        assertMatch(userService.getAll(), SECOND_USER);
     }
 
     @Test

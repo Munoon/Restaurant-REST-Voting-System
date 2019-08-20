@@ -16,7 +16,7 @@ import static com.train4game.munoon.data.RestaurantTestData.SECOND_RESTAURANT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MealTestData {
-    public static final int FIRST_MEAL_ID = 105;
+    public static final int FIRST_MEAL_ID = 104;
     public static final Meal FIRST_MEAL = new Meal(FIRST_MEAL_ID, "Burger", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
     public static final Meal SECOND_MEAL = new Meal(FIRST_MEAL_ID + 1, "French Fries", FIRST_RESTAURANT, 20, LocalDate.of(2019, 8, 6));
     public static final Meal THIRD_MEAL = new Meal(FIRST_MEAL_ID + 2, "Burger", SECOND_RESTAURANT, 30, LocalDate.of(2019, 8, 6));

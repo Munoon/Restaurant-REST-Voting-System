@@ -44,7 +44,7 @@ public class UserServiceTest extends AbstractServiceTest  {
         ));
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        assertMatch(service.getAll(), newUser, THIRD_USER, SECOND_USER, FIRST_USER);
+        assertMatch(service.getAll(), newUser, FIRST_USER, SECOND_USER);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class UserServiceTest extends AbstractServiceTest  {
         );
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        assertMatch(service.getAll(), newUser, THIRD_USER, SECOND_USER, FIRST_USER);
+        assertMatch(service.getAll(), newUser, FIRST_USER, SECOND_USER);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class UserServiceTest extends AbstractServiceTest  {
     @Test
     void delete() {
         service.delete(FIRST_USER_ID);
-        assertMatch(service.getAll(), THIRD_USER, SECOND_USER);
+        assertMatch(service.getAll(), SECOND_USER);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class UserServiceTest extends AbstractServiceTest  {
 
     @Test
     void getAll() {
-        assertMatch(service.getAll(), THIRD_USER, SECOND_USER, FIRST_USER);
+        assertMatch(service.getAll(), FIRST_USER, SECOND_USER);
     }
 
     @Test

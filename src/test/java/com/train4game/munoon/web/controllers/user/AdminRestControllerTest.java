@@ -41,7 +41,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(THIRD_USER, SECOND_USER, FIRST_USER));
+                .andExpect(contentJson(FIRST_USER, SECOND_USER));
     }
 
     @Test
@@ -66,7 +66,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         expected.setId(returned.getId());
 
         assertMatch(returned, expected);
-        assertMatch(userService.getAll(), expected, THIRD_USER, SECOND_USER, FIRST_USER);
+        assertMatch(userService.getAll(), expected, FIRST_USER, SECOND_USER);
     }
 
     @Test
@@ -74,7 +74,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + FIRST_USER_ID)
                 .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
-        assertMatch(userService.getAll(), THIRD_USER, SECOND_USER);
+        assertMatch(userService.getAll(), SECOND_USER);
     }
 
     @Test

@@ -36,7 +36,7 @@ public class JsonTest {
         String json = JsonUtil.writeValue(FIRST_USER);
         System.out.println(json);
 
-        assertThat(json.contains("password") || json.contains(FIRST_USER.getPassword())).isEqualTo(false);
+        assertThat(json.contains("password")).isEqualTo(false);
 
         String jsonWithPass = UserTestData.jsonWithPassword(FIRST_USER, "new Password");
         System.out.println(jsonWithPass);

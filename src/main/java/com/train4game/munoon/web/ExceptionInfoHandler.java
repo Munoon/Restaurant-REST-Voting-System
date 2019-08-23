@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +21,7 @@ import java.util.List;
 
 import static com.train4game.munoon.utils.exceptions.ErrorType.*;
 
+@ControllerAdvice
 @RestControllerAdvice(annotations = RestController.class)
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
@@ -29,6 +30,12 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo notFoundHandler(HttpServletRequest req, NotFoundException e) {
         return warnAndGetErrorInfo(req.getRequestURL(), DATA_NOT_FOUND, e);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorInfo wrongRequest(HttpServletRequest req, NoHandlerFoundException e) {
+        return warnAndGetErrorInfo(req.getRequestURL(), ErrorType.WRONG_REQUEST, e);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -86,7 +93,7 @@ public class ExceptionInfoHandler {
     private ErrorInfo warnAndGetErrorInfo(CharSequence url, ErrorType errorType, Exception e) {
         Throwable rootCause = ValidationUtils.getRootCause(e);
         log.warn("{} at request  {}: {}", errorType, url.toString(), rootCause.toString());
-        return new ErrorInfo(url, errorType, rootCause.toString());
+        return new ErrorInfo(url, errorType, rootCause.getMessage());
     }
 
     private ErrorInfo warnAndGetErrorInfo(CharSequence url, ErrorType errorType, List<String> errors) {

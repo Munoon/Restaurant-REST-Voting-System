@@ -12,11 +12,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static com.train4game.munoon.TestUtil.userAuth;
+import static com.train4game.munoon.TestUtil.*;
 import static com.train4game.munoon.data.UserTestData.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -28,6 +29,22 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Autowired
     public ProfileRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext) {
         super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
+    }
+
+    @Test
+    void testRegistration() throws Exception {
+        UserTo user = new UserTo(null, "New User", "email@email.com", "testPassword");
+
+        ResultActions actions = mockMvc.perform(post(REST_URL + "register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(user, user.getPassword())))
+                .andExpect(status().isCreated());
+
+        User created = readFromJson(actions, User.class);
+        created.setName(user.getName());
+        created.setEmail(user.getEmail());
+
+        assertMatch(userService.getAll(), created, FIRST_USER, SECOND_USER);
     }
 
     @Test
@@ -80,6 +97,16 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void registerNotUniqueEmail() throws Exception {
+        UserTo user = new UserTo(null, "New user", FIRST_USER_EMAIL, "password");
+        mockMvc.perform(post(REST_URL + "register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(user, user.getPassword())))
                 .andExpect(status().isConflict());
     }
 }

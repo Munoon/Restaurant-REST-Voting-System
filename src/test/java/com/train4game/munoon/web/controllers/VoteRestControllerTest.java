@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
@@ -149,5 +151,34 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().is5xxServerError());
 
         assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void votedTwiceForToday() throws Exception {
+        VoteTo firstVote = new VoteTo(null, FIRST_RESTAURANT_ID);
+        VoteTo secondVote = new VoteTo(null, SECOND_RESTAURANT_ID);
+
+        ResultActions actions = mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(firstVote)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(secondVote)))
+                .andExpect(status().isConflict());
+
+        VoteTo returned = readFromJson(actions, VoteTo.class);
+        firstVote.setId(returned.getId());
+        firstVote.setUserId(returned.getUserId());
+
+        Vote expectedVote = toVote.map(firstVote);
+        expectedVote.setRestaurant(FIRST_RESTAURANT);
+
+        assertMatchVoteTo(returned, firstVote);
+        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
     }
 }

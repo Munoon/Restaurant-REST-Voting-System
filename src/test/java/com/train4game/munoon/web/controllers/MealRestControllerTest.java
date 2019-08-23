@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Type;
@@ -147,5 +149,33 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isForbidden());
 
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createNotUniqueName() throws Exception {
+        Meal meal = new Meal(null, FIRST_MEAL.getName(), FIRST_RESTAURANT, 500, FIRST_MEAL.getDate());
+        MealTo expected = toMealTo.map(meal);
+
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateNotUniqueName() throws Exception {
+        Meal meal = new Meal(FIRST_MEAL);
+        meal.setName(SECOND_MEAL.getName());
+
+        MealTo updated = toMealTo.map(meal);
+
+        mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isConflict());
     }
 }

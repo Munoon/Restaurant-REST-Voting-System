@@ -9,6 +9,7 @@
         <csrf disabled="true"/>
 
         <intercept-url pattern="/admin/users/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/profile/register" access="isAnonymous()"/>
         <intercept-url pattern="/profile/**" access="isAuthenticated()"/>
 
         <intercept-url pattern="/vote/**" access="isAuthenticated()"/>

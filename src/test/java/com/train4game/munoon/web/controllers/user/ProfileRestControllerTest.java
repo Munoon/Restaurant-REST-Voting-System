@@ -12,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.train4game.munoon.TestUtil.userAuth;
@@ -65,5 +67,19 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void notAuthorized() throws Exception {
         mockMvc.perform(get(REST_URL))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateNotUniqueEmail() throws Exception {
+        User expected = new User(FIRST_USER);
+        UserTo updated = UserUtil.parseTo(expected);
+        updated.setEmail(SECOND_USER.getEmail());
+
+        mockMvc.perform(put(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isConflict());
     }
 }

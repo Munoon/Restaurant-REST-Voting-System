@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
@@ -112,5 +114,29 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void notAuthorized() throws Exception {
         mockMvc.perform(get(REST_URL))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createNotUniqueEmail() throws Exception {
+        User expected = new User(null, "new", FIRST_USER_EMAIL, "newPass", new Date(), true, Set.of(Roles.ROLE_USER));
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(expected, expected.getPassword())))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateNotUniqueEmail() throws Exception {
+        User updated = new User(FIRST_USER);
+        updated.setEmail(SECOND_USER.getEmail());
+
+        mockMvc.perform(put(REST_URL + FIRST_USER_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isConflict());
     }
 }

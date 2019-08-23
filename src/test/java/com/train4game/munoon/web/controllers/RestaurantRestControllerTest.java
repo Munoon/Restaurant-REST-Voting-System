@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Type;
@@ -134,6 +136,30 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isForbidden());
 
         assertMatch(service.getAll(), SECOND_RESTAURANT, FIRST_RESTAURANT);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createNotUniqueName() throws Exception {
+        Restaurant expected = new Restaurant(null, FIRST_RESTAURANT.getName());
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateNotUniqueName() throws Exception {
+        Restaurant updated = new Restaurant(FIRST_RESTAURANT);
+        updated.setName(SECOND_RESTAURANT.getName());
+
+        mockMvc.perform(put(REST_URL + FIRST_RESTAURANT_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isConflict());
     }
 
     // пришлось скопировать из контроллера

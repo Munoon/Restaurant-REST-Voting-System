@@ -5,15 +5,12 @@ import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.service.VoteService;
-import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
 import com.train4game.munoon.to.RestaurantToWithVotes;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
-import com.train4game.munoon.web.controllers.RestaurantRestController;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
@@ -22,9 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +32,7 @@ import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static com.train4game.munoon.utils.ParserUtil.*;
+import static com.train4game.munoon.utils.RestaurantUtil.parseWithVotes;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -70,7 +66,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         LocalDate date = LocalDate.of(2019, 8, 7);
         Restaurant expected = new Restaurant(FIRST_RESTAURANT);
         expected.setMenu(Collections.singletonList(FOURTH_MEAL));
-        List<RestaurantToWithVotes> expectedList = parseWithVotes(Collections.singletonList(expected), date);
+        List<RestaurantToWithVotes> expectedList = parseWithVotes(Collections.singletonList(expected), date, modelMapper, voteService);
 
         mockMvc.perform(get(REST_URL + "?date=" + date))
                 .andDo(print())
@@ -87,7 +83,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(parseWithVotes(expected, LocalDate.now())));
+                .andExpect(contentJson(parseWithVotes(expected, LocalDate.now(), modelMapper, voteService)));
     }
 
     @Test
@@ -160,19 +156,5 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isConflict());
-    }
-
-    // пришлось скопировать из контроллера
-    // не нащел способ это вынести куда-то
-    private List<RestaurantToWithVotes> parseWithVotes(List<Restaurant> restaurants, LocalDate date) {
-        List<RestaurantToWithVotes> result = new ArrayList<>();
-        restaurants.forEach(restaurant -> result.add(parseWithVotes(restaurant, date)));
-        return result;
-    }
-
-    private RestaurantToWithVotes parseWithVotes(Restaurant restaurant, LocalDate date) {
-        List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
-        int votes = voteService.getCount(restaurant.getId(), date);
-        return parseRestaurantWithVotes(restaurant, menu, votes);
     }
 }

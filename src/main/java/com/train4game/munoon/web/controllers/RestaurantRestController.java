@@ -1,6 +1,5 @@
 package com.train4game.munoon.web.controllers;
 
-import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
@@ -22,10 +21,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ParserUtil.*;
+import static com.train4game.munoon.utils.RestaurantUtil.parseWithVotes;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -66,13 +65,13 @@ public class RestaurantRestController {
     public List<RestaurantToWithVotes> getAllByDate(@RequestParam(required = false) LocalDate date) {
         LocalDate localDate = date == null ? LocalDate.now() : date;
         log.info("Get all restaurants by meal date {}", localDate);
-        return parseWithVotes(service.getAllByMealDate(localDate), localDate);
+        return parseWithVotes(service.getAllByMealDate(localDate), localDate, modelMapper, voteService);
     }
 
     @GetMapping("/{id}")
     public RestaurantToWithVotes get(@PathVariable int id) {
         log.info("Get restaurant with id {}", id);
-        return parseWithVotes(service.get(id), LocalDate.now());
+        return parseWithVotes(service.get(id), LocalDate.now(), modelMapper, voteService);
     }
 
     @GetMapping("/votes/{id}")
@@ -111,17 +110,5 @@ public class RestaurantRestController {
         log.info("Create {}", restaurant);
         Restaurant created = service.create(toRestaurant.map(restaurant));
         return toRestaurantTo.map(created);
-    }
-
-    private List<RestaurantToWithVotes> parseWithVotes(List<Restaurant> restaurants, LocalDate date) {
-        List<RestaurantToWithVotes> result = new ArrayList<>();
-        restaurants.forEach(restaurant -> result.add(parseWithVotes(restaurant, date)));
-        return result;
-    }
-
-    private RestaurantToWithVotes parseWithVotes(Restaurant restaurant, LocalDate date) {
-        List<MealTo> menu = modelMapper.map(restaurant.getMenu(), MEAL_LIST_MAPPER);
-        int votes = voteService.getCount(restaurant.getId(), date);
-        return parseRestaurantWithVotes(restaurant, menu, votes);
     }
 }

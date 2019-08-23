@@ -1,7 +1,6 @@
 package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Meal;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.meal.MealRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,6 +25,12 @@ public class MealService {
     @CacheEvict(value = "meals", allEntries = true)
     public Meal create(Meal meal) {
         Assert.notNull(meal, "Meal must be not null");
+        return repository.save(meal);
+    }
+
+    @CacheEvict(value = "meals", allEntries = true)
+    public List<Meal> create(List<Meal> meal) {
+        Assert.notNull(meal, "Meals list must be not null");
         return repository.save(meal);
     }
 

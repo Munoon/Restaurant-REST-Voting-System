@@ -28,8 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.train4game.munoon.TestUtil.readFromJson;
-import static com.train4game.munoon.TestUtil.userAuth;
+import static com.train4game.munoon.TestUtil.*;
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT_ID;
@@ -143,6 +142,28 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void testCreateAll() throws Exception {
+        MealTo firstMeal = new MealTo(null, "New Meal 1", 500, FIRST_RESTAURANT_ID, LocalDate.of(2019, 8, 6));
+        MealTo secondMeal = new MealTo(null, "New Meal 2", 500, FIRST_RESTAURANT_ID, LocalDate.of(2019, 8, 6));
+        List<MealTo> expected = Arrays.asList(firstMeal, secondMeal);
+
+        ResultActions actions = mockMvc.perform(post(REST_URL + "all")
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isCreated());
+
+        List<MealTo> returned = readFromJsonList(actions, MealTo.class);
+        firstMeal.setId(returned.get(0).getId());
+        secondMeal.setId(returned.get(1).getId());
+
+        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal, FOURTH_MEAL), MEAL_LIST_MAPPER);
+
+        assertMatchMealTo(returned, expected);
+        assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), MEAL_LIST_MAPPER), expectedList);
+    }
+
+    @Test
     void noPermission() throws Exception {
         mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(SECOND_USER)))
@@ -161,6 +182,19 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createAllNotUniqueName() throws Exception {
+        MealTo firstMeal = new MealTo(null, "New Meal", 500, FIRST_RESTAURANT_ID, LocalDate.of(2019, 8, 6));
+        MealTo secondMeal = new MealTo(null, "New Meal", 500, FIRST_RESTAURANT_ID, LocalDate.of(2019, 8, 6));
+
+        mockMvc.perform(post(REST_URL + "all")
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(Arrays.asList(firstMeal, secondMeal))))
                 .andExpect(status().isConflict());
     }
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT;
@@ -32,6 +34,18 @@ public class MealServiceTest extends AbstractServiceTest {
         Meal created = service.create(newMeal);
         newMeal.setId(created.getId());
         assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal, FOURTH_MEAL);
+    }
+
+    @Test
+    void createAll() {
+        Meal firstMeal = new Meal(null, "Test meal 1", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
+        Meal secondMeal = new Meal(null, "Test meal 2", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
+        List<Meal> created = service.create(Arrays.asList(firstMeal, secondMeal));
+
+        firstMeal.setId(created.get(0).getId());
+        secondMeal.setId(created.get(1).getId());
+
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal, FOURTH_MEAL);
     }
 
     @Test

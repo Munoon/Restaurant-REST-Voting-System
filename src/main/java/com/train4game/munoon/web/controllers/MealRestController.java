@@ -8,6 +8,7 @@ import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.utils.ParserUtil;
+import com.train4game.munoon.utils.ValidationUtils;
 import com.train4game.munoon.web.SecurityUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -22,13 +23,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
+import static com.train4game.munoon.utils.ParserUtil.MEAL_TO_LIST_MAPPER;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
 
@@ -104,6 +108,12 @@ public class MealRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<MealTo> createAllWithLocation(@Valid @RequestBody List<MealTo> meals) {
+        return createAll(meals);
+    }
+
     private List<MealTo> getAll(int restaurantId) {
         log.info("Get all meals of restaurant {}", restaurantId);
         return modelMapper.map(service.getAll(restaurantId), MEAL_LIST_MAPPER);
@@ -114,7 +124,14 @@ public class MealRestController {
         return modelMapper.map(service.getAllByDate(restaurantId, date), MEAL_LIST_MAPPER);
     }
 
-    public MealTo create(MealTo mealTo) {
+    private List<MealTo> createAll(List<MealTo> meals) {
+        meals.forEach(ValidationUtils::checkNew);
+        log.info("Create meals from list {}", meals);
+        List<Meal> mealsList = modelMapper.map(meals, MEAL_TO_LIST_MAPPER);
+        return modelMapper.map(service.create(mealsList), MEAL_LIST_MAPPER);
+    }
+
+    private MealTo create(MealTo mealTo) {
         checkNew(mealTo);
         log.info("Create {}", mealTo);
         Meal meal = parseMeal.map(mealTo);

@@ -19,6 +19,10 @@ public class MealRepository {
         return repository.save(meal);
     }
 
+    public List<Meal> save(List<Meal> meals) {
+        return repository.saveAll(meals);
+    }
+
     public Meal get(int id) {
         return repository.getMealById(id);
     }

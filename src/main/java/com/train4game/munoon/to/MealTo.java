@@ -20,6 +20,17 @@ public class MealTo extends AbstractBaseTo {
     @NotNull
     private LocalDate date = LocalDate.now();
 
+    public MealTo() {
+    }
+
+    public MealTo(Integer id, @Size(min = 2, max = 200) @NotBlank String name, @Range(min = 10, max = 50000) int price, int restaurantId, @NotNull LocalDate date) {
+        super(id);
+        this.name = name;
+        this.price = price;
+        this.restaurantId = restaurantId;
+        this.date = date;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,5 +1,6 @@
 package com.train4game.munoon.utils;
 
+import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class ParserUtil {
     public static final Type MEAL_LIST_MAPPER = new TypeToken<List<MealTo>>() {}.getType();
+    public static final Type MEAL_TO_LIST_MAPPER = new TypeToken<List<Meal>>() {}.getType();
     public static final Type RESTAURANT_LIST_MAPPER = new TypeToken<List<RestaurantTo>>() {}.getType();
     public static final Type VOTE_LIST_MAPPER = new TypeToken<List<VoteTo>>() {}.getType();
 

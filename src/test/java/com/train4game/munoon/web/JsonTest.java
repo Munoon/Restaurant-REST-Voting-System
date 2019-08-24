@@ -10,7 +10,10 @@ import java.util.List;
 
 import static com.train4game.munoon.data.MealTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // Решил JsonTest положить в папку web так-как в папке web уменя лежит JacksonObjectMapper
 // Создавать папку Util чисто для трёх тестов я считаю глупо
@@ -36,12 +39,12 @@ public class JsonTest {
         String json = JsonUtil.writeValue(FIRST_USER);
         System.out.println(json);
 
-        assertThat(json.contains("password")).isEqualTo(false);
+        assertThat(json, not(containsString("password")));
 
         String jsonWithPass = UserTestData.jsonWithPassword(FIRST_USER, "new Password");
         System.out.println(jsonWithPass);
 
         User user = JsonUtil.readValue(jsonWithPass, User.class);
-        assertThat(user.getPassword()).isEqualTo("new Password");
+        assertEquals(user.getPassword(), "new Password");
     }
 }

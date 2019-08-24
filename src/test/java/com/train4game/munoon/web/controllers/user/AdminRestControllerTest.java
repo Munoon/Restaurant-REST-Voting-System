@@ -23,6 +23,8 @@ import java.util.Set;
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.UserTestData.*;
+import static com.train4game.munoon.model.Roles.ROLE_USER;
+import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -57,7 +59,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        User expected = new User(null, "new", "new@gmail.com", "newPass", new Date(), true, Set.of(Roles.ROLE_USER));
+        User expected = new User(null, "new", "new@gmail.com", "newPass", new Date(), true, Set.of(ROLE_USER));
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,12 +121,13 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createNotUniqueEmail() throws Exception {
-        User expected = new User(null, "new", FIRST_USER_EMAIL, "newPass", new Date(), true, Set.of(Roles.ROLE_USER));
+        User expected = new User(null, "new", FIRST_USER_EMAIL, "newPass", new Date(), true, Set.of(ROLE_USER));
         mockMvc.perform(post(REST_URL)
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(expected, expected.getPassword())))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 
     @Test
@@ -137,6 +140,32 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void createUnsafeHtml() throws Exception {
+        User user = new User(null, "<script>alert(123)</script>", "email@email.com", "password", ROLE_USER);
+
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(user, user.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateUnsafeHtml() throws Exception {
+        User updated = new User(FIRST_USER);
+        updated.setName("<script>alert(123)</script>");
+
+        mockMvc.perform(put(REST_URL + FIRST_USER_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

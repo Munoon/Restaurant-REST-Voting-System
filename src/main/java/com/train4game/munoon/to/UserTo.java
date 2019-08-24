@@ -1,6 +1,7 @@
 package com.train4game.munoon.to;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,11 +10,13 @@ import javax.validation.constraints.Size;
 public class UserTo extends AbstractBaseTo {
     @Size(min = 2, max = 200)
     @NotBlank
+    @SafeHtml
     String name;
 
     @Email
     @NotBlank
     @Size(min = 3, max = 200)
+    @SafeHtml
     String email;
 
     @NotBlank

@@ -1,5 +1,8 @@
 package com.train4game.munoon.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import com.train4game.munoon.View;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +12,7 @@ import javax.validation.constraints.Size;
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @Size(min = 2, max = 200)
     @Column(name = "name", nullable = false)
+    @SafeHtml(groups = {View.Web.class})
     @NotBlank
     protected String name;
 

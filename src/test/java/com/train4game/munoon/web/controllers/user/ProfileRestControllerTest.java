@@ -19,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static com.train4game.munoon.TestUtil.*;
 import static com.train4game.munoon.data.UserTestData.*;
+import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,7 +98,8 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, updated.getPassword())))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 
     @Test
@@ -107,6 +109,31 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(post(REST_URL + "register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(user, user.getPassword())))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void registerUnsafeHtml() throws Exception {
+        UserTo user = new UserTo(null, "<script>alert(123)</script>", "email@email.com", "password");
+
+        mockMvc.perform(post(REST_URL + "register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(user, user.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateUnsafeHtml() throws Exception {
+        UserTo updated = UserUtil.parseTo(new User(FIRST_USER));
+        updated.setName("<script>alert(123)</script>");
+
+        mockMvc.perform(put(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

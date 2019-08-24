@@ -1,5 +1,6 @@
 package com.train4game.munoon.web.controllers;
 
+import com.train4game.munoon.View;
 import com.train4game.munoon.model.Meal;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.model.User;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -93,14 +95,14 @@ public class MealRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody MealTo meal, @PathVariable int id) {
+    public void update(@Validated(View.Web.class) @RequestBody MealTo meal, @PathVariable int id) {
         assureIdConsistent(meal, id);
         log.info("Update {}", meal);
         service.update(parseMeal.map(meal));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MealTo> createWithLocation(@Valid @RequestBody MealTo meal) {
+    public ResponseEntity<MealTo> createWithLocation(@Validated(View.Web.class) @RequestBody MealTo meal) {
         MealTo created = create(meal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")
@@ -110,7 +112,7 @@ public class MealRestController {
 
     @PostMapping(value = "/all", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public List<MealTo> createAllWithLocation(@Valid @RequestBody List<MealTo> meals) {
+    public List<MealTo> createAllWithLocation(@Validated(View.Web.class) @RequestBody List<MealTo> meals) {
         return createAll(meals);
     }
 

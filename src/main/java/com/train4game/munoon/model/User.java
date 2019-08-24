@@ -1,9 +1,11 @@
 package com.train4game.munoon.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.train4game.munoon.View;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,6 +25,7 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email", name = "users_unique_email_idx"))
 public class User extends AbstractNamedEntity implements Serializable {
     @Column(name = "email", nullable = false, unique = true)
+    @SafeHtml(groups = {View.Web.class})
     @Email
     @NotBlank
     @Size(min = 3, max = 200)

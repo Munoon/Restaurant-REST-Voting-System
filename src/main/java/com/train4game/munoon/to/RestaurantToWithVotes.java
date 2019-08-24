@@ -1,5 +1,7 @@
 package com.train4game.munoon.to;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 public class RestaurantToWithVotes extends AbstractBaseTo {
     @Size(min = 2, max = 200)
     @NotBlank
+    @SafeHtml
     private String name;
 
     private List<MealTo> menu;

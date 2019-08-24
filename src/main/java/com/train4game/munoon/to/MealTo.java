@@ -1,6 +1,7 @@
 package com.train4game.munoon.to;
 
 import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 public class MealTo extends AbstractBaseTo {
     @Size(min = 2, max = 200)
     @NotBlank
+    @SafeHtml
     private String name;
 
     @Range(min = 10, max = 50000)

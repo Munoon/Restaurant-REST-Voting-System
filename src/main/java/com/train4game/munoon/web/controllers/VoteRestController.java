@@ -1,6 +1,7 @@
 package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.AuthorizedUser;
+import com.train4game.munoon.View;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.service.RestaurantService;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -72,14 +74,14 @@ public class VoteRestController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody VoteTo voteTo, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser user) {
+    public void update(@Validated(View.Web.class) @RequestBody VoteTo voteTo, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser user) {
         assureIdConsistent(voteTo, id);
         log.info("Update {} with id {} from user {}", voteTo, id, user.getUser());
         service.update(toVote.map(voteTo), user.getId());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<VoteTo> createWithLocation(@Valid @RequestBody VoteTo vote) {
+    public ResponseEntity<VoteTo> createWithLocation(@Validated(View.Web.class) @RequestBody VoteTo vote) {
         VoteTo created = create(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")

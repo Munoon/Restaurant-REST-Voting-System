@@ -8,6 +8,7 @@ import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.utils.ParserUtil;
+import com.train4game.munoon.utils.exceptions.ErrorType;
 import com.train4game.munoon.web.AbstractControllerTest;
 import com.train4game.munoon.web.controllers.MealRestController;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import static com.train4game.munoon.data.RestaurantTestData.FIRST_RESTAURANT_ID;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
+import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -182,7 +184,8 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 
     @Test
@@ -195,7 +198,8 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(Arrays.asList(firstMeal, secondMeal))))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 
     @Test
@@ -210,6 +214,33 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void createUnsafeHtml() throws Exception {
+        MealTo meal = new MealTo(null, "<script>alert(123)</script>", 50, FIRST_RESTAURANT_ID, LocalDate.now());
+
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(meal)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateUnsafeHtml() throws Exception {
+        Meal meal = new Meal(FIRST_MEAL);
+        meal.setName("<script>alert(123)</script>");
+        MealTo updated = toMealTo.map(meal);
+
+        mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

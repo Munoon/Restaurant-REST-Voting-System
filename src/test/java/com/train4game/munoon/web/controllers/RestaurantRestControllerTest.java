@@ -33,6 +33,7 @@ import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static com.train4game.munoon.utils.ParserUtil.*;
 import static com.train4game.munoon.utils.RestaurantUtil.parseWithVotes;
+import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -142,7 +143,8 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 
     @Test
@@ -155,6 +157,31 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isConflict())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void createUnsafeHtml() throws Exception {
+        Restaurant restaurant = new Restaurant(null, "<script>alert(123)</script>");
+        mockMvc.perform(post(REST_URL)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(restaurant)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void updateUnsafeHtml() throws Exception {
+        Restaurant restaurant = new Restaurant(FIRST_RESTAURANT);
+        restaurant.setName("<script>alert(123)</script>");
+
+        mockMvc.perform(put(REST_URL + FIRST_RESTAURANT_ID)
+                .with(userAuth(FIRST_USER))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(restaurant)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
     }
 }

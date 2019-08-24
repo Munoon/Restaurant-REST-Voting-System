@@ -1,5 +1,6 @@
 package com.train4game.munoon.web.controllers;
 
+import com.train4game.munoon.View;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.VoteService;
@@ -15,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -89,7 +90,7 @@ public class RestaurantRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public RestaurantTo update(@Valid @RequestBody RestaurantTo restaurant, @PathVariable int id) {
+    public RestaurantTo update(@Validated(View.Web.class) @RequestBody RestaurantTo restaurant, @PathVariable int id) {
         assureIdConsistent(restaurant, id);
         log.info("Update {}", restaurant);
         Restaurant created = service.update(toRestaurant.map(restaurant));
@@ -97,7 +98,7 @@ public class RestaurantRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestaurantTo> createWithLocation(@Valid @RequestBody RestaurantTo restaurant) {
+    public ResponseEntity<RestaurantTo> createWithLocation(@Validated(View.Web.class) @RequestBody RestaurantTo restaurant) {
         RestaurantTo created = create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(REST_URL + "/{id}")

@@ -17,7 +17,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.train4game.munoon.utils.exceptions.ErrorType.*;
 
@@ -25,6 +28,12 @@ import static com.train4game.munoon.utils.exceptions.ErrorType.*;
 @RestControllerAdvice(annotations = RestController.class)
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+    public static final Map<String, String> DATABASE_ERROR_MAP = Map.of(
+            "users_unique_email_idx", "User with this email already exists",
+            "restaurants_unique_name_idx", "Restaurant with this name already exists",
+            "meals_unique_name_idx", "Meal with this name already exists",
+            "users_votes_unique_date_idx", "You have already voted today"
+    );
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
@@ -41,24 +50,16 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        String errorMessage = e.getRootCause().getMessage().toLowerCase();
-        String url = req.getRequestURL().toString();
-
-        if (errorMessage.contains("users_unique_email_idx")) {
-            log.warn("Database error users_unique_email_idx");
-            return new ErrorInfo(url, DATA_ERROR, "User with this email already exists");
-        } else if (errorMessage.contains("restaurants_unique_name_idx")) {
-            log.warn("Database error restaurants_unique_name_idx");
-            return new ErrorInfo(url, DATA_ERROR, "Restaurant with this name already exists");
-        } else if (errorMessage.contains("meals_unique_name_idx")) {
-            log.warn("Database error meals_unique_name_idx");
-            return new ErrorInfo(url, DATA_ERROR, "Meal with this name already exists");
-        } else if (errorMessage.contains("users_votes_unique_date_idx")) {
-            log.warn("Database error users_votes_unique_date_idx");
-            return new ErrorInfo(url, DATA_ERROR, "You have already voted today");
+        String rootMsg = ValidationUtils.getRootCause(e).getMessage();
+        if (rootMsg != null) {
+            String lowerCaseMsg = rootMsg.toLowerCase();
+            Optional<Map.Entry<String, String>> entry = DATABASE_ERROR_MAP.entrySet().stream()
+                    .filter(it -> lowerCaseMsg.contains(it.getKey()))
+                    .findAny();
+            if (entry.isPresent())
+                return warnAndGetErrorInfo(req.getRequestURL(), VALIDATION_ERROR, Collections.singletonList(entry.get().getValue()));
         }
-
-        return warnAndGetErrorInfo(url, DATA_ERROR, e);
+        return warnAndGetErrorInfo(req.getRequestURL(), DATA_ERROR, e);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)

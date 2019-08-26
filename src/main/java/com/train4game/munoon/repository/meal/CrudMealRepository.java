@@ -30,5 +30,5 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     List<Meal> getMealsByRestaurantId(int restaurantId, Sort sort);
 
-    List<Meal> getMealsByRestaurantIdAndDate(int restaurantId, LocalDate date, Sort sort);
+    List<Meal> getMealsByRestaurantIdAndDate(int restaurantId, LocalDate date);
 }

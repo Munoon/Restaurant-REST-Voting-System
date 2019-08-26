@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class MealRepository {
-    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.ASC, "date");
+    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date");
 
     @Autowired
     private CrudMealRepository repository;
@@ -36,7 +36,7 @@ public class MealRepository {
     }
 
     public List<Meal> getAllByDate(int restaurantId, LocalDate date) {
-        return repository.getMealsByRestaurantIdAndDate(restaurantId, date, SORT_BY_DATE);
+        return repository.getMealsByRestaurantIdAndDate(restaurantId, date);
     }
 
     public Meal getWithRestaurant(int id) {

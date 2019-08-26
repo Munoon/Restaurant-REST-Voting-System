@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public class UserRepository {
     private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "registered");
-    private static final Sort SORT_BY_ID = new Sort(Sort.Direction.ASC, "id");
 
     @Autowired
     private CrudUserRepository repository;

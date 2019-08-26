@@ -4,6 +4,7 @@ import com.train4game.munoon.model.User;
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.repository.user.CrudUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,8 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public class VoteRepository {
+    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date");
+
     @Autowired
     private CrudVoteRepository repository;
 
@@ -41,7 +44,7 @@ public class VoteRepository {
     }
 
     public List<Vote> getAll(int userId) {
-        return repository.getAllByUser_id(userId);
+        return repository.getAllByUser_id(userId, SORT_BY_DATE);
     }
 
     public int getCount(int restaurantId, LocalDate date) {

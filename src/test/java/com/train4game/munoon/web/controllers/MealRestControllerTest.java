@@ -56,7 +56,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        List<MealTo> expected = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL), MEAL_LIST_MAPPER );
+        List<MealTo> expected = modelMapper.map(Arrays.asList(FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL), MEAL_LIST_MAPPER );
 
         mockMvc.perform(get(REST_URL + "all/" + FIRST_RESTAURANT_ID))
                 .andDo(print())
@@ -103,7 +103,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(FIRST_USER)))
                 .andExpect(status().isNoContent());
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, SECOND_MEAL);
     }
 
     @Test
@@ -136,7 +136,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         MealTo returned = readFromJson(actions, MealTo.class);
         expected.setId(returned.getId());
 
-        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, expected, FOURTH_MEAL), MEAL_LIST_MAPPER);
+        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL, expected), MEAL_LIST_MAPPER);
 
         assertMatchMealTo(returned, expected);
         assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), MEAL_LIST_MAPPER), expectedList);
@@ -158,7 +158,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         firstMeal.setId(returned.get(0).getId());
         secondMeal.setId(returned.get(1).getId());
 
-        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal, FOURTH_MEAL), MEAL_LIST_MAPPER);
+        List<MealTo> expectedList = modelMapper.map(Arrays.asList(FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal), MEAL_LIST_MAPPER);
 
         assertMatchMealTo(returned, expected);
         assertMatchMealTo(modelMapper.map(service.getAll(FIRST_RESTAURANT_ID), MEAL_LIST_MAPPER), expectedList);
@@ -170,7 +170,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(SECOND_USER)))
                 .andExpect(status().isForbidden());
 
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL);
     }
 
     @Test

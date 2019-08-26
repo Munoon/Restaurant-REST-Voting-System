@@ -56,7 +56,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        List<VoteTo> expected = modelMapper.map(Arrays.asList(FIRST_VOTE, SECOND_VOTE), VOTE_LIST_MAPPER);
+        List<VoteTo> expected = modelMapper.map(Arrays.asList(SECOND_VOTE, FIRST_VOTE), VOTE_LIST_MAPPER);
 
         mockMvc.perform(get(REST_URL)
                 .with(userAuth(FIRST_USER)))
@@ -119,7 +119,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, expected);
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
+        assertMatch(service.getAll(FIRST_USER_ID), expectedVote, SECOND_VOTE, FIRST_VOTE);
     }
 
     @Test
@@ -146,7 +146,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER)))
                 .andExpect(status().is5xxServerError());
 
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
+        assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE, FIRST_VOTE);
     }
 
     @Test
@@ -175,6 +175,6 @@ class VoteRestControllerTest extends AbstractControllerTest {
         expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, firstVote);
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, expectedVote);
+        assertMatch(service.getAll(FIRST_USER_ID), expectedVote, SECOND_VOTE, FIRST_VOTE);
     }
 }

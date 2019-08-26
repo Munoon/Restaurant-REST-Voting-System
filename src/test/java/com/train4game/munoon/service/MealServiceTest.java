@@ -33,7 +33,7 @@ public class MealServiceTest extends AbstractServiceTest {
         Meal newMeal = new Meal(null, "Test meal", FIRST_RESTAURANT, 50, LocalDate.of(2019, 8, 6));
         Meal created = service.create(newMeal);
         newMeal.setId(created.getId());
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, newMeal, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL, newMeal);
     }
 
     @Test
@@ -45,13 +45,13 @@ public class MealServiceTest extends AbstractServiceTest {
         firstMeal.setId(created.get(0).getId());
         secondMeal.setId(created.get(1).getId());
 
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL, firstMeal, secondMeal);
     }
 
     @Test
     void delete() {
         service.delete(FIRST_MEAL_ID);
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, SECOND_MEAL);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void getAll() {
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FIRST_MEAL, SECOND_MEAL, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, FIRST_MEAL, SECOND_MEAL);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class MealServiceTest extends AbstractServiceTest {
         Meal meal = new Meal(FIRST_MEAL);
         meal.setPrice(999);
         service.update(meal);
-        assertMatch(service.getAll(FIRST_RESTAURANT_ID), SECOND_MEAL, meal, FOURTH_MEAL);
+        assertMatch(service.getAll(FIRST_RESTAURANT_ID), FOURTH_MEAL, SECOND_MEAL, meal);
     }
 
     @Test

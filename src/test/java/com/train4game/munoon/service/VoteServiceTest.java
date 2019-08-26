@@ -39,7 +39,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
         newVote.setId(created.getId());
         newVote.setUser(created.getUser());
         List<Vote> all = service.getAll(FIRST_USER_ID);
-        assertMatch(all, FIRST_VOTE, SECOND_VOTE, newVote);
+        assertMatch(all, newVote, SECOND_VOTE, FIRST_VOTE);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     void getAll() {
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE);
+        assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE, FIRST_VOTE);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
         vote.setRestaurant(SECOND_RESTAURANT);
 
         service.update(vote, FIRST_USER_ID);
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, vote);
+        assertMatch(service.getAll(FIRST_USER_ID), vote, FIRST_VOTE);
     }
 
     @Test
@@ -115,6 +115,6 @@ public class VoteServiceTest extends AbstractServiceTest  {
         service.create(firstVote, FIRST_USER_ID);
         assertThrows(DataIntegrityViolationException.class, () -> service.create(secondVote, FIRST_USER_ID));
 
-        assertMatch(service.getAll(FIRST_USER_ID), FIRST_VOTE, SECOND_VOTE, firstVote);
+        assertMatch(service.getAll(FIRST_USER_ID), firstVote, SECOND_VOTE, FIRST_VOTE);
     }
 }

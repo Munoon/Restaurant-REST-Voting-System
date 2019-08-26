@@ -8,19 +8,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class UserTo extends AbstractBaseTo {
-    @Size(min = 2, max = 200)
+    @Size(min = 2, max = 225)
     @NotBlank
     @SafeHtml
     String name;
 
     @Email
     @NotBlank
-    @Size(min = 3, max = 200)
+    @Size(min = 3, max = 225)
     @SafeHtml
     String email;
 
     @NotBlank
-    @Size(min = 5, max = 200)
+    @Size(min = 5, max = 225)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
 

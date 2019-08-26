@@ -28,12 +28,12 @@ public class User extends AbstractNamedEntity implements Serializable {
     @SafeHtml(groups = {View.Web.class})
     @Email
     @NotBlank
-    @Size(min = 3, max = 200)
+    @Size(min = 3, max = 225)
     private String email;
 
     @Column(name = "password", nullable = false)
     @NotBlank
-    @Size(min = 5, max = 200)
+    @Size(min = 5, max = 225)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

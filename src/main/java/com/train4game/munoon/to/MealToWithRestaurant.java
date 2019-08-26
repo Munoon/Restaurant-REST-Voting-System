@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 public class MealToWithRestaurant extends AbstractBaseTo {
-    @Size(min = 2, max = 200)
+    @Size(min = 2, max = 225)
     @NotBlank
     @SafeHtml
     private String name;

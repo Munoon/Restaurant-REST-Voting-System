@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 public class MealTo extends AbstractBaseTo {
-    @Size(min = 2, max = 200)
+    @Size(min = 2, max = 225)
     @NotBlank
     @SafeHtml
     private String name;
@@ -25,7 +25,7 @@ public class MealTo extends AbstractBaseTo {
     public MealTo() {
     }
 
-    public MealTo(Integer id, @Size(min = 2, max = 200) @NotBlank String name, @Range(min = 10, max = 50000) int price, int restaurantId, @NotNull LocalDate date) {
+    public MealTo(Integer id, @Size(min = 2, max = 225) @NotBlank String name, @Range(min = 10, max = 50000) int price, int restaurantId, @NotNull LocalDate date) {
         super(id);
         this.name = name;
         this.price = price;

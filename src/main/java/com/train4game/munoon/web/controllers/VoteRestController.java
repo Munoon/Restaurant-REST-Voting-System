@@ -22,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -36,22 +35,11 @@ public class VoteRestController {
     public static final String REST_URL = "/vote";
     private static final Logger log = LoggerFactory.getLogger(VoteRestController.class);
 
-    private final VoteService service;
-    private final ModelMapper modelMapper;
-    private final TypeMap<VoteTo, Vote> toVote;
-    private final TypeMap<Vote, VoteTo> toVoteTo;
+    @Autowired
+    private VoteService service;
 
     @Autowired
-    public VoteRestController(VoteService service, RestaurantService restaurantService, ModelMapper modelMapper) {
-        this.service = service;
-        this.modelMapper = modelMapper;
-
-        Converter<Integer, Restaurant> converter = num -> restaurantService.get(num.getSource());
-        toVote = modelMapper.createTypeMap(VoteTo.class, Vote.class)
-                .addMappings(mapper -> mapper.using(converter).map(VoteTo::getRestaurantId, Vote::setRestaurant));
-
-        toVoteTo = modelMapper.createTypeMap(Vote.class, VoteTo.class);
-    }
+    private ModelMapper modelMapper;
 
     @GetMapping
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthorizedUser user) {
@@ -62,7 +50,8 @@ public class VoteRestController {
     @GetMapping("/{id}")
     public VoteTo get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser user) {
         log.info("Get vote {} with user {}", id, user.getId());
-        return toVoteTo.map(service.get(id, user.getId()));
+        Vote vote = service.get(id, user.getId());
+        return modelMapper.map(vote, VoteTo.class);
     }
 
     @DeleteMapping("/{id}")
@@ -77,7 +66,8 @@ public class VoteRestController {
     public void update(@Validated(View.Web.class) @RequestBody VoteTo voteTo, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser user) {
         assureIdConsistent(voteTo, id);
         log.info("Update {} with id {} from user {}", voteTo, id, user.getUser());
-        service.update(toVote.map(voteTo), user.getId());
+        Vote update = modelMapper.map(voteTo, Vote.class);
+        service.update(update, user.getId());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -92,6 +82,7 @@ public class VoteRestController {
     private VoteTo create(VoteTo voteTo) {
         log.info("Create {}", voteTo);
         checkNew(voteTo);
-        return toVoteTo.map(service.create(toVote.map(voteTo), SecurityUtil.authUserId()));
+        Vote created = service.create(modelMapper.map(voteTo, Vote.class), SecurityUtil.authUserId());
+        return modelMapper.map(created, VoteTo.class);
     }
 }

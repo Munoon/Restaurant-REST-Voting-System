@@ -2,19 +2,11 @@ package com.train4game.munoon.web.controllers;
 
 import com.train4game.munoon.View;
 import com.train4game.munoon.model.Meal;
-import com.train4game.munoon.model.Restaurant;
-import com.train4game.munoon.model.User;
 import com.train4game.munoon.service.MealService;
-import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.MealToWithRestaurant;
-import com.train4game.munoon.utils.ParserUtil;
 import com.train4game.munoon.utils.ValidationUtils;
-import com.train4game.munoon.web.SecurityUtil;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.print.attribute.standard.Media;
-import javax.validation.Valid;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
@@ -46,25 +34,11 @@ public class MealRestController {
     public static final String REST_URL = "/meals";
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
 
-    private final MealService service;
-    private final ModelMapper modelMapper;
-    private final TypeMap<MealTo, Meal> parseMeal;
-    private final TypeMap<Meal, MealTo> parseMealTo;
-    private final TypeMap<Meal, MealToWithRestaurant> parseMealToWithRestaurant;
+    @Autowired
+    private MealService service;
 
     @Autowired
-    public MealRestController(MealService service, RestaurantService restaurantService, ModelMapper modelMapper) {
-        this.service = service;
-        this.modelMapper = modelMapper;
-
-        Converter<Integer, Restaurant> intToRestaurantParser = num -> restaurantService.get(num.getSource());
-
-        parseMeal = modelMapper.createTypeMap(MealTo.class, Meal.class)
-                .addMappings(mapper -> mapper.using(intToRestaurantParser).map(MealTo::getRestaurantId, Meal::setRestaurant));
-
-        parseMealTo = modelMapper.createTypeMap(Meal.class, MealTo.class);
-        parseMealToWithRestaurant = modelMapper.createTypeMap(Meal.class, MealToWithRestaurant.class);
-    }
+    private ModelMapper modelMapper;
 
     @GetMapping("/all/{restaurant}")
     public List<MealTo> getAll(@PathVariable int restaurant, @DateTimeFormat(iso = DATE) @RequestParam(required = false) LocalDate date) {
@@ -79,13 +53,13 @@ public class MealRestController {
     @GetMapping("/{id}")
     public MealTo get(@PathVariable int id) {
         log.info("Get meal with id {}", id);
-        return parseMealTo.map(service.get(id));
+        return modelMapper.map(service.get(id), MealTo.class);
     }
 
     @GetMapping("/with/{id}")
     public MealToWithRestaurant getWithRestaurant(@PathVariable int id) {
         log.info("Get meal with restaurant and id {}", id);
-        return parseMealToWithRestaurant.map(service.getWithRestaurant(id));
+        return modelMapper.map(service.getWithRestaurant(id), MealToWithRestaurant.class);
     }
 
     @DeleteMapping("/{id}")
@@ -100,7 +74,7 @@ public class MealRestController {
     public void update(@Validated(View.Web.class) @RequestBody MealTo meal, @PathVariable int id) {
         assureIdConsistent(meal, id);
         log.info("Update {}", meal);
-        service.update(parseMeal.map(meal));
+        service.update(modelMapper.map(meal, Meal.class));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -138,7 +112,8 @@ public class MealRestController {
     private MealTo create(MealTo mealTo) {
         checkNew(mealTo);
         log.info("Create {}", mealTo);
-        Meal meal = parseMeal.map(mealTo);
-        return parseMealTo.map(service.create(meal));
+        Meal meal = modelMapper.map(mealTo, Meal.class);
+        Meal created = service.create(meal);
+        return modelMapper.map(created, MealTo.class);
     }
 }

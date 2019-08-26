@@ -46,13 +46,11 @@ class MealRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = MealRestController.REST_URL + "/";
 
     private MealService service;
-    private TypeMap<Meal, MealTo> toMealTo;
 
     @Autowired
     public MealRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, MealService service) {
         super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
         this.service = service;
-        this.toMealTo = modelMapper.getTypeMap(Meal.class, MealTo.class);
     }
 
 
@@ -69,7 +67,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getAllForDate() throws Exception {
-        List<MealTo> expected = Collections.singletonList(toMealTo.map(FOURTH_MEAL));
+        List<MealTo> expected = Collections.singletonList(modelMapper.map(FOURTH_MEAL, MealTo.class));
 
         mockMvc.perform(get(REST_URL + "all/" + FIRST_RESTAURANT_ID + "?date=" + LocalDate.of(2019, 8, 7)))
                 .andDo(print())
@@ -80,10 +78,11 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
+        MealTo meal = modelMapper.map(FIRST_MEAL, MealTo.class);
         mockMvc.perform(get(REST_URL + FIRST_MEAL_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(toMealTo.map(FIRST_MEAL)));
+                .andExpect(contentJson(meal));
     }
 
     @Test
@@ -113,7 +112,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         meal.setName("New Name");
         meal.setPrice(1000);
 
-        MealTo updated = toMealTo.map(meal);
+        MealTo updated = modelMapper.map(meal, MealTo.class);
 
         mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(FIRST_USER))
@@ -121,13 +120,13 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        assertMatchMealTo(toMealTo.map(service.get(FIRST_MEAL_ID)), updated);
+        assertMatchMealTo(modelMapper.map(service.get(FIRST_MEAL_ID), MealTo.class), updated);
     }
 
     @Test
     void testCreate() throws Exception {
         Meal meal = new Meal(null, "New Meal", FIRST_RESTAURANT, 500, LocalDate.of(2019, 8, 6));
-        MealTo expected = toMealTo.map(meal);
+        MealTo expected = modelMapper.map(meal, MealTo.class);
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .with(userAuth(FIRST_USER))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +177,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     void createNotUniqueName() throws Exception {
         Meal meal = new Meal(null, FIRST_MEAL.getName(), FIRST_RESTAURANT, 500, FIRST_MEAL.getDate());
-        MealTo expected = toMealTo.map(meal);
+        MealTo expected = modelMapper.map(meal, MealTo.class);
 
         mockMvc.perform(post(REST_URL)
                 .with(userAuth(FIRST_USER))
@@ -208,7 +207,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         Meal meal = new Meal(FIRST_MEAL);
         meal.setName(SECOND_MEAL.getName());
 
-        MealTo updated = toMealTo.map(meal);
+        MealTo updated = modelMapper.map(meal, MealTo.class);
 
         mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(FIRST_USER))
@@ -234,7 +233,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     void updateUnsafeHtml() throws Exception {
         Meal meal = new Meal(FIRST_MEAL);
         meal.setName("<script>alert(123)</script>");
-        MealTo updated = toMealTo.map(meal);
+        MealTo updated = modelMapper.map(meal, MealTo.class);
 
         mockMvc.perform(put(REST_URL + FIRST_MEAL_ID)
                 .with(userAuth(FIRST_USER))

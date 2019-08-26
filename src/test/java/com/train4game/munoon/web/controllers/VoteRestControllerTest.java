@@ -47,15 +47,11 @@ class VoteRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = VoteRestController.REST_URL + "/";
 
     private VoteService service;
-    private TypeMap<Vote, VoteTo> toVoteTo;
-    private TypeMap<VoteTo, Vote> toVote;
 
     @Autowired
     public VoteRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, VoteService service) {
         super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
         this.service = service;
-        this.toVoteTo = modelMapper.getTypeMap(Vote.class, VoteTo.class);
-        this.toVote = modelMapper.getTypeMap(VoteTo.class, Vote.class);
     }
 
     @Test
@@ -76,7 +72,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .with(userAuth(FIRST_USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonVoteTo(toVoteTo.map(FIRST_VOTE)));
+                .andExpect(contentJsonVoteTo(modelMapper.map(FIRST_VOTE, VoteTo.class)));
     }
 
     @Test
@@ -93,7 +89,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         assumeFalse(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is after 11");
 
-        VoteTo updated = toVoteTo.map(FIRST_VOTE);
+        VoteTo updated = modelMapper.map(FIRST_VOTE, VoteTo.class);
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
@@ -119,7 +115,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         expected.setId(returned.getId());
         expected.setUserId(returned.getUserId());
 
-        Vote expectedVote = toVote.map(expected);
+        Vote expectedVote = modelMapper.map(expected, Vote.class);
         expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, expected);
@@ -130,7 +126,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void updateTimeOver() throws Exception {
         assumeFalse(LocalTime.now().isBefore(LocalTime.of(11, 0)), "It is before 11");
 
-        VoteTo updated = toVoteTo.map(FIRST_VOTE);
+        VoteTo updated = modelMapper.map(FIRST_VOTE, VoteTo.class);
         updated.setRestaurantId(FIRST_RESTAURANT.getId());
 
         mockMvc.perform(put(REST_URL + FIRST_VOTE_ID)
@@ -175,7 +171,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
         firstVote.setId(returned.getId());
         firstVote.setUserId(returned.getUserId());
 
-        Vote expectedVote = toVote.map(firstVote);
+        Vote expectedVote = modelMapper.map(firstVote, Vote.class);
         expectedVote.setRestaurant(FIRST_RESTAURANT);
 
         assertMatchVoteTo(returned, firstVote);

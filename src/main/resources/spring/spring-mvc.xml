@@ -9,7 +9,7 @@
 
     <bean class="com.train4game.munoon.web.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-    <mvc:annotation-driven conversion-service="conversionService">
+    <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
@@ -22,12 +22,4 @@
     </mvc:annotation-driven>
 
     <context:component-scan base-package="com.train4game.munoon.**.web"/>
-
-    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean" id="conversionService">
-        <property name="formatters">
-            <set>
-                <bean class="com.train4game.munoon.web.LocalDateFormatter"/>
-            </set>
-        </property>
-    </bean>
 </beans>

@@ -18,6 +18,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ import static com.train4game.munoon.utils.ParserUtil.MEAL_LIST_MAPPER;
 import static com.train4game.munoon.utils.ParserUtil.MEAL_TO_LIST_MAPPER;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @RestController
 @RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +67,7 @@ public class MealRestController {
     }
 
     @GetMapping("/all/{restaurant}")
-    public List<MealTo> getAll(@PathVariable int restaurant, @RequestParam(required = false) LocalDate date) {
+    public List<MealTo> getAll(@PathVariable int restaurant, @DateTimeFormat(iso = DATE) @RequestParam(required = false) LocalDate date) {
         return date == null ? getAll(restaurant) : getAllByDate(restaurant, date);
     }
 
@@ -121,7 +123,7 @@ public class MealRestController {
         return modelMapper.map(service.getAll(restaurantId), MEAL_LIST_MAPPER);
     }
 
-    private List<MealTo> getAllByDate(int restaurantId, LocalDate date) {
+    private List<MealTo> getAllByDate(int restaurantId, @DateTimeFormat(iso = DATE) LocalDate date) {
         log.info("Get all meals of restaurant {} by date {}", restaurantId, date);
         return modelMapper.map(service.getAllByDate(restaurantId, date), MEAL_LIST_MAPPER);
     }

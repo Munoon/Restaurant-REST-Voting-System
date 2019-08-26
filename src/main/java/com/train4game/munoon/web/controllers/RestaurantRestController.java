@@ -13,6 +13,7 @@ import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import static com.train4game.munoon.utils.ParserUtil.*;
 import static com.train4game.munoon.utils.RestaurantUtil.parseWithVotes;
 import static com.train4game.munoon.utils.ValidationUtils.assureIdConsistent;
 import static com.train4game.munoon.utils.ValidationUtils.checkNew;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @RestController
 @RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +65,7 @@ public class RestaurantRestController {
     }
 
     @GetMapping
-    public List<RestaurantToWithVotes> getAllByDate(@RequestParam(required = false) LocalDate date) {
+    public List<RestaurantToWithVotes> getAllByDate(@DateTimeFormat(iso = DATE) @RequestParam(required = false) LocalDate date) {
         LocalDate localDate = date == null ? LocalDate.now() : date;
         log.info("Get all restaurants by meal date {}", localDate);
         return parseWithVotes(service.getAllByMealDate(localDate), localDate, modelMapper, voteService);

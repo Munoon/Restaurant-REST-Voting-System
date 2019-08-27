@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class MealRepository {
-    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date");
+    private static final Sort SORT_BY_DATE = Sort.by(Sort.Order.desc("date"), Sort.Order.asc("name"));
 
     @Autowired
     private CrudMealRepository repository;

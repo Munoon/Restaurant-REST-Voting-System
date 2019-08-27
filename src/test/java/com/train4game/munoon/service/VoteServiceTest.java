@@ -2,14 +2,12 @@ package com.train4game.munoon.service;
 
 import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
-import com.train4game.munoon.utils.exceptions.TimeOverException;
-import org.junit.jupiter.api.BeforeEach;
+import com.train4game.munoon.utils.exceptions.VoteNotAllowedException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
     @Test
     void deleteTimeOver() {
         assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
-        assertThrows(TimeOverException.class, () -> service.delete(FIRST_VOTE_ID, FIRST_USER_ID));
+        assertThrows(VoteNotAllowedException.class, () -> service.delete(FIRST_VOTE_ID, FIRST_USER_ID));
     }
 
     @Test
@@ -92,7 +90,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
     @Test
     void updateTimeOver() {
         assumeTrue(LocalTime.now().isAfter(LocalTime.of(11, 0)), "It is before 11");
-        assertThrows(TimeOverException.class, () -> service.update(FIRST_VOTE, FIRST_USER_ID));
+        assertThrows(VoteNotAllowedException.class, () -> service.update(FIRST_VOTE, FIRST_USER_ID));
     }
 
     @Test

@@ -1,9 +1,10 @@
 package com.train4game.munoon.utils;
 
 import com.train4game.munoon.model.AbstractBaseEntity;
+import com.train4game.munoon.model.Vote;
 import com.train4game.munoon.to.AbstractBaseTo;
 import com.train4game.munoon.utils.exceptions.NotFoundException;
-import com.train4game.munoon.utils.exceptions.TimeOverException;
+import com.train4game.munoon.utils.exceptions.VoteNotAllowedException;
 import org.springframework.validation.FieldError;
 
 import java.time.DateTimeException;
@@ -39,7 +40,7 @@ public class ValidationUtils {
         LocalTime time = LocalTime.now();
         LocalTime endTime = LocalTime.of(11, 0);
         if (time.isAfter(endTime))
-            throw new TimeOverException();
+            throw new VoteNotAllowedException();
     }
 
     public static void checkNew(AbstractBaseEntity entity) {

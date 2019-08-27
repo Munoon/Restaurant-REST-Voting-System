@@ -61,7 +61,6 @@ public class AbstractControllerTest {
     @BeforeEach
     void setUp() {
         cacheManager.getCache("users").clear();
-        cacheManager.getCache("votes").clear();
         cacheManager.getCache("meals").clear();
         jpaUtil.clear2ndLevelCache();
     }

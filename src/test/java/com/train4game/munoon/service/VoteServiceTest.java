@@ -26,12 +26,6 @@ public class VoteServiceTest extends AbstractServiceTest  {
     @Autowired
     private VoteService service;
 
-    @BeforeEach
-    void setUp() {
-        cacheManager.getCache("votes").clear();
-        jpaUtil.clear2ndLevelCache();
-    }
-
     @Test
     void create() {
         Vote newVote = new Vote(null, null, FIRST_RESTAURANT, LocalDate.now());

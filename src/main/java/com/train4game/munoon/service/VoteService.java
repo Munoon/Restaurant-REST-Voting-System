@@ -22,14 +22,12 @@ public class VoteService {
         this.repository = repository;
     }
 
-    @CacheEvict(value = "votes", allEntries = true)
     public Vote create(Vote vote, int userId) {
         vote.setDate(LocalDate.now());
         Assert.notNull(vote, "Vote must be not null");
         return repository.save(vote, userId);
     }
 
-    @CacheEvict(value = "votes", allEntries = true)
     public void delete(int id, int userId) {
         checkForTimeException();
         checkNotFoundWithId(repository.delete(id, userId), id);
@@ -39,12 +37,10 @@ public class VoteService {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    @Cacheable("votes")
     public List<Vote> getAll(int userId) {
         return repository.getAll(userId);
     }
 
-    @CacheEvict(value = "votes", allEntries = true)
     public void update(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
         checkForSameDate(vote.getDate(), get(vote.getId(), userId).getDate(), "You cant change vote date");

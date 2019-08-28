@@ -80,4 +80,10 @@ public class AdminRestController extends AbstractUserController {
         List<Vote> votes = date == null ? voteService.getAll(id) : voteService.getAllByDate(id, date);
         return modelMapper.map(votes, VOTE_LIST_MAPPER);
     }
+
+    @GetMapping("/votes")
+    public List<VoteTo> getAllVotes() {
+        log.info("Get all votes");
+        return modelMapper.map(voteService.getAll(), VOTE_LIST_MAPPER);
+    }
 }

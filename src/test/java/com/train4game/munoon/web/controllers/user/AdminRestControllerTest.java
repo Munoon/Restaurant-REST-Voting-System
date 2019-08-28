@@ -131,6 +131,16 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getAllVotes() throws Exception {
+        List<VoteTo> expected = modelMapper.map(Arrays.asList(SECOND_VOTE, FIRST_VOTE, THIRD_VOTE), VOTE_LIST_MAPPER);
+        mockMvc.perform(get(REST_URL + "votes")
+                .with(userAuth(FIRST_USER)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonVoteTo(expected));
+    }
+
+    @Test
     void noPermission() throws Exception {
         mockMvc.perform(get(REST_URL + FIRST_USER_ID)
                 .with(userAuth(SECOND_USER)))

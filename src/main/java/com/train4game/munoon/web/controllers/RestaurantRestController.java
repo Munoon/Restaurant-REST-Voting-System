@@ -69,12 +69,6 @@ public class RestaurantRestController {
         return toRestaurantTo.map(service.get(id));
     }
 
-    @GetMapping("/votes/{id}")
-    public int getRestaurantVotes(@PathVariable int id) {
-        log.info("Get restaurant {} votes", id);
-        return voteService.getCount(id, LocalDate.now());
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {

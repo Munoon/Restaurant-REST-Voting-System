@@ -104,11 +104,6 @@ public class VoteServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    void getCount() {
-        assertEquals(service.getCount(FIRST_RESTAURANT_ID, LocalDate.of(2019, 7, 1)), 1);
-    }
-
-    @Test
     void twoVoteInOneDay() {
         LocalDate date = LocalDate.of(2019, 8, 11);
         Vote firstVote = new Vote(null, FIRST_USER, FIRST_RESTAURANT, date);

@@ -63,4 +63,8 @@ public class VoteTestData {
     public static ResultMatcher contentJsonVoteTo(VoteTo expected) {
         return result -> assertMatchVoteTo(readFromJsonMvcResult(result, VoteTo.class), expected);
     }
+
+    public static ResultMatcher contentJsonVoteToArray(VoteTo expected) {
+        return result -> assertMatchVoteTo(readListFromJsonMvcResult(result, VoteTo.class), expected);
+    }
 }

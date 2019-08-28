@@ -66,8 +66,18 @@ public class VoteServiceTest extends AbstractServiceTest  {
     }
 
     @Test
-    void getAll() {
+    void getAllByUserId() {
         assertMatch(service.getAll(FIRST_USER_ID), SECOND_VOTE, FIRST_VOTE);
+    }
+
+    @Test
+    void getAll() {
+        assertMatch(service.getAll(), SECOND_VOTE, FIRST_VOTE, THIRD_VOTE);
+    }
+
+    @Test
+    void getAllByUserIdAndDate() {
+        assertMatch(service.getAllByDate(FIRST_USER_ID, FIRST_VOTE.getDate()), FIRST_VOTE);
     }
 
     @Test

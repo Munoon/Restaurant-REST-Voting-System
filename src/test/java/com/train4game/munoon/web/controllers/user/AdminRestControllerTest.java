@@ -4,6 +4,7 @@ import com.train4game.munoon.model.Roles;
 import com.train4game.munoon.model.User;
 import com.train4game.munoon.repository.JpaUtil;
 import com.train4game.munoon.service.UserService;
+import com.train4game.munoon.to.VoteTo;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -17,13 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static com.train4game.munoon.TestUtil.readFromJson;
 import static com.train4game.munoon.TestUtil.userAuth;
 import static com.train4game.munoon.data.UserTestData.*;
+import static com.train4game.munoon.data.VoteTestData.*;
 import static com.train4game.munoon.model.Roles.ROLE_USER;
+import static com.train4game.munoon.utils.ParserUtil.VOTE_LIST_MAPPER;
 import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -103,6 +108,26 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(FIRST_USER));
+    }
+
+    @Test
+    void getAllVotesByUserId() throws Exception {
+        List<VoteTo> expected = modelMapper.map(Arrays.asList(SECOND_VOTE, FIRST_VOTE), VOTE_LIST_MAPPER);
+        mockMvc.perform(get(REST_URL + "votes/" + FIRST_USER_ID)
+                .with(userAuth(FIRST_USER)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonVoteTo(expected));
+    }
+
+    @Test
+    void getAllVotesByUserIdAndDate() throws Exception {
+        VoteTo expected = modelMapper.map(FIRST_VOTE, VoteTo.class);
+        mockMvc.perform(get(REST_URL + String.format("votes/%d?date=%s", FIRST_USER_ID, FIRST_VOTE.getDate()))
+                .with(userAuth(FIRST_USER)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonVoteToArray(expected));
     }
 
     @Test

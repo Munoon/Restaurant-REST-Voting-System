@@ -41,6 +41,15 @@ public class VoteService {
         return repository.getAll(userId);
     }
 
+    public List<Vote> getAllByDate(int userId, LocalDate date) {
+        Assert.notNull(date, "Date must be not null");
+        return repository.getAllByDate(userId, date);
+    }
+
+    public List<Vote> getAll() {
+        return repository.getAll();
+    }
+
     public void update(Vote vote, int userId) {
         Assert.notNull(vote, "Vote must be not null");
         checkForSameDate(vote.getDate(), get(vote.getId(), userId).getDate(), "You cant change vote date");

@@ -47,7 +47,15 @@ public class VoteRepository {
         return repository.getAllByUser_id(userId, SORT_BY_DATE);
     }
 
+    public List<Vote> getAll() {
+        return repository.findAll(SORT_BY_DATE);
+    }
+
     public int getCount(int restaurantId, LocalDate date) {
         return repository.getCount(restaurantId, date);
+    }
+
+    public List<Vote> getAllByDate(int userId, LocalDate date) {
+        return repository.getAllByUser_idAndDate(userId, date, SORT_BY_DATE);
     }
 }

@@ -6,7 +6,6 @@ import com.train4game.munoon.service.RestaurantService;
 import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.service.VoteService;
 import com.train4game.munoon.to.RestaurantTo;
-import com.train4game.munoon.to.RestaurantToWithVotes;
 import com.train4game.munoon.utils.JsonUtil;
 import com.train4game.munoon.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ import static com.train4game.munoon.data.RestaurantTestData.*;
 import static com.train4game.munoon.data.UserTestData.FIRST_USER;
 import static com.train4game.munoon.data.UserTestData.SECOND_USER;
 import static com.train4game.munoon.utils.ParserUtil.*;
-import static com.train4game.munoon.utils.RestaurantUtil.parseWithVotes;
 import static com.train4game.munoon.utils.exceptions.ErrorType.VALIDATION_ERROR;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -67,13 +65,13 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         LocalDate date = LocalDate.of(2019, 8, 7);
         Restaurant expected = new Restaurant(FIRST_RESTAURANT);
         expected.setMenu(Collections.singletonList(FOURTH_MEAL));
-        List<RestaurantToWithVotes> expectedList = parseWithVotes(Collections.singletonList(expected), date, modelMapper, voteService);
+        List<RestaurantTo> expectedList = modelMapper.map(Collections.singletonList(expected), RESTAURANT_LIST_MAPPER);
 
         mockMvc.perform(get(REST_URL + "?date=" + date))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJsonWithVotes(expectedList));
+                .andExpect(contentJson(expectedList));
     }
 
     @Test
@@ -84,7 +82,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL + FIRST_RESTAURANT_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(parseWithVotes(expected, LocalDate.now(), modelMapper, voteService)));
+                .andExpect(contentJson(modelMapper.map(expected, RestaurantTo.class)));
     }
 
     @Test

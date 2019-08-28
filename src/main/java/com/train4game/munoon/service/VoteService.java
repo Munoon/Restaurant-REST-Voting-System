@@ -56,8 +56,4 @@ public class VoteService {
         checkForTimeException();
         checkNotFoundWithId(repository.save(vote, userId), vote.getId());
     }
-
-    public int getCount(int restaurantId, LocalDate date) {
-        return repository.getCount(restaurantId, date);
-    }
 }

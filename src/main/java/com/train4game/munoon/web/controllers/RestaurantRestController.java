@@ -3,12 +3,8 @@ package com.train4game.munoon.web.controllers;
 import com.train4game.munoon.View;
 import com.train4game.munoon.model.Restaurant;
 import com.train4game.munoon.service.RestaurantService;
-import com.train4game.munoon.service.VoteService;
-import com.train4game.munoon.to.MealTo;
 import com.train4game.munoon.to.RestaurantTo;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +31,11 @@ public class RestaurantRestController {
     public static final String REST_URL = "/restaurant";
     private final static Logger log = LoggerFactory.getLogger(RestaurantRestController.class);
 
-    private final RestaurantService service;
-    private final VoteService voteService;
-    private final ModelMapper modelMapper;
-    private final TypeMap<Restaurant, RestaurantTo> toRestaurantTo;
-    private final TypeMap<RestaurantTo, Restaurant> toRestaurant;
+    @Autowired
+    private RestaurantService service;
 
     @Autowired
-    public RestaurantRestController(RestaurantService service, VoteService voteService, ModelMapper modelMapper) {
-        this.service = service;
-        this.voteService = voteService;
-        this.modelMapper = modelMapper;
-        this.toRestaurantTo = modelMapper.createTypeMap(Restaurant.class, RestaurantTo.class);
-        this.toRestaurant = modelMapper.createTypeMap(RestaurantTo.class, Restaurant.class);
-    }
+    private ModelMapper modelMapper;
 
     @GetMapping("/all")
     public List<RestaurantTo> getAll() {
@@ -66,7 +53,7 @@ public class RestaurantRestController {
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable int id) {
         log.info("Get restaurant with id {}", id);
-        return toRestaurantTo.map(service.get(id));
+        return modelMapper.map(service.get(id), RestaurantTo.class);
     }
 
     @DeleteMapping("/{id}")
@@ -81,8 +68,8 @@ public class RestaurantRestController {
     public RestaurantTo update(@Validated(View.Web.class) @RequestBody RestaurantTo restaurant, @PathVariable int id) {
         assureIdConsistent(restaurant, id);
         log.info("Update {}", restaurant);
-        Restaurant created = service.update(toRestaurant.map(restaurant));
-        return toRestaurantTo.map(created);
+        Restaurant created = service.update(modelMapper.map(restaurant, Restaurant.class));
+        return modelMapper.map(created, RestaurantTo.class);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +84,7 @@ public class RestaurantRestController {
     private RestaurantTo create(RestaurantTo restaurant) {
         checkNew(restaurant);
         log.info("Create {}", restaurant);
-        Restaurant created = service.create(toRestaurant.map(restaurant));
-        return toRestaurantTo.map(created);
+        Restaurant created = service.create(modelMapper.map(restaurant, Restaurant.class));
+        return modelMapper.map(created, RestaurantTo.class);
     }
 }

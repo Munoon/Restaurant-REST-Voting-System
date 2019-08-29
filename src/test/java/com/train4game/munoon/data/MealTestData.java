@@ -51,12 +51,20 @@ public class MealTestData {
         assertThat(actual).usingElementComparatorIgnoringFields("restaurant").isEqualTo(expected);
     }
 
+    public static void assertMatchMealToIgnoreId(Iterable<MealTo> actual, Iterable<MealTo> expected) {
+        assertThat(actual).usingElementComparatorIgnoringFields("restaurant", "id").isEqualTo(expected);
+    }
+
     public static void assertMatchMealTo(MealTo actual, MealTo expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "restaurant");
     }
 
     public static ResultMatcher contentJson(List<MealTo> expected) {
         return result -> assertMatchMealTo(readListFromJsonMvcResult(result, MealTo.class), expected);
+    }
+
+    public static ResultMatcher contentJsonIgnoreId(MealTo... expected) {
+        return result -> assertMatchMealToIgnoreId(readListFromJsonMvcResult(result, MealTo.class), Arrays.asList(expected));
     }
 
     public static ResultMatcher contentJson(MealTo expected) {

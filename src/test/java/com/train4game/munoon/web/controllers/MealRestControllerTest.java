@@ -77,6 +77,18 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getAllForToday() throws Exception {
+        Meal meal = new Meal(null, "New Meal", FIRST_RESTAURANT, 50, LocalDate.now());
+        MealTo expected = modelMapper.map(meal, MealTo.class);
+        service.create(meal);
+
+        ResultActions actions = mockMvc.perform(get(REST_URL + "today/" + FIRST_RESTAURANT_ID))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonIgnoreId(expected));
+    }
+
+    @Test
     void testGet() throws Exception {
         MealTo meal = modelMapper.map(FIRST_MEAL, MealTo.class);
         mockMvc.perform(get(REST_URL + FIRST_MEAL_ID))

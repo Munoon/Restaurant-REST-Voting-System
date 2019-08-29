@@ -41,13 +41,11 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";
 
     private RestaurantService service;
-    private VoteService voteService;
 
     @Autowired
     public RestaurantRestControllerTest(UserService userService, ModelMapper modelMapper, JpaUtil jpaUtil, CacheManager cacheManager, WebApplicationContext webApplicationContext, RestaurantService service, VoteService voteService) {
         super(userService, modelMapper, jpaUtil, cacheManager, webApplicationContext);
         this.service = service;
-        this.voteService = voteService;
     }
 
     @Test

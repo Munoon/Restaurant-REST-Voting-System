@@ -20,7 +20,7 @@ public class UserRepository {
     }
 
     public User get(int id) {
-        return repository.findById(id).orElse(null);
+        return repository.get(id);
     }
 
     @Transactional
@@ -33,6 +33,6 @@ public class UserRepository {
     }
 
     public List<User> getAll() {
-        return repository.findAll(SORT_BY_DATE);
+        return repository.getAll(SORT_BY_DATE);
     }
 }

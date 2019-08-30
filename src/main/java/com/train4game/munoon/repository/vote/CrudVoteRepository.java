@@ -26,4 +26,7 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @Query("SELECT DISTINCT v FROM Vote v JOIN FETCH v.restaurant r JOIN FETCH r.menu JOIN FETCH v.user u WHERE u.id=:id AND v.date=:date")
     List<Vote> getAllByUserIdAndDate(@Param("id") int userId, @Param("date") LocalDate date, Sort sort);
+
+    @Query("SELECT DISTINCT v FROM Vote v JOIN FETCH v.restaurant r JOIN FETCH r.menu JOIN FETCH v.user")
+    List<Vote> getAll(Sort sort);
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public class VoteRepository {
-    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date");
+    private static final Sort SORT_BY_DATE = new Sort(Sort.Direction.DESC, "date", "id");
 
     @Autowired
     private CrudVoteRepository repository;
@@ -48,7 +48,7 @@ public class VoteRepository {
     }
 
     public List<Vote> getAll() {
-        return repository.findAll(SORT_BY_DATE);
+        return repository.getAll(SORT_BY_DATE);
     }
 
     public List<Vote> getAllByDate(int userId, LocalDate date) {

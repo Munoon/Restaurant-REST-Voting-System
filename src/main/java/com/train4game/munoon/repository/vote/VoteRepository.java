@@ -35,16 +35,16 @@ public class VoteRepository {
     }
 
     public Vote get(int id, int userId) {
-        return repository.getVoteByIdAndUser_id(id, userId);
+        return repository.get(id, userId);
     }
 
     @Transactional
     public boolean delete(int id, int userId) {
-        return repository.deleteVoteByIdAndUser_id(id, userId) != 0;
+        return repository.delete(id, userId) != 0;
     }
 
     public List<Vote> getAll(int userId) {
-        return repository.getAllByUser_id(userId, SORT_BY_DATE);
+        return repository.getAllByUserId(userId, SORT_BY_DATE);
     }
 
     public List<Vote> getAll() {
@@ -52,6 +52,6 @@ public class VoteRepository {
     }
 
     public List<Vote> getAllByDate(int userId, LocalDate date) {
-        return repository.getAllByUser_idAndDate(userId, date, SORT_BY_DATE);
+        return repository.getAllByUserIdAndDate(userId, date, SORT_BY_DATE);
     }
 }

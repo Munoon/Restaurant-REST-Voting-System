@@ -16,9 +16,11 @@ import java.util.List;
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Transactional
     @Modifying
-    int deleteMealById(int id);
+    @Query("DELETE FROM Restaurant r WHERE r.id=:id")
+    int deleteMealById(@Param("id") int id);
 
-    Restaurant getById(int id);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.menu WHERE r.id=:id")
+    Restaurant getById(@Param("id") int id);
 
     @Query("SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.menu m WHERE m.date=:date")
     List<Restaurant> getAllByMealsDate(@Param("date") LocalDate date, Sort sort);

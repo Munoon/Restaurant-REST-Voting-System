@@ -28,7 +28,7 @@ public class MealRepository {
     }
 
     public boolean delete(int id) {
-        return repository.deleteMealById(id) != 0;
+        return repository.delete(id) != 0;
     }
 
     public List<Meal> getAll(int restaurantId) {

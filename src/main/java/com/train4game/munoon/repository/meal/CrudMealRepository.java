@@ -21,9 +21,10 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Transactional
     @Modifying
-    int deleteMealById(int id);
+    @Query("DELETE FROM Meal m WHERE m.id=:id")
+    int delete(@Param("id") int id);
 
-    @Query("SELECT m FROM Meal m LEFT JOIN FETCH m.restaurant WHERE m.id=:id")
+    @Query("SELECT m FROM Meal m LEFT JOIN FETCH m.restaurant r LEFT JOIN FETCH r.menu WHERE m.id=:id")
     Meal getMealByIdWithRestaurant(@Param("id") int id);
 
     Meal getMealById(int id);

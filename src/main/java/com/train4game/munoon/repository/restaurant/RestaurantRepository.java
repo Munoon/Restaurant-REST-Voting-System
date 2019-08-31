@@ -16,7 +16,6 @@ public class RestaurantRepository {
     @Autowired
     private CrudRestaurantRepository repository;
 
-    @Transactional
     public Restaurant save(Restaurant restaurant) {
         return repository.save(restaurant);
     }
@@ -25,7 +24,6 @@ public class RestaurantRepository {
         return repository.getById(id);
     }
 
-    @Transactional
     public boolean delete(int id) {
         return repository.deleteMealById(id) != 0;
     }

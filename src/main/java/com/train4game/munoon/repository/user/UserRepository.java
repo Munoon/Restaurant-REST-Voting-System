@@ -23,7 +23,6 @@ public class UserRepository {
         return repository.get(id);
     }
 
-    @Transactional
     public boolean delete(int id) {
         return repository.deleteUserById(id) != 0;
     }

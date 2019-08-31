@@ -19,6 +19,7 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @Transactional
     @Modifying
+    @EntityGraph(Vote.WITH_PARENTS)
     @Query("DELETE FROM Vote v WHERE v.id=:id AND v.user.id=:uid")
     int delete(@Param("id") int id, @Param("uid") int userId);
 

@@ -17,6 +17,7 @@ import java.util.List;
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Transactional
     @Modifying
+    @EntityGraph(Restaurant.WITH_MENU)
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")
     int deleteMealById(@Param("id") int id);
 

@@ -15,6 +15,7 @@ import java.util.List;
 public interface CrudUserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
+    @EntityGraph(User.WITH_ROLES)
     @Query("DELETE FROM User u WHERE u.id=:id")
     int deleteUserById(@Param("id") int id);
 

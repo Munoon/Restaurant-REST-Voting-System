@@ -22,6 +22,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Transactional
     @Modifying
+    @EntityGraph(Meal.WITH_PARENTS)
     @Query("DELETE FROM Meal m WHERE m.id=:id")
     int delete(@Param("id") int id);
 

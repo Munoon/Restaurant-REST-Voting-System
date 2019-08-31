@@ -48,7 +48,7 @@ public class VoteRepository {
     }
 
     public List<Vote> getAll() {
-        return repository.getAll(SORT_BY_DATE);
+        return repository.findAll(SORT_BY_DATE);
     }
 
     public List<Vote> getAllByDate(int userId, LocalDate date) {

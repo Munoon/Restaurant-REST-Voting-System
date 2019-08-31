@@ -15,8 +15,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     @EntityGraph(Vote.WITH_PARENTS)
-    @Query("SELECT v FROM Vote v WHERE v.id=:id AND v.user.id=:uid")
-    Vote get(@Param("id") int id, @Param("uid") int userId);
+    Vote getByIdAndUser_Id(int id, int userId);
 
     @Transactional
     @Modifying
@@ -24,12 +23,10 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     int delete(@Param("id") int id, @Param("uid") int userId);
 
     @EntityGraph(Vote.WITH_PARENTS)
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:id")
-    List<Vote> getAllByUserId(@Param("id") int userId, Sort sort);
+    List<Vote> getAllByUser_Id(int userId, Sort sort);
 
     @EntityGraph(Vote.WITH_PARENTS)
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:id AND v.date=:date")
-    List<Vote> getAllByUserIdAndDate(@Param("id") int userId, @Param("date") LocalDate date, Sort sort);
+    List<Vote> getAllByUser_IdAndDate(int userId, LocalDate date, Sort sort);
 
     @Override
     @EntityGraph(Vote.WITH_PARENTS)

@@ -40,6 +40,6 @@ public class MealRepository {
     }
 
     public Meal getWithRestaurant(int id) {
-        return repository.getMealByIdWithRestaurant(id);
+        return repository.getById(id);
     }
 }

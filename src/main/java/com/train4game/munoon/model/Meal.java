@@ -11,7 +11,14 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "meals", uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "meal_unique_name_idx"))
+@NamedEntityGraph(
+        name = Meal.WITH_PARENTS,
+        attributeNodes = @NamedAttributeNode(value = "restaurant", subgraph = "menu"),
+        subgraphs = @NamedSubgraph(name = "menu", attributeNodes = @NamedAttributeNode("menu"))
+)
 public class Meal extends AbstractNamedEntity {
+    public static final String WITH_PARENTS = "Meal.withParents";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

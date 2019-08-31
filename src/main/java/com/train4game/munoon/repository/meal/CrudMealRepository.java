@@ -2,6 +2,7 @@ package com.train4game.munoon.repository.meal;
 
 import com.train4game.munoon.model.Meal;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +25,8 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     @Query("DELETE FROM Meal m WHERE m.id=:id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT m FROM Meal m LEFT JOIN FETCH m.restaurant r LEFT JOIN FETCH r.menu WHERE m.id=:id")
+    @EntityGraph(Meal.WITH_PARENTS)
+    @Query("SELECT m FROM Meal m WHERE m.id=:id")
     Meal getMealByIdWithRestaurant(@Param("id") int id);
 
     Meal getMealById(int id);

@@ -10,19 +10,17 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_votes", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date"}, name = "users_votes_unique_date_idx"))
-@NamedEntityGraphs({
-        @NamedEntityGraph(
-                name = Vote.WITH_PARENTS,
-                attributeNodes = {
-                        @NamedAttributeNode(value = "user", subgraph = "roles"),
-                        @NamedAttributeNode(value = "restaurant", subgraph = "menu")
-                },
-                subgraphs = {
-                        @NamedSubgraph(name = "roles", attributeNodes = @NamedAttributeNode("roles")),
-                        @NamedSubgraph(name = "menu", attributeNodes = @NamedAttributeNode("menu"))
-                }
-        )
-})
+@NamedEntityGraph(
+        name = Vote.WITH_PARENTS,
+        attributeNodes = {
+                @NamedAttributeNode(value = "user", subgraph = "roles"),
+                @NamedAttributeNode(value = "restaurant", subgraph = "menu")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "roles", attributeNodes = @NamedAttributeNode("roles")),
+                @NamedSubgraph(name = "menu", attributeNodes = @NamedAttributeNode("menu"))
+        }
+)
 public class Vote extends AbstractBaseEntity {
     public static final String WITH_PARENTS = "Vote.withParents";
 

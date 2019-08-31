@@ -33,6 +33,6 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getAllByMealDate(LocalDate date) {
-        return repository.getAllByMealsDate(date, SORT_BY_NAME);
+        return repository.getAllByMenu_Date(date, SORT_BY_NAME);
     }
 }

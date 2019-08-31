@@ -4,7 +4,6 @@ import com.train4game.munoon.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class UserRepository {
     }
 
     public User get(int id) {
-        return repository.get(id);
+        return repository.getById(id);
     }
 
     public boolean delete(int id) {
@@ -32,6 +31,6 @@ public class UserRepository {
     }
 
     public List<User> getAll() {
-        return repository.getAll(SORT_BY_DATE);
+        return repository.findAll(SORT_BY_DATE);
     }
 }

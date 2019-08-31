@@ -23,7 +23,13 @@ import java.util.Set;
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email", name = "users_unique_email_idx"))
+@NamedEntityGraph(
+        name = User.WITH_ROLES,
+        attributeNodes = @NamedAttributeNode("roles")
+)
 public class User extends AbstractNamedEntity implements Serializable {
+    public static final String WITH_ROLES = "User.withRoles";
+
     @Column(name = "email", nullable = false, unique = true)
     @SafeHtml(groups = {View.Web.class})
     @Email

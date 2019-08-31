@@ -38,6 +38,7 @@ public class VoteRepository {
         return repository.get(id, userId);
     }
 
+    @Transactional
     public boolean delete(int id, int userId) {
         return repository.delete(id, userId) != 0;
     }

@@ -72,7 +72,7 @@ public class VoteServiceTest extends AbstractServiceTest  {
 
     @Test
     void getAll() {
-        assertMatch(service.getAll(), SECOND_VOTE, FIRST_VOTE, THIRD_VOTE);
+        assertMatch(service.getAll(), SECOND_VOTE, THIRD_VOTE, FIRST_VOTE);
     }
 
     @Test

@@ -29,7 +29,7 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getAll() {
-        return repository.getAll(SORT_BY_NAME);
+        return repository.findAll(SORT_BY_NAME);
     }
 
     public List<Restaurant> getAllByMealDate(LocalDate date) {

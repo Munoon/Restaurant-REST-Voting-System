@@ -1,4 +1,4 @@
-# Vote API
+# Restaurant API
 _Replace `{URL}` with your url to page and `{ID}` with restaurant id that you need._
 
 ## URL Pages

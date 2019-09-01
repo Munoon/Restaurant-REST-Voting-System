@@ -1,4 +1,4 @@
-# Vote API
+# Meals API
 _Replace `{URL}` with your url to page, `{RID}` with restaurant id that you need and `{ID}` with meal id that you need._
 
 ## URL Pages
@@ -24,6 +24,8 @@ _Replace `admin@gmail.com:admin` with user that you need, `106` with meal id tha
 ### Get All By Date
 `curl -s {URL}/meals/all/103?date=2019-08-06`
 
+_Replace `2019-08-06` with date that you need._
+
 ### Get All For Today
 `curl -s {URL}/meals/today/103`
 
@@ -37,7 +39,7 @@ _Replace `admin@gmail.com:admin` with user that you need, `106` with meal id tha
 `curl -s -X DELETE {URL}/meals/106 --user admin@gmail.com:admin`
 
 ### Update Meal
-`curl -s -X PUT -d '{"id": 106,"name": "Other Name","price": 40 "restaurantId": 103}' -H 'Content-Type: application/json' {URL}/meals/106 --user admin@gmail.com:admin`
+`curl -s -X PUT -d '{"id": 106,"name": "Other Name","price": 40, "restaurantId": 103}' -H 'Content-Type: application/json' {URL}/meals/106 --user admin@gmail.com:admin`
 
 ### Create Meal
 `curl -s -X POST -d '{"name": "New Meal 1","price": 30, "restaurantId": 103}' -H 'Content-Type: application/json;charset=UTF-8' {URL}/meals --user admin@gmail.com:admin`
@@ -45,10 +47,7 @@ _Replace `admin@gmail.com:admin` with user that you need, `106` with meal id tha
 ### Create Many Meal
 `curl -s -X POST -d '[{"name": "New Meal 1","price": 30, "restaurantId": 103},{"name": "New Meal 2","price": 40, "restaurantId": 103}]' -H 'Content-Type: application/json;charset=UTF-8' {URL}/meals/all --user admin@gmail.com:admin`
 
-_Replace `2019-08-06` with date that you need._
-
 ## Bodies
-_Replace `{RNAME}` with restaurant name_
 ### Create Body
 ```json
 {

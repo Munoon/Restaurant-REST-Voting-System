@@ -2,10 +2,7 @@ package com.train4game.munoon.web.controllers.user;
 
 import com.train4game.munoon.View;
 import com.train4game.munoon.model.User;
-import com.train4game.munoon.service.UserService;
 import com.train4game.munoon.to.UserTo;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 
 import static com.train4game.munoon.web.SecurityUtil.authUserId;

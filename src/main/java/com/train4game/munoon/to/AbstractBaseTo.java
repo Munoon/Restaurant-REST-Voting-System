@@ -1,6 +1,8 @@
 package com.train4game.munoon.to;
 
-abstract public class AbstractBaseTo {
+import com.train4game.munoon.HasId;
+
+abstract public class AbstractBaseTo implements HasId {
     protected Integer id;
 
     public AbstractBaseTo() {
@@ -10,15 +12,13 @@ abstract public class AbstractBaseTo {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public boolean isNew() {
-        return id == null;
     }
 }

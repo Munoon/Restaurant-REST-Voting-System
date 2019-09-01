@@ -1,13 +1,14 @@
 package com.train4game.munoon.to;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.train4game.munoon.HasEmail;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class UserTo extends AbstractBaseTo {
+public class UserTo extends AbstractBaseTo implements HasEmail {
     @Size(min = 2, max = 225)
     @NotBlank
     @SafeHtml
@@ -42,6 +43,7 @@ public class UserTo extends AbstractBaseTo {
         this.name = name;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }

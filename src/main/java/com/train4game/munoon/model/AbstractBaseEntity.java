@@ -1,10 +1,12 @@
 package com.train4game.munoon.model;
 
+import com.train4game.munoon.HasId;
+
 import javax.persistence.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100;
 
     @Id
@@ -19,15 +21,13 @@ public abstract class AbstractBaseEntity {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public boolean isNew() {
-        return id == null;
     }
 }

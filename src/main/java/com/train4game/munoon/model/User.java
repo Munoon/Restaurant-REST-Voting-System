@@ -1,6 +1,7 @@
 package com.train4game.munoon.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.train4game.munoon.HasEmail;
 import com.train4game.munoon.View;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -13,7 +14,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -27,7 +27,7 @@ import java.util.Set;
         name = User.WITH_ROLES,
         attributeNodes = @NamedAttributeNode("roles")
 )
-public class User extends AbstractNamedEntity implements Serializable {
+public class User extends AbstractNamedEntity implements Serializable, HasEmail {
     public static final String WITH_ROLES = "User.withRoles";
 
     @Column(name = "email", nullable = false, unique = true)
@@ -83,6 +83,7 @@ public class User extends AbstractNamedEntity implements Serializable {
         this.roles = Collections.singleton(role);
     }
 
+    @Override
     public String getEmail() {
         return email;
     }

@@ -3,7 +3,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/caab747fd11d4c0183f60aa7b45e7734)](https://app.codacy.com/app/Munoon/Restaurant-REST-Voting-System?utm_source=github.com&utm_medium=referral&utm_content=Munoon/Restaurant-REST-Voting-System&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/Munoon/Restaurant-REST-Voting-System.svg?branch=master)](https://travis-ci.org/Munoon/Restaurant-REST-Voting-System)
 
-[DEVELOPING] REST service to vote for restaurants
+REST service to vote for restaurants
 
 This is a [JavaOPS](http://javaops.ru/reg/topjava) graduation project.
 

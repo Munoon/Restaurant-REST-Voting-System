@@ -60,7 +60,7 @@ _Replace `admin@gmail.com:admin` with user that you need, `admin@gmail.com` with
 ### Update Body
 ```json
 {
-    "id": 102,
+    "id": {ID},
     "name": "Another Name",
     "email": "SecondPetrsEmail@gmail.com",
     "password": "PertHasStrongPass123",

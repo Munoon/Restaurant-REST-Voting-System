@@ -1,5 +1,5 @@
 # Vote API
-_Replace `{URL}` with your url to page and `{ID}` with vote restaurant that you need._
+_Replace `{URL}` with your url to page and `{ID}` with restaurant id that you need._
 
 ## URL Pages
 Description | Method | URL | Body | User

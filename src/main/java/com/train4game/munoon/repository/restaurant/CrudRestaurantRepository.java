@@ -26,4 +26,8 @@ public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Inte
 
     @EntityGraph(Restaurant.WITH_MENU)
     List<Restaurant> getAllByMenu_Date(@Param("date") LocalDate date, Sort sort);
+
+    @Override
+    @EntityGraph(Restaurant.WITH_MENU)
+    List<Restaurant> findAll(Sort sort);
 }

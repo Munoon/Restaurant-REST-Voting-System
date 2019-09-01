@@ -10,7 +10,6 @@ Delete | DELETE  | `{URL}/vote/{ID}` | none | Authorized
 Create | POST | `{URL}/vote` | Create Body | Authorized
 Update | PUT | `{URL}/vote/{ID}` | Update Body | Authorized
 
-
 ## CURL
 _Replace `admin@gmail.com:admin` with user that you need, `113` with vote id that you need and `102` with restaurant id that you need._
 

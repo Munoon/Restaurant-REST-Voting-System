@@ -12,7 +12,6 @@ Delete | DELETE  | `{URL}/restaurant/{ID}` | none | Admin Only
 Create | POST | `{URL}/restaurant` | Create Body | Admin Only
 Update | PUT | `{URL}/restaurant/{ID}` | Update Body | Admin Only
 
-
 ## CURL
 _Replace `admin@gmail.com:admin` with user that you need, `Restaurant Name` with restaurant name that you need and `103` with restaurant id that you need._
 

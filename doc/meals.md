@@ -14,7 +14,6 @@ Update | PUT | `{URL}/meals/{ID}` | Update Body | Admin Only
 Create | POST | `{URL}/meals` | Create Body | Admin Only
 Create All | POST | `{URL}/meals/all` | Create All Body | Admin Only
 
-
 ## CURL
 _Replace `admin@gmail.com:admin` with user that you need, `106` with meal id that you need and `103` with restaurant id that you need._
 

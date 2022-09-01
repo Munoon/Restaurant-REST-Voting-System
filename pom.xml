@@ -26,7 +26,7 @@
         <tomcat.version>9.0.21</tomcat.version>
         <jackson-json.version>2.10.0.pr3</jackson-json.version>
         <junit.jupiter.version>5.5.1</junit.jupiter.version>
-        <jsoup.version>1.14.2</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <modelmapper.version>2.3.0</modelmapper.version>
         <hamcrest.version>1.3</hamcrest.version>
         <json-path.version>2.4.0</json-path.version>

@@ -1,0 +1,46 @@
+name: Sonar Scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    permissions: # permission to comment a PR
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving the relevancy of reporting.
+          fetch-depth: 0
+
+      # Triggering SonarQube analysis; the results are required for the Quality Gate check.
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+
+      # Check the Quality Gate status.
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        # Enforce a timeout to fail the step after a specific time.
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+
+      - name: SonarQube Pull Request Comment
+        if: always()
+        uses: campos-pay/sonarqube-pr-comment@main
+        with:
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
+          sonar_host_url: https://sonarcloud.io
+          sonar_projectkey: ${{ github.event.repository.name }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repo_name: ${{ github.repository }}
+          pr_number: ${{ github.event.pull_request.number }}
+          github_api_base_url: ""

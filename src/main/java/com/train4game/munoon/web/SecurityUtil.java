@@ -29,6 +29,10 @@ public class SecurityUtil {
         return get().getUser().getId();
     }
 
+    public static void unusedMethod() {
+        throw new RuntimeException("Shouldn't be used");
+    }
+
 //    public static User getUser() {
 //        return get().getUser();
 //    }

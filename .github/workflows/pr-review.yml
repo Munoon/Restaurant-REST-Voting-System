@@ -47,7 +47,7 @@ jobs:
         with:
           sonar_token: ${{ secrets.SONAR_TOKEN }}
           sonar_host_url: https://sonarcloud.io
-          sonar_projectkey: ${{ github.event.repository.name }}
+          sonar_projectkey: munoon-1_restaurant-rest-voting-system
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repo_name: ${{ github.repository }}
           pr_number: ${{ github.event.pull_request.number }}

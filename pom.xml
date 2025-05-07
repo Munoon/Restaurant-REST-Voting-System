@@ -27,7 +27,7 @@
         <javax-el.version>3.0.1-b11</javax-el.version>
         <ehcache.version>3.7.1</ehcache.version>
         <tomcat.version>9.0.21</tomcat.version>
-        <jackson-json.version>2.10.0.pr3</jackson-json.version>
+        <jackson-json.version>2.12.7.1</jackson-json.version>
         <junit.jupiter.version>5.5.1</junit.jupiter.version>
         <jsoup.version>1.14.2</jsoup.version>
         <modelmapper.version>2.3.0</modelmapper.version>
